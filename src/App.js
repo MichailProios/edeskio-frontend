@@ -11,6 +11,10 @@ import {
 //Styling
 import "./App.css";
 
+//Pages
+import Login from "./components/Login/Login";
+import LandingPage from "./pages/LandingPage/LandingPage";
+
 const useStyles = makeStyles((theme) => ({
   "@global": {
     "*": {
@@ -91,6 +95,7 @@ function App() {
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
+        <LandingPage />
         <Router>
           <Routes>
             <Route path="/" exact element={<div />} />
