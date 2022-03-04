@@ -1,5 +1,7 @@
 //Basic dependencies
 import React, { useState, useEffect } from "react";
+//import CssBaseline from "@material-ui/core/CssBaseline";
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import {
@@ -94,6 +96,7 @@ function App() {
 
   return (
     <React.Fragment>
+      {/* <CssBaseline /> */}
       <ThemeProvider theme={theme}>
         <LandingPage />
         <Router>
