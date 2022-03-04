@@ -9,7 +9,7 @@ import Login from "../../components/Login/Login";
 
 const useStyles = makeStyles((theme) => ({}));
 
-const LandingPage = () => {
+const LoginPage = () => {
   return (
     <>
       <Grid
@@ -28,4 +28,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default LoginPage;

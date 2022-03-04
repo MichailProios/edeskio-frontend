@@ -101,6 +101,7 @@ const Login = () => {
             <TextField
               label="Username"
               variant="outlined"
+              required={true}
               className={styles.loginTextfields}
             />
           </Grid>
@@ -117,6 +118,7 @@ const Login = () => {
             <TextField
               label="Password"
               variant="outlined"
+              required={true}
               className={styles.loginTextfields}
             />
           </Grid>

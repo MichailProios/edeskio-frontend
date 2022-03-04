@@ -15,7 +15,7 @@ import "./App.css";
 
 //Pages
 import Login from "./components/Login/Login";
-import LandingPage from "./pages/LandingPage/LandingPage";
+import LoginPage from "./pages/LoginPage/LoginPage";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -98,7 +98,7 @@ function App() {
     <React.Fragment>
       {/* <CssBaseline /> */}
       <ThemeProvider theme={theme}>
-        <LandingPage />
+        <LoginPage />
         <Router>
           <Routes>
             <Route path="/" exact element={<div />} />
