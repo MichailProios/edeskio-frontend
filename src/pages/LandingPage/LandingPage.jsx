@@ -7,9 +7,7 @@ import { Grid } from "@material-ui/core";
 
 import Login from "../../components/Login/Login";
 
-const useStyles = makeStyles((theme) => ({
-  loginRoot: { backgroundColor: "blue" },
-}));
+const useStyles = makeStyles((theme) => ({}));
 
 const LandingPage = () => {
   return (
@@ -22,7 +20,7 @@ const LandingPage = () => {
         justifyContent="center"
         style={{ minHeight: "100vh" }}
       >
-        <Grid item xs={3}>
+        <Grid item>
           <Login />
         </Grid>
       </Grid>
