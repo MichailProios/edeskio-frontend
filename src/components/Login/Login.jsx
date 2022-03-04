@@ -21,7 +21,7 @@ import logofull from "../../utilities/images/Logos/logo-full.png";
 
 const useStyles = makeStyles((theme) => ({
   loginRoot: { width: "30em", height: "40em" },
-  loginLogoGridContainer: {},
+  loginLogoGridContainer: { padding: "1em" },
   loginFormGridContainer: { marginTop: "0.5em" },
 
   loginRememberMeCheckbox: { marginLeft: "2.3em", userSelect: "none" },
@@ -52,8 +52,9 @@ const useStyles = makeStyles((theme) => ({
 
   loginSignUpLink: { userSelect: "none", userDrag: "none", marginRight: "3em" },
 
-  logo: {
-    padding: "1em",
+  loginLogo: {
+    // margin: "1em",
+    // padding: "1em",
     userSelect: "none",
     userDrag: "none",
   },
@@ -72,13 +73,11 @@ const Login = () => {
         >
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
             <MuiImage
-              imageStyle={{ padding: "1em" }}
               aspectRatio={1.5}
-              iconContainerStyle={{ padding: "1em" }}
               src={logofull}
               cover={true}
-              animationDuration={50}
-              className={styles.logo}
+              animationDuration={100}
+              className={styles.loginLogo}
             />
           </Grid>
         </Grid>
