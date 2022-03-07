@@ -14,7 +14,7 @@ import {
 import "./App.css";
 
 //Pages
-import Login from "./components/Login/Login";
+import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 
 const useStyles = makeStyles((theme) => ({
@@ -98,7 +98,9 @@ function App() {
     <React.Fragment>
       {/* <CssBaseline /> */}
       <ThemeProvider theme={theme}>
-        <LoginPage />
+        {/* <LoginPage /> */}
+
+        <RegisterPage />
         <Router>
           <Routes>
             <Route path="/" exact element={<div />} />
