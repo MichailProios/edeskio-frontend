@@ -27,7 +27,7 @@ import logoOnly from "../../utilities/images/Logos/logo-only.png";
 import RegisterStepper from "./RegisterStepper";
 
 const useStyles = makeStyles((theme) => ({
-  registerRoot: { width: "30em", height: "40em" },
+  registerRoot: { width: "30em", height: "40em", overflow: "hidden" },
 
   registerCard: { height: "auto", width: "80%" },
 
@@ -130,7 +130,7 @@ const Register = () => {
         {!registerAndJoin && (
           <Slide
             in={!registerAndJoin}
-            direction="right"
+            direction={registerAndJoin ? "right" : "left"}
             mountOnEnter
             unmountOnExit
           >
