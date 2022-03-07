@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "0.5em",
   },
 
-  registerFooterGridContainer: { marginTop: "1.2em" },
+  registerFooterGridContainer: { marginTop: "1em" },
 
   registerLogo: {
     // padding: "1em",
@@ -218,6 +218,28 @@ const Register = ({ handleRegisterBack }) => {
                 </Card>
               </Grid>
             </Grid>
+
+            <Grid
+              container
+              spacing={0}
+              direction="row"
+              className={styles.registerFooterGridContainer}
+            >
+              <Grid
+                container
+                item
+                justifyContent="center"
+                xs={12}
+                sm={12}
+                md={12}
+                lg={12}
+                xl={12}
+              >
+                <Typography className={styles.registerCopyrightText}>
+                  Copyright © E-Deskio 2022
+                </Typography>
+              </Grid>
+            </Grid>
           </div>
         </Slide>
       )}
@@ -229,31 +251,10 @@ const Register = ({ handleRegisterBack }) => {
           unmountOnExit
         >
           <div>
-            <RegisterStepper />
+            <RegisterStepper handleRegisterBack={handleRegisterBack} />
           </div>
         </Slide>
       )}
-      <Grid
-        container
-        spacing={0}
-        direction="row"
-        className={styles.registerFooterGridContainer}
-      >
-        <Grid
-          container
-          item
-          justifyContent="center"
-          xs={12}
-          sm={12}
-          md={12}
-          lg={12}
-          xl={12}
-        >
-          <Typography className={styles.registerCopyrightText}>
-            Copyright © E-Deskio 2022
-          </Typography>
-        </Grid>
-      </Grid>
     </>
   );
 };

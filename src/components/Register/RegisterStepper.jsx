@@ -24,107 +24,224 @@ import {
   StepContent,
 } from "@material-ui/core";
 
+import Autocomplete from "@material-ui/lab/Autocomplete";
+
 const useStyles = makeStyles((theme) => ({
-  loginRoot: { width: "30em", height: "40em" },
-  loginLogoGridContainer: { padding: "1em" },
-  loginFormGridContainer: { marginTop: "0.5em" },
+  registerStepper: { userSelect: "none", userDrag: "none" },
+  registerStepperContentGridContainer: {},
+  registerStepperNextBackButtons: { width: "80%" },
 
-  loginRememberMeCheckbox: { marginLeft: "2.3em", userSelect: "none" },
-
-  loginLinksGridContainer: { marginTop: "0.5em" },
-
-  loginFooterGridContainer: { marginTop: "1em" },
-
-  loginSignInButton: {
+  registerTextfields: {
     width: "80%",
-    userSelect: "none",
-    userDrag: "none",
-  },
-
-  loginTextfields: {
-    width: "80%",
-    userSelect: "none",
-    userDrag: "none",
-  },
-
-  loginCopyrightText: {
-    userSelect: "none",
-    userDrag: "none",
-    // width: "100%",
-  },
-
-  loginForgotLink: { userSelect: "none", userDrag: "none", marginLeft: "3em" },
-
-  loginSignUpLink: { userSelect: "none", userDrag: "none", marginRight: "3em" },
-
-  loginLogo: {
-    // margin: "1em",
-    // padding: "1em",
     userSelect: "none",
     userDrag: "none",
   },
 }));
 
-const getStepContent = (step) => {
+const getStepContent = (step, styles) => {
   switch (step) {
     case 0:
-      return "Select campaign settings...";
+      return (
+        <>
+          <Grid
+            container
+            item
+            justifyContent="flex-end"
+            xs={6}
+            sm={6}
+            md={6}
+            lg={6}
+            xl={6}
+          >
+            <TextField
+              label="First Name"
+              variant="outlined"
+              required={true}
+              className={styles.registerTextfields}
+            />
+          </Grid>
+          <Grid
+            container
+            item
+            justifyContent="flex-start"
+            xs={6}
+            sm={6}
+            md={6}
+            lg={6}
+            xl={6}
+          >
+            <TextField
+              label="Last Name"
+              variant="outlined"
+              required={true}
+              className={styles.registerTextfields}
+            />
+          </Grid>
+          <Grid
+            container
+            item
+            justifyContent="center"
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
+          >
+            <TextField
+              label="Organization Email Address"
+              variant="outlined"
+              required={true}
+              className={styles.registerTextfields}
+            />
+          </Grid>
+          <Grid
+            container
+            item
+            justifyContent="center"
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
+          >
+            <TextField
+              label="Personal Email Address"
+              variant="outlined"
+              required={false}
+              className={styles.registerTextfields}
+            />
+          </Grid>
+          <Grid
+            container
+            item
+            justifyContent="center"
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
+          >
+            <TextField
+              label="Phone Number"
+              variant="outlined"
+              required={false}
+              className={styles.registerTextfields}
+            />
+          </Grid>
+        </>
+      );
     case 1:
-      return "What is an ad group anyways?";
+      return (
+        <>
+          <Grid
+            container
+            item
+            justifyContent="center"
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
+          >
+            <TextField
+              label="Username"
+              variant="outlined"
+              required={true}
+              className={styles.registerTextfields}
+            />
+          </Grid>
+          <Grid
+            container
+            item
+            justifyContent="center"
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
+          >
+            <TextField
+              label="Password"
+              variant="outlined"
+              required={true}
+              className={styles.registerTextfields}
+            />
+          </Grid>
+          <Grid
+            container
+            item
+            justifyContent="center"
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
+          >
+            <TextField
+              label="Re-Enter Password"
+              variant="outlined"
+              required={true}
+              className={styles.registerTextfields}
+            />
+          </Grid>
+        </>
+      );
     case 2:
-      return "This is the bit I really care about!";
+      return (
+        <>
+          <Grid
+            container
+            item
+            justifyContent="center"
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
+          >
+            <Autocomplete
+              options={temp}
+              getOptionLabel={(option) => option.title}
+              className={styles.registerTextfields}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  required={true}
+                  label="Organization Name"
+                  variant="outlined"
+                />
+              )}
+            />
+          </Grid>
+        </>
+      );
     default:
       return "Unknown step";
   }
 };
 
+const temp = [
+  { title: "Business1" },
+  { title: "Business2" },
+  { title: "Business3" },
+];
+
 const getSteps = () => {
-  return ["Name", "Contact Information", "Address", "Inquiry"];
+  return ["Information", "Account", "Organization"];
 };
 
-const RegisterStepper = () => {
+const RegisterStepper = ({ handleRegisterBack }) => {
   const styles = useStyles();
 
   const [activeStep, setActiveStep] = useState(0);
-  const [skipped, setSkipped] = useState(new Set());
   const steps = getSteps();
 
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
-
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
-
   const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
   };
 
   const handleReset = () => {
@@ -133,18 +250,10 @@ const RegisterStepper = () => {
 
   return (
     <>
-      <Stepper activeStep={activeStep}>
+      <Stepper activeStep={activeStep} className={styles.registerStepper}>
         {steps.map((label, index) => {
           const stepProps = {};
           const labelProps = {};
-          if (isStepOptional(index)) {
-            labelProps.optional = (
-              <Typography variant="caption">Optional</Typography>
-            );
-          }
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
-          }
           return (
             <Step key={label} {...stepProps}>
               <StepLabel {...labelProps}>{label}</StepLabel>
@@ -155,47 +264,95 @@ const RegisterStepper = () => {
       <div>
         {activeStep === steps.length ? (
           <div>
-            <Typography className={styles.instructions}>
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Button onClick={handleReset} className={styles.button}>
-              Reset
-            </Button>
-          </div>
-        ) : (
-          <div>
-            <Typography className={styles.instructions}>
-              {getStepContent(activeStep)}
-            </Typography>
-            <div>
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                className={styles.button}
+            <Grid
+              container
+              spacing={1}
+              direction="row"
+              className={styles.loginLogoGridContainer}
+            >
+              <Grid
+                container
+                item
+                justifyContent="center"
+                xs={12}
+                sm={12}
+                md={12}
+                lg={12}
+                xl={12}
               >
-                Back
-              </Button>
-              {isStepOptional(activeStep) && (
+                <Typography className={styles.instructions}>
+                  Account Created
+                </Typography>
+              </Grid>
+
+              <Grid
+                container
+                item
+                justifyContent="center"
+                xs={12}
+                sm={12}
+                md={12}
+                lg={12}
+                xl={12}
+              >
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleSkip}
-                  className={styles.button}
+                  onClick={handleRegisterBack}
                 >
-                  Skip
+                  Back to Login
                 </Button>
-              )}
+              </Grid>
+            </Grid>
+          </div>
+        ) : (
+          <Grid
+            container
+            spacing={1}
+            direction="row"
+            className={styles.registerStepperContentGridContainer}
+          >
+            {getStepContent(activeStep, styles)}
 
+            <Grid
+              container
+              item
+              justifyContent="flex-end"
+              xs={6}
+              sm={6}
+              md={6}
+              lg={6}
+              xl={6}
+            >
+              <Button
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                variant="outlined"
+                className={styles.registerStepperNextBackButtons}
+              >
+                Back
+              </Button>
+            </Grid>
+            <Grid
+              container
+              item
+              justifyContent="flex-start"
+              xs={6}
+              sm={6}
+              md={6}
+              lg={6}
+              xl={6}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 onClick={handleNext}
-                className={styles.button}
+                className={styles.registerStepperNextBackButtons}
               >
-                {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                {activeStep === steps.length - 1 ? "Register" : "Next"}
               </Button>
-            </div>
-          </div>
+            </Grid>
+          </Grid>
         )}
       </div>
     </>

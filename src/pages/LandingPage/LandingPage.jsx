@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   root: { width: "30em", height: "40em", overflow: "hidden" },
 }));
 
-const RegisterPage = () => {
+const LandingPage = () => {
   const styles = useStyles();
   const [register, setRegister] = useState(false);
   const [initialSlideFlag, setInitialSlideFlag] = useState(false);
@@ -81,4 +81,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default LandingPage;
