@@ -50,7 +50,12 @@ const useStyles = makeStyles((theme) => ({
 
   loginForgotLink: { userSelect: "none", userDrag: "none", marginLeft: "3em" },
 
-  loginSignUpLink: { userSelect: "none", userDrag: "none", marginRight: "3em" },
+  loginSignUpLink: {
+    cursor: "pointer",
+    userSelect: "none",
+    userDrag: "none",
+    marginRight: "3em",
+  },
 
   loginLogo: {
     // margin: "1em",
@@ -60,162 +65,160 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = () => {
+const Login = ({ handleRegister }) => {
   const styles = useStyles();
   return (
     <>
-      <Paper elevation={3} className={styles.loginRoot}>
+      <Grid
+        container
+        spacing={0}
+        direction="row"
+        className={styles.loginLogoGridContainer}
+      >
+        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+          <MuiImage
+            aspectRatio={1.5}
+            src={logofull}
+            cover={true}
+            animationDuration={100}
+            className={styles.loginLogo}
+          />
+        </Grid>
+      </Grid>
+      <Divider />
+      <Grid
+        container
+        spacing={1}
+        direction="row"
+        className={styles.loginFormGridContainer}
+      >
         <Grid
           container
-          spacing={0}
-          direction="row"
-          className={styles.loginLogoGridContainer}
+          item
+          justifyContent="center"
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          xl={12}
         >
-          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-            <MuiImage
-              aspectRatio={1.5}
-              src={logofull}
-              cover={true}
-              animationDuration={100}
-              className={styles.loginLogo}
-            />
-          </Grid>
+          <TextField
+            label="Username"
+            variant="outlined"
+            required={true}
+            className={styles.loginTextfields}
+          />
         </Grid>
-        <Divider />
         <Grid
           container
-          spacing={1}
-          direction="row"
-          className={styles.loginFormGridContainer}
+          item
+          justifyContent="center"
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          xl={12}
         >
-          <Grid
-            container
-            item
-            justifyContent="center"
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            xl={12}
-          >
-            <TextField
-              label="Username"
-              variant="outlined"
-              required={true}
-              className={styles.loginTextfields}
-            />
-          </Grid>
-          <Grid
-            container
-            item
-            justifyContent="center"
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            xl={12}
-          >
-            <TextField
-              label="Password"
-              variant="outlined"
-              required={true}
-              className={styles.loginTextfields}
-            />
-          </Grid>
-          <Grid
-            container
-            item
-            justifyContent="flex-start"
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            xl={12}
-          >
-            <FormControlLabel
-              className={styles.loginRememberMeCheckbox}
-              control={<Checkbox name="checkedC" />}
-              label="Remember Me"
-            />
-          </Grid>
-          <Grid
-            container
-            item
-            justifyContent="center"
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            xl={12}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              className={styles.loginSignInButton}
-            >
-              Sign In
-            </Button>
-          </Grid>
+          <TextField
+            label="Password"
+            variant="outlined"
+            required={true}
+            className={styles.loginTextfields}
+          />
         </Grid>
+        <Grid
+          container
+          item
+          justifyContent="flex-start"
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          xl={12}
+        >
+          <FormControlLabel
+            className={styles.loginRememberMeCheckbox}
+            control={<Checkbox name="checkedC" />}
+            label="Remember Me"
+          />
+        </Grid>
+        <Grid
+          container
+          item
+          justifyContent="center"
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          xl={12}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            className={styles.loginSignInButton}
+          >
+            Sign In
+          </Button>
+        </Grid>
+      </Grid>
 
+      <Grid
+        container
+        spacing={0}
+        direction="row"
+        className={styles.loginLinksGridContainer}
+      >
         <Grid
           container
-          spacing={0}
-          direction="row"
-          className={styles.loginLinksGridContainer}
+          item
+          justifyContent="flex-start"
+          xs={6}
+          sm={6}
+          md={6}
+          lg={6}
+          xl={6}
         >
-          <Grid
-            container
-            item
-            justifyContent="flex-start"
-            xs={6}
-            sm={6}
-            md={6}
-            lg={6}
-            xl={6}
-          >
-            <Typography className={styles.loginForgotLink}>
-              <Link href="">Forgot Password?</Link>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            item
-            justifyContent="flex-end"
-            xs={6}
-            sm={6}
-            md={6}
-            lg={6}
-            xl={6}
-          >
-            <Typography className={styles.loginSignUpLink}>
-              <Link href="">Sign Up</Link>
-            </Typography>
-          </Grid>
+          <Typography className={styles.loginForgotLink}>
+            <Link href="">Forgot Password?</Link>
+          </Typography>
         </Grid>
+        <Grid
+          container
+          item
+          justifyContent="flex-end"
+          xs={6}
+          sm={6}
+          md={6}
+          lg={6}
+          xl={6}
+        >
+          <Typography className={styles.loginSignUpLink}>
+            <Link onClick={handleRegister}>Sign Up</Link>
+          </Typography>
+        </Grid>
+      </Grid>
 
+      <Grid
+        container
+        spacing={0}
+        direction="row"
+        className={styles.loginFooterGridContainer}
+      >
         <Grid
           container
-          spacing={0}
-          direction="center"
-          className={styles.loginFooterGridContainer}
+          item
+          justifyContent="center"
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          xl={12}
         >
-          <Grid
-            container
-            item
-            justifyContent="center"
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            xl={12}
-          >
-            <Typography className={styles.loginCopyrightText}>
-              Copyright © E-Deskio 2022
-            </Typography>
-          </Grid>
+          <Typography className={styles.loginCopyrightText}>
+            Copyright © E-Deskio 2022
+          </Typography>
         </Grid>
-      </Paper>
+      </Grid>
     </>
   );
 };

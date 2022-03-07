@@ -60,12 +60,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Register = () => {
+const Register = ({ handleRegisterBack }) => {
   const styles = useStyles();
 
   const [registerAndJoin, setRegisterAndJoin] = useState(false);
+  const [initialSlideFlag, setInitialSlideFlag] = useState(false);
 
-  const handleRegisterBack = () => {
+  const handleRegisterAndJoinBack = () => {
     setRegisterAndJoin(false);
   };
 
@@ -73,180 +74,186 @@ const Register = () => {
     setRegisterAndJoin(true);
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitialSlideFlag(true);
+    }, 1);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
-      <Paper elevation={3} className={styles.registerRoot}>
-        <Grid
-          container
-          spacing={0}
-          direction="row"
-          className={styles.registerLogoGridContainer}
-        >
-          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-            <MuiImage
-              imageStyle={{
-                width: "150px",
-                height: "auto",
-                marginLeft: "10em",
-              }}
-              aspectRatio={3}
-              src={logoOnly}
-              cover={true}
-              animationDuration={100}
-              className={styles.registerLogo}
-            />
-          </Grid>
+      <Grid
+        container
+        spacing={0}
+        direction="row"
+        className={styles.registerLogoGridContainer}
+      >
+        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+          <MuiImage
+            imageStyle={{
+              width: "150px",
+              height: "auto",
+              marginLeft: "10em",
+            }}
+            aspectRatio={3}
+            src={logoOnly}
+            cover={true}
+            animationDuration={100}
+            className={styles.registerLogo}
+          />
         </Grid>
-        <Divider />
+      </Grid>
+      <Divider />
 
+      <Grid
+        container
+        spacing={2}
+        direction="row"
+        className={styles.registerTilesGridContainer}
+      >
         <Grid
           container
-          spacing={2}
-          direction="row"
-          className={styles.registerTilesGridContainer}
+          item
+          justifyContent="center"
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          xl={12}
         >
-          <Grid
-            container
-            item
-            justifyContent="center"
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            xl={12}
+          <Button
+            variant="contained"
+            color="primary"
+            className={styles.registerPreviousButton}
+            onClick={
+              registerAndJoin ? handleRegisterAndJoinBack : handleRegisterBack
+            }
           >
-            <Button
-              variant="contained"
-              color="primary"
-              className={styles.registerPreviousButton}
-              onClick={handleRegisterBack}
-            >
-              {registerAndJoin
-                ? "Back to Previous Selection"
-                : "Back to Sign In"}
-            </Button>
-          </Grid>
+            {registerAndJoin ? "Back to Previous Selection" : "Back to Sign In"}
+          </Button>
         </Grid>
-        {!registerAndJoin && (
-          <Slide
-            in={!registerAndJoin}
-            direction={registerAndJoin ? "right" : "left"}
-            mountOnEnter
-            unmountOnExit
-          >
-            <div>
+      </Grid>
+      {!registerAndJoin && (
+        <Slide
+          in={!registerAndJoin}
+          direction={initialSlideFlag ? "right" : "left"}
+          mountOnEnter
+          unmountOnExit
+        >
+          <div>
+            <Grid
+              container
+              spacing={2}
+              direction="row"
+              className={styles.registerTilesGridContainer}
+            >
               <Grid
                 container
-                spacing={2}
-                direction="row"
-                className={styles.registerTilesGridContainer}
+                item
+                justifyContent="center"
+                xs={12}
+                sm={12}
+                md={12}
+                lg={12}
+                xl={12}
               >
-                <Grid
-                  container
-                  item
-                  justifyContent="center"
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  xl={12}
-                >
-                  <Card className={styles.registerCard}>
-                    <CardActionArea
-                      className={styles.registerCardAction}
-                      onClick={handleRegisterAndJoin}
-                    >
-                      {/* <CardMedia
+                <Card className={styles.registerCard}>
+                  <CardActionArea
+                    className={styles.registerCardAction}
+                    onClick={handleRegisterAndJoin}
+                  >
+                    {/* <CardMedia
                   image="/static/images/cards/contemplative-reptile.jpg"
                   title="Contemplative Reptile"
                 /> */}
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          Register and Join Organization
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          component="p"
-                        >
-                          Create an account with E-Deskio and join your
-                          organization
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </Grid>
-
-                <Grid
-                  container
-                  item
-                  justifyContent="center"
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  xl={12}
-                >
-                  <Card className={styles.registerCard}>
-                    <CardActionArea className={styles.registerCardAction}>
-                      {/* <CardMedia
-                  image="/static/images/cards/contemplative-reptile.jpg"
-                  title="Contemplative Reptile"
-                /> */}
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          Register and Create Organization
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          component="p"
-                        >
-                          Create an account with E-Deskio and create an
-                          organization
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </Grid>
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        Register and Join Organization
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="p"
+                      >
+                        Create an account with E-Deskio and join your
+                        organization
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
               </Grid>
-            </div>
-          </Slide>
-        )}
-        {registerAndJoin && (
-          <Slide
-            in={registerAndJoin}
-            direction="right"
-            mountOnEnter
-            unmountOnExit
-          >
-            <div>
-              <RegisterStepper />
-            </div>
-          </Slide>
-        )}
+
+              <Grid
+                container
+                item
+                justifyContent="center"
+                xs={12}
+                sm={12}
+                md={12}
+                lg={12}
+                xl={12}
+              >
+                <Card className={styles.registerCard}>
+                  <CardActionArea className={styles.registerCardAction}>
+                    {/* <CardMedia
+                  image="/static/images/cards/contemplative-reptile.jpg"
+                  title="Contemplative Reptile"
+                /> */}
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        Register and Create Organization
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="p"
+                      >
+                        Create an account with E-Deskio and create an
+                        organization
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            </Grid>
+          </div>
+        </Slide>
+      )}
+      {registerAndJoin && (
+        <Slide
+          in={registerAndJoin}
+          direction={registerAndJoin ? "left" : "right"}
+          mountOnEnter
+          unmountOnExit
+        >
+          <div>
+            <RegisterStepper />
+          </div>
+        </Slide>
+      )}
+      <Grid
+        container
+        spacing={0}
+        direction="row"
+        className={styles.registerFooterGridContainer}
+      >
         <Grid
           container
-          spacing={0}
-          direction="row"
-          className={styles.registerFooterGridContainer}
+          item
+          justifyContent="center"
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          xl={12}
         >
-          <Grid
-            container
-            item
-            justifyContent="center"
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            xl={12}
-          >
-            <Typography className={styles.registerCopyrightText}>
-              Copyright © E-Deskio 2022
-            </Typography>
-          </Grid>
+          <Typography className={styles.registerCopyrightText}>
+            Copyright © E-Deskio 2022
+          </Typography>
         </Grid>
-      </Paper>
+      </Grid>
     </>
   );
 };
