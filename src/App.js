@@ -1,5 +1,7 @@
 //Basic dependencies
 import React, { useState, useEffect } from "react";
+//import CssBaseline from "@material-ui/core/CssBaseline";
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import {
@@ -10,6 +12,9 @@ import {
 
 //Styling
 import "./App.css";
+
+//Pages
+import LandingPage from "./pages/LandingPage/LandingPage";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -55,7 +60,7 @@ const theme = createTheme({
       // dark: "#001d3e",
     },
     secondary: {
-      main: "#008B8B",
+      main: "#00cccc",
       light: "#00b3b3",
       dark: "#006666",
     },
@@ -72,6 +77,7 @@ const theme = createTheme({
       secondary: "#c2160a",
     },
   },
+
   breakpoints: {
     values: {
       xs: 0,
@@ -90,7 +96,9 @@ function App() {
 
   return (
     <React.Fragment>
+      {/* <CssBaseline /> */}
       <ThemeProvider theme={theme}>
+        <LandingPage />
         <Router>
           <Routes>
             <Route path="/" exact element={<div />} />
