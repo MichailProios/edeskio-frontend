@@ -230,7 +230,7 @@ const getSteps = () => {
   return ["Information", "Account", "Organization"];
 };
 
-const RegisterStepper = ({ handleRegisterBack }) => {
+const RegisterStepperJoin = ({ handleRegisterBack }) => {
   const styles = useStyles();
 
   const [activeStep, setActiveStep] = useState(0);
@@ -242,10 +242,6 @@ const RegisterStepper = ({ handleRegisterBack }) => {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
   };
 
   return (
@@ -359,4 +355,4 @@ const RegisterStepper = ({ handleRegisterBack }) => {
   );
 };
 
-export default RegisterStepper;
+export default RegisterStepperJoin;

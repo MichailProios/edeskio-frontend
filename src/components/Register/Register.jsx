@@ -24,7 +24,8 @@ import MuiImage from "material-ui-image";
 
 import logoOnly from "../../utilities/images/Logos/logo-only.png";
 
-import RegisterStepper from "./RegisterStepper";
+import RegisterStepperJoin from "./RegisterStepperJoin";
+import RegisterStepperCreate from "./RegisterStepperCreate";
 
 const useStyles = makeStyles((theme) => ({
   registerRoot: { width: "30em", height: "40em", overflow: "hidden" },
@@ -64,6 +65,7 @@ const Register = ({ handleRegisterBack }) => {
   const styles = useStyles();
 
   const [registerAndJoin, setRegisterAndJoin] = useState(false);
+  const [registerAndCreate, setRegisterAndCreate] = useState(false);
   const [initialSlideFlag, setInitialSlideFlag] = useState(false);
 
   const handleRegisterAndJoinBack = () => {
@@ -72,6 +74,13 @@ const Register = ({ handleRegisterBack }) => {
 
   const handleRegisterAndJoin = () => {
     setRegisterAndJoin(true);
+  };
+
+  const handleRegisterAndCreateBack = () => {
+    setRegisterAndCreate(false);
+  };
+  const handleRegisterAndCreate = () => {
+    setRegisterAndCreate(true);
   };
 
   useEffect(() => {
@@ -128,16 +137,22 @@ const Register = ({ handleRegisterBack }) => {
             color="primary"
             className={styles.registerPreviousButton}
             onClick={
-              registerAndJoin ? handleRegisterAndJoinBack : handleRegisterBack
+              registerAndJoin
+                ? handleRegisterAndJoinBack
+                : registerAndCreate
+                ? handleRegisterAndCreateBack
+                : handleRegisterBack
             }
           >
-            {registerAndJoin ? "Back to Previous Selection" : "Back to Sign In"}
+            {registerAndJoin || registerAndCreate
+              ? "Back to Previous Selection"
+              : "Back to Sign In"}
           </Button>
         </Grid>
       </Grid>
-      {!registerAndJoin && (
+      {!registerAndJoin && !registerAndCreate && (
         <Slide
-          in={!registerAndJoin}
+          in={!registerAndJoin && !registerAndCreate}
           direction={initialSlideFlag ? "right" : "left"}
           mountOnEnter
           unmountOnExit
@@ -196,7 +211,10 @@ const Register = ({ handleRegisterBack }) => {
                 xl={12}
               >
                 <Card className={styles.registerCard}>
-                  <CardActionArea className={styles.registerCardAction}>
+                  <CardActionArea
+                    className={styles.registerCardAction}
+                    onClick={handleRegisterAndCreate}
+                  >
                     {/* <CardMedia
                   image="/static/images/cards/contemplative-reptile.jpg"
                   title="Contemplative Reptile"
@@ -251,7 +269,20 @@ const Register = ({ handleRegisterBack }) => {
           unmountOnExit
         >
           <div>
-            <RegisterStepper handleRegisterBack={handleRegisterBack} />
+            <RegisterStepperJoin handleRegisterBack={handleRegisterBack} />
+          </div>
+        </Slide>
+      )}
+
+      {registerAndCreate && (
+        <Slide
+          in={registerAndCreate}
+          direction={registerAndCreate ? "left" : "right"}
+          mountOnEnter
+          unmountOnExit
+        >
+          <div>
+            <RegisterStepperCreate handleRegisterBack={handleRegisterBack} />
           </div>
         </Slide>
       )}
