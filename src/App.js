@@ -53,12 +53,28 @@ const useStyles = makeStyles((theme) => ({
 
 const theme = createTheme({
   palette: {
-    type: "light",
     primary: {
-      main: "#0ec6cb",
+      main: "#008B8B",
+      light: "#00b3b3",
+      dark: "#006666",
+      // dark: "#001d3e",
     },
     secondary: {
-      main: "#39a9f1",
+      main: "#00cccc",
+      light: "#00b3b3",
+      dark: "#006666",
+    },
+    // button: {
+    //   main: "#1d4369",
+    //   hover: "#4D8AC9",
+    // },
+    success: {
+      main: "#4caf50",
+      secondary: "#3e8e41",
+    },
+    error: {
+      main: "#f44336",
+      secondary: "#c2160a",
     },
   },
 
