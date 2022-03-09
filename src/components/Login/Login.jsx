@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 //Material-UI Styles
 import { makeStyles, useTheme } from "@material-ui/styles";
@@ -14,6 +14,10 @@ import {
   Typography,
   Link,
 } from "@material-ui/core";
+
+import { useSelector, useDispatch } from "react-redux";
+
+import { postUserLoginAction } from "../../redux/user/userActions";
 
 import MuiImage from "material-ui-image";
 
@@ -67,6 +71,25 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = ({ handleRegister }) => {
   const styles = useStyles();
+  const dispatch = useDispatch();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    setUsername("");
+    setPassword("");
+    dispatch(postUserLoginAction(username, password));
+  };
+
+  const handleUsername = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
   return (
     <>
       <Grid
@@ -106,6 +129,8 @@ const Login = ({ handleRegister }) => {
             label="Username"
             variant="outlined"
             required={true}
+            value={username}
+            onChange={handleUsername}
             className={styles.loginTextfields}
           />
         </Grid>
@@ -123,6 +148,9 @@ const Login = ({ handleRegister }) => {
             label="Password"
             variant="outlined"
             required={true}
+            type="password"
+            value={password}
+            onChange={handlePassword}
             className={styles.loginTextfields}
           />
         </Grid>
@@ -155,6 +183,7 @@ const Login = ({ handleRegister }) => {
           <Button
             variant="contained"
             color="primary"
+            onClick={handleLogin}
             className={styles.loginSignInButton}
           >
             Sign In

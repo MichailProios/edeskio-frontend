@@ -1,294 +1,354 @@
 import axios from "axios";
 import {
-  FETCH_USER_REQUEST,
-  FETCH_USER_SUCCESS,
-  FETCH_USER_FAILURE,
-  FETCH_USER_CALENDAR_REQUEST,
-  FETCH_USER_CALENDAR_SUCCESS,
-  FETCH_USER_CALENDAR_FAILURE,
-  FETCH_USER_API_TOKEN_REQUEST,
-  FETCH_USER_API_TOKEN_SUCCESS,
-  FETCH_USER_API_TOKEN_FAILURE,
-  FETCH_USER_GRAPH_TOKEN_REQUEST,
-  FETCH_USER_GRAPH_TOKEN_SUCCESS,
-  FETCH_USER_GRAPH_TOKEN_FAILURE,
+  POST_USER_LOGIN_REQUEST,
+  POST_USER_LOGIN_SUCCESS,
+  POST_USER_LOGIN_FAILURE,
+  GET_USER_ORGANIZATIONS_REQUEST,
+  GET_USER_ORGANIZATIONS_SUCCESS,
+  GET_USER_ORGANIZATIONS_FAILURE,
+  POST_USER_REGISTER_NEW_ORGANIZAITON_REQUEST,
+  POST_USER_REGISTER_NEW_ORGANIZAITON_SUCCESS,
+  POST_USER_REGISTER_NEW_ORGANIZAITON_FAILURE,
+  POST_USER_REGISTER_EXISTING_ORGANIZAITON_REQUEST,
+  POST_USER_REGISTER_EXISTING_ORGANIZAITON_SUCCESS,
+  POST_USER_REGISTER_EXISTING_ORGANIZAITON_FAILURE,
 } from "./userTypes";
 
 import { store } from "../store";
 
-import { getGraphApiToken } from "../../utilities/azure/MsGraphApiCall";
-
-import { getMaximApiToken } from "../../utilities/azure/MaximApiCall";
-
 import { endpoints } from "./userEndpoints";
 
-export const getUser = () => {
+/**************************************************************************************************************/
+export const postUserLoginAction = (username, password) => {
   return async (dispatch) => {
-    dispatch(getGraphTokenRequest());
-
-    await getGraphApiToken()
+    dispatch(postUserLoginRequest());
+    await postUserLoginWithAxios(username, password)
       .then((response) => {
-        dispatch(getGraphTokenSuccess(response.accessToken));
+        dispatch(postUserLoginSuccess(response));
       })
       .catch((error) => {
-        dispatch(getGraphTokenFailure(error.message));
-      });
-
-    dispatch(getApiTokenRequest());
-
-    await getMaximApiToken()
-      .then((response) => {
-        dispatch(getApiTokenSuccess(response.accessToken));
-      })
-      .catch((error) => {
-        dispatch(getApiTokenFailure(error.message));
-      });
-
-    dispatch(getUserRequest());
-
-    await getUserWithAxios()
-      .then((response) => {
-        dispatch(getUserSuccess(response));
-      })
-      .catch((error) => {
-        dispatch(getUserFailure(error.message));
-      });
-
-    dispatch(getUserCalendarRequest());
-    await getUserCalendarWithAxios()
-      .then((response) => {
-        dispatch(getUserCalendarSuccess(response));
-      })
-      .catch((error) => {
-        dispatch(getUserCalendarFailure(error.message));
+        dispatch(postUserLoginFailure(error.message));
       });
   };
 };
 
-const getUserCalendarWithAxios = async () => {
-  let calendar = [];
-
-  await getCalendarData().then((response) => {
-    calendar.push(response);
-  });
-
-  return calendar;
-};
-
-const getUserWithAxios = async () => {
+const postUserLoginWithAxios = async (username, password) => {
   var user = [];
-  var modules = [];
-  var options = [];
-  var empData = [];
-  var supervisor = [];
-  var salesAsst = [];
-  var chysql1EmpData = [];
 
-  await getUserInfoData().then((response) => {
+  await postUserLogin(username, password).then((response) => {
     user.push(response);
   });
-  await getModulesData().then((response) => {
-    modules.push(response);
-  });
-  await getOptionsData().then((response) => {
-    options.push(response);
-  });
 
-  await getEmpData(user[0].data.mail.toLowerCase()).then((response) => {
-    empData.push(response);
-  });
-
-  await getSupervisorData(empData[0].data.tblEmpData[0].SupervisorCrd).then(
-    (response) => {
-      supervisor.push(response);
-    }
-  );
-
-  await getSalesAsstData(empData[0].data.tblEmpData[0].SlsAssist).then(
-    (response) => {
-      salesAsst.push(response);
-    }
-  );
-
-  await getCHYSQL1EmpData(user[0].data.mail.toLowerCase()).then((response) => {
-    chysql1EmpData.push(response);
+  await getUserSession().then((response) => {
+    user.push(response);
   });
 
   return {
-    modules,
-    options,
     user,
-    empData,
-    supervisor,
-    salesAsst,
-    chysql1EmpData,
   };
 };
 
-function getSupervisorData(supervisorCrd) {
-  return axios.get(endpoints.employeeByCRD, {
+const getUserSession = (username, password) => {
+  return axios.get(endpoints.userSession, {
     headers: {
-      Authorization: "Bearer " + getApiTokenState(),
       "Content-Type": "application/json",
-    },
-    params: {
-      crd: supervisorCrd,
     },
   });
-}
+};
 
-function getEmpData(userEmail) {
-  return axios.get(endpoints.employeeByEmail, {
-    headers: {
-      Authorization: "Bearer " + getApiTokenState(),
-      "Content-Type": "application/json",
+const postUserLogin = (username, password) => {
+  console.log(username);
+  return axios.post(
+    endpoints.loginUser,
+    {
+      username: username,
+      password: password,
     },
-    params: {
-      email: userEmail,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      withCredentials: true,
+    }
+  );
+};
+
+const postUserLoginRequest = () => {
+  return {
+    type: POST_USER_LOGIN_REQUEST,
+  };
+};
+
+const postUserLoginSuccess = (data) => {
+  alert("Authorized");
+  return {
+    type: POST_USER_LOGIN_SUCCESS,
+    payload: data,
+  };
+};
+
+const postUserLoginFailure = (error) => {
+  alert("Not Authorized");
+  return {
+    type: POST_USER_LOGIN_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const getUserOrganizationAction = () => {
+  return async (dispatch) => {
+    dispatch(getUserOrganizationRequest());
+    await getUserOrganizationWithAxios()
+      .then((response) => {
+        dispatch(getUserOrganizationSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getUserOrganizationFailure(error.message));
+      });
+  };
+};
+
+const getUserOrganizationWithAxios = async () => {
+  var organizations = [];
+
+  await getUserOrganizations().then((response) => {
+    organizations.push(response);
+  });
+
+  return {
+    organizations,
+  };
+};
+
+const getUserOrganizations = (username, password) => {
+  return axios.get(endpoints.organizationsAll, {
+    headers: {
+      "Content-Type": "application/json",
     },
   });
-}
+};
 
-function getCHYSQL1EmpData(email) {
-  return axios.get(endpoints.chysql1EmpData, {
-    headers: {
-      Authorization: "Bearer " + getApiTokenState(),
-      "Content-Type": "application/json",
-    },
-    params: {
+const getUserOrganizationRequest = () => {
+  return {
+    type: GET_USER_ORGANIZATIONS_REQUEST,
+  };
+};
+
+const getUserOrganizationSuccess = (data) => {
+  return {
+    type: GET_USER_ORGANIZATIONS_SUCCESS,
+    payload: data,
+  };
+};
+
+const getUserOrganizationFailure = (error) => {
+  return {
+    type: GET_USER_ORGANIZATIONS_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const postUserRegisterExistingOrganizationAction = (
+  email,
+  userName,
+  password,
+  firstName,
+  lastName,
+  companyName
+) => {
+  return async (dispatch) => {
+    dispatch(postUserRegisterExistingOrganizationRequest());
+    await postUserRegisterExistingOrganizationAxios(
+      email,
+      userName,
+      password,
+      firstName,
+      lastName,
+      companyName
+    )
+      .then((response) => {
+        dispatch(postUserRegisterExistingOrganizationSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(postUserRegisterExistingOrganizationFailure(error.message));
+      });
+  };
+};
+
+const postUserRegisterExistingOrganizationAxios = async (
+  email,
+  userName,
+  password,
+  firstName,
+  lastName,
+  companyName
+) => {
+  var reponse = [];
+
+  await postUserRegisterExistingOrganization(
+    email,
+    userName,
+    password,
+    firstName,
+    lastName,
+    companyName
+  ).then((response) => {
+    reponse.push(response);
+  });
+
+  return {
+    reponse,
+  };
+};
+
+const postUserRegisterExistingOrganization = (
+  email,
+  userName,
+  password,
+  firstName,
+  lastName,
+  companyName
+) => {
+  return axios.post(
+    endpoints.registerUserExistingOrganization,
+    {
       email: email,
+      userName: userName,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+      companyName: companyName,
     },
-  });
-}
-function getSalesAsstData(salesAsstCrd) {
-  return axios.get(endpoints.employeeByCRD, {
-    headers: {
-      Authorization: "Bearer " + getApiTokenState(),
-      "Content-Type": "application/json",
-    },
-    params: {
-      crd: salesAsstCrd,
-    },
-  });
-}
-function getCalendarData() {
-  return axios.get(endpoints.calendar, {
-    headers: {
-      Authorization: "Bearer " + getGraphTokenState(),
-    },
-  });
-}
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
 
-function getUserInfoData() {
-  return axios.get(endpoints.userInfo, {
-    headers: {
-      Authorization: "Bearer " + getGraphTokenState(),
-    },
-  });
-}
-
-function getModulesData() {
-  return axios.get(endpoints.modules, {
-    headers: {
-      Authorization: "Bearer " + getApiTokenState(),
-    },
-  });
-}
-
-function getOptionsData() {
-  return axios.get(endpoints.options, {
-    headers: {
-      Authorization: "Bearer " + getApiTokenState(),
-    },
-  });
-}
-
-const getUserRequest = () => {
+const postUserRegisterExistingOrganizationRequest = (error) => {
   return {
-    type: FETCH_USER_REQUEST,
+    type: POST_USER_REGISTER_EXISTING_ORGANIZAITON_REQUEST,
+    payload: error,
   };
 };
 
-const getUserSuccess = (data) => {
+const postUserRegisterExistingOrganizationSuccess = (data) => {
   return {
-    type: FETCH_USER_SUCCESS,
+    type: POST_USER_REGISTER_EXISTING_ORGANIZAITON_SUCCESS,
     payload: data,
   };
 };
 
-const getUserFailure = (error) => {
+const postUserRegisterExistingOrganizationFailure = () => {
   return {
-    type: FETCH_USER_FAILURE,
+    type: POST_USER_REGISTER_EXISTING_ORGANIZAITON_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+export const postUserRegisterNewOrganizationAction = (
+  email,
+  userName,
+  password,
+  firstName,
+  lastName,
+  companyName
+) => {
+  return async (dispatch) => {
+    dispatch(postUserRegisterNewOrganizationRequest());
+    await postUserRegisterNewOrganizationAxios(
+      email,
+      userName,
+      password,
+      firstName,
+      lastName,
+      companyName
+    )
+      .then((response) => {
+        dispatch(postUserRegisterNewOrganizationSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(postUserRegisterNewOrganizationFailure(error.message));
+      });
+  };
+};
+
+const postUserRegisterNewOrganizationAxios = async (
+  email,
+  userName,
+  password,
+  firstName,
+  lastName,
+  companyName
+) => {
+  var reponse = [];
+
+  await postUserRegisterNewOrganization(
+    email,
+    userName,
+    password,
+    firstName,
+    lastName,
+    companyName
+  ).then((response) => {
+    reponse.push(response);
+  });
+
+  return {
+    reponse,
+  };
+};
+
+const postUserRegisterNewOrganization = (
+  email,
+  userName,
+  password,
+  firstName,
+  lastName,
+  companyName
+) => {
+  console.log(companyName);
+  return axios.post(
+    endpoints.registerUserNewOrganization,
+    {
+      email: email,
+      userName: userName,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+      companyName: companyName,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const postUserRegisterNewOrganizationRequest = (error) => {
+  return {
+    type: POST_USER_REGISTER_NEW_ORGANIZAITON_REQUEST,
     payload: error,
   };
 };
 
-const getUserCalendarRequest = () => {
+const postUserRegisterNewOrganizationSuccess = (data) => {
   return {
-    type: FETCH_USER_CALENDAR_REQUEST,
-  };
-};
-
-const getUserCalendarSuccess = (data) => {
-  return {
-    type: FETCH_USER_CALENDAR_SUCCESS,
+    type: POST_USER_REGISTER_NEW_ORGANIZAITON_SUCCESS,
     payload: data,
   };
 };
 
-const getUserCalendarFailure = (error) => {
+const postUserRegisterNewOrganizationFailure = () => {
   return {
-    type: FETCH_USER_CALENDAR_FAILURE,
-    payload: error,
+    type: POST_USER_REGISTER_NEW_ORGANIZAITON_FAILURE,
   };
 };
-
-const getGraphTokenRequest = () => {
-  return {
-    type: FETCH_USER_GRAPH_TOKEN_REQUEST,
-  };
-};
-
-const getGraphTokenSuccess = (token) => {
-  return {
-    type: FETCH_USER_GRAPH_TOKEN_SUCCESS,
-    payload: token,
-  };
-};
-
-const getGraphTokenFailure = (error) => {
-  return {
-    type: FETCH_USER_GRAPH_TOKEN_FAILURE,
-    payload: error,
-  };
-};
-
-const getApiTokenRequest = () => {
-  return {
-    type: FETCH_USER_API_TOKEN_REQUEST,
-  };
-};
-
-const getApiTokenSuccess = (token) => {
-  return {
-    type: FETCH_USER_API_TOKEN_SUCCESS,
-    payload: token,
-  };
-};
-
-const getApiTokenFailure = (error) => {
-  return {
-    type: FETCH_USER_API_TOKEN_FAILURE,
-    payload: error,
-  };
-};
-
-function getGraphTokenState() {
-  let state = store.getState();
-  return state.User.graphToken;
-}
-
-function getApiTokenState() {
-  let state = store.getState();
-  return state.User.apiToken;
-}

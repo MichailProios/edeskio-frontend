@@ -3,6 +3,8 @@ import React, { useState } from "react";
 //Material-UI Styles
 import { makeStyles, useTheme } from "@material-ui/styles";
 
+import { useSelector, useDispatch } from "react-redux";
+
 import {
   Paper,
   Grid,
@@ -26,6 +28,8 @@ import {
 
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
+import { postUserRegisterExistingOrganizationAction } from "../../redux/user/userActions";
+
 const useStyles = makeStyles((theme) => ({
   registerStepper: { userSelect: "none", userDrag: "none" },
   registerStepperContentGridContainer: {},
@@ -38,7 +42,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const getStepContent = (step, styles) => {
+const getStepContent = (
+  step,
+  styles,
+  firstName,
+  lastName,
+  email,
+  username,
+  password,
+  companyName,
+  handleFirstName,
+  handleLastName,
+  handleEmail,
+  handleUsername,
+  handlePassword,
+  handleCompanyName,
+  setCompanyName,
+  organizations
+) => {
   switch (step) {
     case 0:
       return (
@@ -57,6 +78,8 @@ const getStepContent = (step, styles) => {
               label="First Name"
               variant="outlined"
               required={true}
+              value={firstName}
+              onChange={handleFirstName}
               className={styles.registerTextfields}
             />
           </Grid>
@@ -74,6 +97,8 @@ const getStepContent = (step, styles) => {
               label="Last Name"
               variant="outlined"
               required={true}
+              value={lastName}
+              onChange={handleLastName}
               className={styles.registerTextfields}
             />
           </Grid>
@@ -91,10 +116,12 @@ const getStepContent = (step, styles) => {
               label="Organization Email Address"
               variant="outlined"
               required={true}
+              value={email}
+              onChange={handleEmail}
               className={styles.registerTextfields}
             />
           </Grid>
-          <Grid
+          {/* <Grid
             container
             item
             justifyContent="center"
@@ -127,7 +154,7 @@ const getStepContent = (step, styles) => {
               required={false}
               className={styles.registerTextfields}
             />
-          </Grid>
+          </Grid> */}
         </>
       );
     case 1:
@@ -147,6 +174,8 @@ const getStepContent = (step, styles) => {
               label="Username"
               variant="outlined"
               required={true}
+              onChange={handleUsername}
+              value={username}
               className={styles.registerTextfields}
             />
           </Grid>
@@ -164,10 +193,13 @@ const getStepContent = (step, styles) => {
               label="Password"
               variant="outlined"
               required={true}
+              type="password"
+              onChange={handlePassword}
+              value={password}
               className={styles.registerTextfields}
             />
           </Grid>
-          <Grid
+          {/* <Grid
             container
             item
             justifyContent="center"
@@ -180,10 +212,11 @@ const getStepContent = (step, styles) => {
             <TextField
               label="Re-Enter Password"
               variant="outlined"
+              type="password"
               required={true}
               className={styles.registerTextfields}
             />
-          </Grid>
+          </Grid> */}
         </>
       );
     case 2:
@@ -200,14 +233,19 @@ const getStepContent = (step, styles) => {
             xl={12}
           >
             <Autocomplete
-              options={temp}
-              getOptionLabel={(option) => option.title}
+              options={organizations}
+              getOptionLabel={(option) => option.Name}
               className={styles.registerTextfields}
+              onChange={(event) => {
+                setCompanyName(event.target.textContent);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   required={true}
                   label="Organization Name"
+                  value={companyName}
+                  onChange={handleCompanyName}
                   variant="outlined"
                 />
               )}
@@ -220,18 +258,13 @@ const getStepContent = (step, styles) => {
   }
 };
 
-const temp = [
-  { title: "Business1" },
-  { title: "Business2" },
-  { title: "Business3" },
-];
-
 const getSteps = () => {
   return ["Information", "Account", "Organization"];
 };
 
 const RegisterStepperJoin = ({ handleRegisterBack }) => {
   const styles = useStyles();
+  const dispatch = useDispatch();
 
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
@@ -242,6 +275,54 @@ const RegisterStepperJoin = ({ handleRegisterBack }) => {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [companyName, setCompanyName] = useState("");
+
+  const organizations = useSelector((state) => state.User.organizations);
+
+  const handleRegister = () => {
+    dispatch(
+      postUserRegisterExistingOrganizationAction(
+        email,
+        username,
+        password,
+        firstName,
+        lastName,
+        companyName
+      )
+    );
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleFirstName = (e) => {
+    setFirstName(e.target.value);
+  };
+
+  const handleLastName = (e) => {
+    setLastName(e.target.value);
+  };
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleUsername = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleCompanyName = (e) => {
+    setCompanyName(e.target.value);
   };
 
   return (
@@ -308,7 +389,24 @@ const RegisterStepperJoin = ({ handleRegisterBack }) => {
             direction="row"
             className={styles.registerStepperContentGridContainer}
           >
-            {getStepContent(activeStep, styles)}
+            {getStepContent(
+              activeStep,
+              styles,
+              firstName,
+              lastName,
+              email,
+              username,
+              password,
+              companyName,
+              handleFirstName,
+              handleLastName,
+              handleEmail,
+              handleUsername,
+              handlePassword,
+              handleCompanyName,
+              setCompanyName,
+              organizations
+            )}
 
             <Grid
               container
@@ -342,7 +440,9 @@ const RegisterStepperJoin = ({ handleRegisterBack }) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleNext}
+                onClick={
+                  activeStep === steps.length - 1 ? handleRegister : handleNext
+                }
                 className={styles.registerStepperNextBackButtons}
               >
                 {activeStep === steps.length - 1 ? "Register" : "Next"}
