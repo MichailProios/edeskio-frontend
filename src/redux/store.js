@@ -14,9 +14,7 @@ import storage from "redux-persist/lib/storage";
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: [
-    "User",
-  ],
+  blacklist: ["User"],
 };
 
 const userPersistConfig = {
@@ -43,7 +41,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export const store = createStore(
   persistedReducer,
   initialState,
-  composeEnhancers(applyMiddleware(...middleware)), //new way for ReduxDevTools
+  composeEnhancers(applyMiddleware(...middleware)) //new way for ReduxDevTools
 );
 
 export const persistor = persistStore(store);

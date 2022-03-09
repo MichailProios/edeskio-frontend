@@ -9,12 +9,17 @@ import Register from "../../components/Register/Register";
 
 import Login from "../../components/Login/Login";
 
+import { useSelector, useDispatch } from "react-redux";
+import { getUserOrganizationAction } from "../../redux/user/userActions";
+
 const useStyles = makeStyles((theme) => ({
   root: { width: "30em", height: "40em", overflow: "hidden" },
 }));
 
 const LandingPage = () => {
   const styles = useStyles();
+  const dispatch = useDispatch();
+
   const [register, setRegister] = useState(false);
   const [initialSlideFlag, setInitialSlideFlag] = useState(false);
 
@@ -25,6 +30,10 @@ const LandingPage = () => {
   const handleRegister = () => {
     setRegister(true);
   };
+
+  useEffect(() => {
+    dispatch(getUserOrganizationAction());
+  }, [dispatch]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
