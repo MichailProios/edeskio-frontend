@@ -13,8 +13,7 @@ import {
 //Styling
 import "./App.css";
 
-//Pages
-import LandingPage from "./pages/LandingPage/LandingPage";
+import routes from "./utilities/routes.jsx";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -91,17 +90,21 @@ const theme = createTheme({
   },
 });
 
-function App() {
+const App = () => {
   const styles = useStyles();
+
+  const routeComponents = routes.map(({ path, component }, key) => (
+    <Route path={path} exact element={component} key={key} />
+  ));
 
   return (
     <React.Fragment>
       {/* <CssBaseline /> */}
       <ThemeProvider theme={theme}>
-        <LandingPage />
+        {/*<LandingPage />*/}
         <Router>
           <Routes>
-            <Route path="/" exact element={<div />} />
+              <Route>{routeComponents}</Route>
           </Routes>
         </Router>
       </ThemeProvider>
