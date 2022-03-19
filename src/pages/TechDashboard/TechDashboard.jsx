@@ -5,10 +5,6 @@ import { makeStyles, useTheme } from "@material-ui/styles";
 
 import { Slide, Paper, Grid, TextField, Card, CardContent, Typography, CardHeader, Divider } from "@material-ui/core";
 
-import Register from "../../components/Register/Register";
-
-import Login from "../../components/Login/Login";
-
 import { useSelector, useDispatch } from "react-redux";
 import { getUserOrganizationAction } from "../../redux/user/userActions";
 
