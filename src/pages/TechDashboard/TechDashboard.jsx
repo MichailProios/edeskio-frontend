@@ -7,6 +7,7 @@ import { Slide, Paper, Grid, TextField, Card, CardContent, Typography, CardHeade
 
 import { useSelector, useDispatch } from "react-redux";
 import { getUserOrganizationAction } from "../../redux/user/userActions";
+import TicketCard from "../../components/Tickets/TicketCard";
 
 const useStyles = makeStyles({
   root: {
@@ -15,24 +16,6 @@ const useStyles = makeStyles({
   ticketCard: {
     width: "80%"
   },
-  cardHeader: {
-    display: "flex",
-    width: "100%",
-    justifyContent: "space-between",
-  },
-  cardFooter: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
-  subject: {
-    fontSize: "14pt",
-  },
-  ticketID: {
-    fontSize: "12pt",
-  },
-  description: {
-    fontSize: "10pt",
-  }
 });
 
 const data = [
@@ -163,37 +146,21 @@ const TechDashboard = () => {
   const [ticketData, setTicketData] = useState(data);
     //setTicketData(data);
 
-    console.log(data[0]);
-
   return (
     <>
       <div className={styles.root}>
         {/*<Grid container spacing={4}>*/}
         <Grid
           container
-          spacing={2}
+          spacing={1}
           direction="column"
           alignItems="center"
           justifyContent="center"
         >
         {ticketData.map((ticket) => {
-          console.log("T", ticket);
           return (
-            <Grid item className={styles.ticketCard}>
-            <Card>
-              <CardContent>
-                <Typography className={styles.subject}>
-                  {ticket.Subject}
-                </Typography>
-                <a href="/" className={styles.ticketID}>
-                  Ticket #{ticket.ID}
-                </a>
-                <Divider />
-                <Typography className={styles.description}>
-                  {ticket.Description}
-                </Typography>
-              </CardContent>
-            </Card>
+            <Grid item className={styles.ticketCard} key={ticket.ID}>
+              <TicketCard ticket={ticket} />
             </Grid>
           );
         })

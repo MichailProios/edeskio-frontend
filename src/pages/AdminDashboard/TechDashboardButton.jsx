@@ -48,7 +48,7 @@ const TechDashboardButton = () => {
       <CardActionArea
         className={styles.actionArea}
         component={Link}
-        to="/"
+        to="/techdashboard"
       >
         <CardHeader
           title={<CgViewList size={100} color={theme.palette.primary.main} />}
