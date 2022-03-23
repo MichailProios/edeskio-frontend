@@ -2,6 +2,9 @@ import {
   POST_USER_LOGIN_REQUEST,
   POST_USER_LOGIN_SUCCESS,
   POST_USER_LOGIN_FAILURE,
+  GET_USER_SESSION_FAILURE,
+  GET_USER_SESSION_REQUEST,
+  GET_USER_SESSION_SUCCESS,
   GET_USER_ORGANIZATIONS_REQUEST,
   GET_USER_ORGANIZATIONS_SUCCESS,
   GET_USER_ORGANIZATIONS_FAILURE,
@@ -23,6 +26,7 @@ export const initialState = {
   successfull: false,
   authenticated: false,
   organizations: [],
+  sessionUser: {},
   error: "",
 };
 
@@ -39,8 +43,32 @@ export const UserReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         successfull: true,
+        sessionUser: action.payload.user[0].data.session.passport.user,
+        authenticated: action.payload.user[0].data.isAuthenticated,
       };
     case POST_USER_LOGIN_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case GET_USER_SESSION_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case GET_USER_SESSION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        successfull: true,
+        sessionUser: action.payload.session[0].data.session.passport.user,
+        authenticated: action.payload.session[0].data.isAuthenticated,
+      };
+    case GET_USER_SESSION_FAILURE:
       return {
         ...state,
         loading: false,

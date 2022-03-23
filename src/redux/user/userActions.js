@@ -3,6 +3,9 @@ import {
   POST_USER_LOGIN_REQUEST,
   POST_USER_LOGIN_SUCCESS,
   POST_USER_LOGIN_FAILURE,
+  GET_USER_SESSION_FAILURE,
+  GET_USER_SESSION_REQUEST,
+  GET_USER_SESSION_SUCCESS,
   GET_USER_ORGANIZATIONS_REQUEST,
   GET_USER_ORGANIZATIONS_SUCCESS,
   GET_USER_ORGANIZATIONS_FAILURE,
@@ -39,21 +42,13 @@ const postUserLoginWithAxios = async (username, password) => {
     user.push(response);
   });
 
-  await getUserSession().then((response) => {
-    user.push(response);
-  });
+  // await getUserSession().then((response) => {
+  //   user.push(response);
+  // });
 
   return {
     user,
   };
-};
-
-const getUserSession = (username, password) => {
-  return axios.get(endpoints.userSession, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 };
 
 const postUserLogin = (username, password) => {
@@ -81,7 +76,7 @@ const postUserLoginRequest = () => {
 };
 
 const postUserLoginSuccess = (data) => {
-  alert("Authorized");
+  // alert("Authorized");
   return {
     type: POST_USER_LOGIN_SUCCESS,
     payload: data,
@@ -89,9 +84,70 @@ const postUserLoginSuccess = (data) => {
 };
 
 const postUserLoginFailure = (error) => {
-  alert("Not Authorized");
+  // alert("Not Authorized");
   return {
     type: POST_USER_LOGIN_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const getUserSessionAction = (username, password) => {
+  return async (dispatch) => {
+    dispatch(getUserSessionRequest());
+    await getUserSessionWithAxios(username, password)
+      .then((response) => {
+        dispatch(getUserSessionSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getUserSessionFailure(error.message));
+      });
+  };
+};
+
+const getUserSessionWithAxios = async (username, password) => {
+  var session = [];
+
+  // await postUserLogin(username, password).then((response) => {
+  //   user.push(response);
+  // });
+
+  await getUserSession().then((response) => {
+    session.push(response);
+  });
+
+  return {
+    session,
+  };
+};
+
+const getUserSession = (username, password) => {
+  return axios.get(endpoints.userSession, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+const getUserSessionRequest = () => {
+  return {
+    type: GET_USER_SESSION_REQUEST,
+  };
+};
+
+const getUserSessionSuccess = (data) => {
+  // alert("Authorized");
+  return {
+    type: GET_USER_SESSION_SUCCESS,
+    payload: data,
+  };
+};
+
+const getUserSessionFailure = (error) => {
+  // alert("Not Authorized");
+  return {
+    type: GET_USER_SESSION_FAILURE,
     payload: error,
   };
 };

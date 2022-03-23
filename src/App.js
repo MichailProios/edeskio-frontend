@@ -10,10 +10,17 @@ import {
   makeStyles,
 } from "@material-ui/core/styles";
 
+import { useSelector, useDispatch } from "react-redux";
+
+import LandingPage from "./pages/LandingPage/LandingPage.jsx";
+import Authenticated from "./components/Authenticated/Authenticated.jsx";
+
 //Styling
 import "./App.css";
 
-import routes from "./utilities/routes.jsx";
+import routes from "./utilities/routes/routes.jsx";
+import UnAuthenticated from "./components/UnAuthenticated/UnAuthenticated.jsx";
+import { getUserSessionAction } from "./redux/user/userActions.js";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -93,23 +100,35 @@ const theme = createTheme({
 const App = () => {
   const styles = useStyles();
 
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.User.authenticated);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      dispatch(getUserSessionAction());
+    }
+  }, [dispatch, isAuthenticated]);
+
   const routeComponents = routes.map(({ path, component }, key) => (
     <Route path={path} exact element={component} key={key} />
   ));
 
   return (
     <React.Fragment>
-      {/* <CssBaseline /> */}
       <ThemeProvider theme={theme}>
-        {/*<LandingPage />*/}
-        <Router>
-          <Routes>
+        <UnAuthenticated>
+          <LandingPage />
+        </UnAuthenticated>
+        <Authenticated>
+          <Router>
+            <Routes>
               <Route>{routeComponents}</Route>
-          </Routes>
-        </Router>
+            </Routes>
+          </Router>
+        </Authenticated>
       </ThemeProvider>
     </React.Fragment>
   );
-}
+};
 
 export default App;
