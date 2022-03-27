@@ -48,7 +48,7 @@ const UserSubmitNewTicketButton = () => {
       <CardActionArea
         className={styles.actionArea}
         component={Link}
-        to="/"
+        to="/submitticket"
       >
         <CardHeader
           title={<IoDocumentText size={100} color={theme.palette.primary.main} />}

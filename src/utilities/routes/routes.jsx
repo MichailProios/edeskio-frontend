@@ -4,6 +4,7 @@ import AdminDashboard from "../../pages/AdminDashboard/AdminDashboard.jsx";
 import HelpdeskAdmin from "../../pages/AdminDashboard/HelpdeskAdmin.jsx";
 
 import LandingPage from "../../pages/LandingPage/LandingPage.jsx";
+import TicketForm from "../../pages/SubmitTicket/TicketForm.jsx";
 
 export const routes = [];
 
@@ -21,6 +22,10 @@ routes.push(
   {
     path: "/userdashboard",
     component: <UserDashboard />,
+  },
+  {
+    path: "/submitticket",
+    component: <TicketForm />,
   },
   {
     path: "/techdashboard",
