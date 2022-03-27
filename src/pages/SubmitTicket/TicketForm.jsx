@@ -60,6 +60,18 @@ const useStyles = makeStyles((theme) => ({
       fontSize: ".85em",
     },
   },
+  chipField: {
+    width: "100%",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: ".85em",
+    },
+    display: 'flex',
+    flexWrap: 'wrap',
+    '& > *': {
+      margin: theme.spacing(0.5),
+    },
+    paddingBottom: "10px",
+  },
   queryButton: {
     backgroundColor: theme.palette.primary.main,
     color: "#f3f3f3",
@@ -162,48 +174,80 @@ const TicketForm = () => {
 
   const [selectedCategories, setSelectedCategories] = useState(["All"]);
   const [selectedCategoryTags, setSelectedCategoryTags] = useState( [... new Set(tblTags.map(tag => tag))] );
-  const [selectedTagsChips, setSelectedTagsChips] = useState([])
+  const [selectedTagsChips, setSelectedTagsChips] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
-
-
-  console.log("uniq",uniqTagCategories);
-  console.log("tags",selectedCategoryTags);
-  console.log("selected",selectedTags);
-
-
 
   const handleCagetoryChange = (e) => {
 
-    let newCategory = e.target.value;
+    let newCategories = [];
 
-    setSelectedCategories(newCategory);
+    if (e.target.value.length > selectedCategories.length)
+    {
+      let newestCategory = e.target.value[e.target.value.length - 1];
+
+      if ( newestCategory === "All" )
+      {
+        newCategories = ["All"];
+      }
+      else
+      {
+        e.target.value.forEach((category) => { if (category !== "All") {newCategories.push(category)} })
+      }
+    }
+    else
+    {
+      newCategories = e.target.value;
+    }
+
+    setSelectedCategories(newCategories);
 
     let newTags = [];
 
     tblTags.forEach((tag) => {
-        if ( newCategory.includes(tag.Category) || newCategory.includes("All") )
-        {
-            newTags.push(tag);
-        }
+      if ( newCategories.includes(tag.Category) || newCategories.includes("All") )
+      {
+        newTags.push(tag);
+      }
     });
 
     setSelectedCategoryTags(newTags);
   }
 
   const handleTagsChange = (e) => {
-    
-    const indexOfNewestTag = e.target.value.length - 1;
-    const tagFromtbl = tblTags.find(
-      (record) => record.Type === e.target.value[indexOfNewestTag],
-    );
 
-    let newChips = e.target.value.map((tagType) => {
-      return <Chip label={tagType} key={tagType} />;
-    })
-    
+    let newChips = [];
+
+    e.target.value.forEach((tag) => {
+
+      const tagFromtbl = tblTags.find(
+        (record) => record.Type === tag,
+      );
+
+      if (tagFromtbl.Category === "Operating System")
+      {
+        newChips.push( <Chip label={tag} key={tag} style={{backgroundColor:'#3399ff', color: "#ffffff"}} onDelete={handleTagChipDelete.bind(this, tag)} /> );
+      }
+      else if (tagFromtbl.Category === "Hardware")
+      {
+        newChips.push( <Chip label={tag} key={tag} style={{backgroundColor:'#cc0000', color: "#ffffff"}} onDelete={handleTagChipDelete.bind(this, tag)} /> );
+      }
+      else if (tagFromtbl.Category === "Software")
+      {
+        newChips.push( <Chip label={tag} key={tag} style={{backgroundColor:'#0000ff', color: "#ffffff"}} onDelete={handleTagChipDelete.bind(this, tag)} /> );
+      }
+    });
+
     setSelectedTagsChips(newChips);
     setSelectedTags(e.target.value);
   }
+
+  console.log("selectedTagsChips", selectedTagsChips);
+
+  const handleTagChipDelete = (deletedTag, e) => {
+
+    setSelectedTagsChips((chips) => chips.filter((chip) => chip.key !== deletedTag));
+    setSelectedTags((tags) => tags.filter((tag) => tag !== deletedTag));
+  };
 
     return (
       <>
@@ -261,7 +305,7 @@ const TicketForm = () => {
             <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
               <div
                 id="tags-text"
-                className={styles.inputField}
+                className={styles.chipField}
               >
                 {selectedTagsChips.length === 0 ? <Chip label="None Selected" key="none" /> : selectedTagsChips}
               </div>
@@ -336,7 +380,7 @@ const TicketForm = () => {
           </CardContent> 
           <CardActions className={styles.cardActionAreaButton}>
             <Button
-            
+              variant="outlined"
             >
               Submit
             </Button>
