@@ -44,12 +44,8 @@ const UserViewTicketsButton = () => {
   const theme = useTheme();
 
   return (
-    <Card className={styles.root}>
-      <CardActionArea
-        className={styles.actionArea}
-        component={Link}
-        to="/"
-      >
+    <Card className={styles.root} raised={true}>
+      <CardActionArea className={styles.actionArea} component={Link} to="/">
         <CardHeader
           title={<CgViewList size={100} color={theme.palette.primary.main} />}
           className={styles.title}

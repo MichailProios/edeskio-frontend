@@ -22,6 +22,8 @@ import routes from "./utilities/routes/routes.jsx";
 import UnAuthenticated from "./components/UnAuthenticated/UnAuthenticated.jsx";
 import { getUserSessionAction } from "./redux/user/userActions.js";
 
+import Navbar from "./components/Navbar/Navbar.jsx";
+
 const useStyles = makeStyles((theme) => ({
   "@global": {
     "*": {
@@ -121,9 +123,11 @@ const App = () => {
         </UnAuthenticated>
         <Authenticated>
           <Router>
-            <Routes>
-              <Route>{routeComponents}</Route>
-            </Routes>
+            <Navbar>
+              <Routes>
+                <Route>{routeComponents}</Route>
+              </Routes>
+            </Navbar>
           </Router>
         </Authenticated>
       </ThemeProvider>

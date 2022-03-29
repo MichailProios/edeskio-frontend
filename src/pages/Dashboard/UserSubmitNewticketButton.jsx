@@ -44,14 +44,16 @@ const UserSubmitNewTicketButton = () => {
   const theme = useTheme();
 
   return (
-    <Card className={styles.root}>
+    <Card className={styles.root} raised={true}>
       <CardActionArea
         className={styles.actionArea}
         component={Link}
-        to="/submitticket"
+        to="/Dashboard/SubmitTicket"
       >
         <CardHeader
-          title={<IoDocumentText size={100} color={theme.palette.primary.main} />}
+          title={
+            <IoDocumentText size={100} color={theme.palette.primary.main} />
+          }
           className={styles.title}
         />
         <Divider />

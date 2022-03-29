@@ -1,5 +1,5 @@
 import TechDashboard from "../../pages/TechDashboard/TechDashboard.jsx";
-import UserDashboard from "../../pages/UserDashboard/UserDashboard.jsx";
+import Dashboard from "../../pages/Dashboard/Dashboard.jsx";
 import AdminDashboard from "../../pages/AdminDashboard/AdminDashboard.jsx";
 import HelpdeskAdmin from "../../pages/AdminDashboard/HelpdeskAdmin.jsx";
 
@@ -11,22 +11,23 @@ export const routes = [];
 routes.push(
   {
     path: "/",
-    component: <UserDashboard />,
+    component: <Dashboard />,
   },
   {
-    path: "/dashboard",
-    component: <TechDashboard />,
+    path: "/Dashboard",
+    component: <Dashboard />,
+  },
+  {
+    path: "/Dashboard/SubmitTicket",
+    component: <TicketForm />,
   },
 
   // Temporary routes
   {
     path: "/userdashboard",
-    component: <UserDashboard />,
+    component: <Dashboard />,
   },
-  {
-    path: "/submitticket",
-    component: <TicketForm />,
-  },
+
   {
     path: "/techdashboard",
     component: <TechDashboard />,

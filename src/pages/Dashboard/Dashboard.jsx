@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 //Main component
 /******************************************************************************************************************/
-const UserDashboard = () => {
+const Dashboard = () => {
   const styles = useStyles();
 
   return (
@@ -45,7 +45,7 @@ const UserDashboard = () => {
         </Grow>
         <Grow in={true} timeout={200}>
           <Grid item>
-          <UserViewTicketsButton />
+            <UserViewTicketsButton />
           </Grid>
         </Grow>
       </Grid>
@@ -54,4 +54,4 @@ const UserDashboard = () => {
 };
 /*****************************************************************************************************************/
 
-export default UserDashboard;
+export default Dashboard;
