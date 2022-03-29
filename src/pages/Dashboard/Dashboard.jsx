@@ -6,8 +6,10 @@ import { makeStyles } from "@material-ui/styles";
 
 // Material-UI
 import { Grid, Grow } from "@material-ui/core";
-import UserSubmitNewTicketButton from "./UserSubmitNewticketButton";
-import UserViewTicketsButton from "./UserViewTicketsButton";
+import UserSubmitNewTicketButton from "./SubmitNewticketButton";
+import UserViewTicketsButton from "./ViewTicketsButton";
+
+import PageHeader from "../../components/PageHeader/PageHeader";
 
 //Redux
 //import { useSelector } from "react-redux";
@@ -16,7 +18,7 @@ import UserViewTicketsButton from "./UserViewTicketsButton";
 /******************************************************************************************************************/
 const useStyles = makeStyles((theme) => ({
   root: {
-    margin: "1.5em",
+    padding: "1.5em",
     height: "100%",
   },
 
@@ -36,7 +38,7 @@ const Dashboard = () => {
 
   return (
     <div className={styles.root}>
-      {/*<PageHeader title="" />*/}
+      <PageHeader title="Dashboard" />
       <Grid container spacing={4} className={styles.gridRoot}>
         <Grow in={true} timeout={100}>
           <Grid item>

@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 //Main component
 /******************************************************************************************************************/
-const UserSubmitNewTicketButton = () => {
+const SubmitNewTicketButton = () => {
   const styles = useStyles();
   const theme = useTheme();
 
@@ -70,4 +70,4 @@ const UserSubmitNewTicketButton = () => {
 };
 /******************************************************************************************************************/
 
-export default UserSubmitNewTicketButton;
+export default SubmitNewTicketButton;

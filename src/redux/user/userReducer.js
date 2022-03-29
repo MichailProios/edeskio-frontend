@@ -23,6 +23,7 @@ import { store } from "../store";
 
 export const initialState = {
   loading: false,
+  loginLoading: false,
   successfull: false,
   authenticated: false,
   organizations: [],
@@ -35,13 +36,13 @@ export const UserReducer = (state = initialState, action) => {
     case POST_USER_LOGIN_REQUEST:
       return {
         ...state,
-        loading: true,
+        loginLoading: true,
         successfull: false,
       };
     case POST_USER_LOGIN_SUCCESS:
       return {
         ...state,
-        loading: false,
+        loginLoading: false,
         successfull: true,
         sessionUser: action.payload.user[0].data.session.passport.user,
         authenticated: action.payload.user[0].data.isAuthenticated,
@@ -49,7 +50,7 @@ export const UserReducer = (state = initialState, action) => {
     case POST_USER_LOGIN_FAILURE:
       return {
         ...state,
-        loading: false,
+        loginLoading: false,
         successfull: false,
         error: action.payload,
       };

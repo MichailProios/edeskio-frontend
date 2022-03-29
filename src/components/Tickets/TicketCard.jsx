@@ -72,15 +72,12 @@ const TicketCard = ({ ticket }) => {
 
   return (
     <React.Fragment>
-      <Card elevation={4}>
+      <Card elevation={10}>
         <CardHeader
           title={ticket.Subject}
-          subheader={`Ticket #${ticket.ID}`}
+          subheader={`Ticket ID: ${ticket.ID}`}
           action={
-            <IconButton
-              aria-label="ticket-options"
-              onClick={handleTicketOptionsClick}
-            >
+            <IconButton onClick={handleTicketOptionsClick}>
               <MoreVert />
             </IconButton>
           }
@@ -93,7 +90,7 @@ const TicketCard = ({ ticket }) => {
           </Typography>
         </CardContent>
       </Card>
-      <Menu
+      {/* <Menu
         anchorEl={anchorEl}
         id="ticket-options"
         keepMounted
@@ -118,7 +115,7 @@ const TicketCard = ({ ticket }) => {
           <DeleteForever />
           &nbsp;Delete Ticket
         </MenuItem>
-      </Menu>
+      </Menu> */}
     </React.Fragment>
   );
 };

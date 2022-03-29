@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 //Material-UI Styles
 import { makeStyles, useTheme } from "@material-ui/styles";
 
-import { Slide, Paper, Grid } from "@material-ui/core";
+import { Slide, Paper, Grid, CircularProgress } from "@material-ui/core";
 
 import Register from "../../components/Register/Register";
 
@@ -22,6 +22,8 @@ const LandingPage = () => {
 
   const [register, setRegister] = useState(false);
   const [initialSlideFlag, setInitialSlideFlag] = useState(false);
+
+  const loading = useSelector((state) => state.User.loginLoading);
 
   const handleRegisterBack = () => {
     setRegister(false);
@@ -43,51 +45,81 @@ const LandingPage = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  return (
-    <>
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        style={{ minHeight: "100vh" }}
-      >
-        <Grid item>
-          <Paper elevation={3} className={styles.root}>
-            {register && (
-              <Slide
-                in={register}
-                direction={register ? "left" : "right"}
-                mountOnEnter
-                unmountOnExit
-              >
-                <div>
-                  <Register handleRegisterBack={handleRegisterBack} />
-                </div>
-              </Slide>
-            )}
+  if (!loading) {
+    return (
+      <>
+        <Grid
+          container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          style={{ minHeight: "100vh" }}
+        >
+          <Grid item>
+            <Paper elevation={3} className={styles.root}>
+              {register && (
+                <Slide
+                  in={register}
+                  direction={register ? "left" : "right"}
+                  mountOnEnter
+                  unmountOnExit
+                >
+                  <div>
+                    <Register handleRegisterBack={handleRegisterBack} />
+                  </div>
+                </Slide>
+              )}
 
-            {!register && (
-              <Slide
-                in={!register}
-                direction={register ? "left" : "right"}
-                mountOnEnter
-                unmountOnExit
-                timeout={initialSlideFlag ? 250 : 0}
-              >
-                <div>
-                  <Login handleRegister={handleRegister} />
-                </div>
-              </Slide>
-            )}
+              {!register && (
+                <Slide
+                  in={!register}
+                  direction={register ? "left" : "right"}
+                  mountOnEnter
+                  unmountOnExit
+                  timeout={initialSlideFlag ? 250 : 0}
+                >
+                  <div>
+                    <Login handleRegister={handleRegister} />
+                  </div>
+                </Slide>
+              )}
 
-            {!initialSlideFlag && <Login handleRegister={handleRegister} />}
-          </Paper>
+              {!initialSlideFlag && <Login handleRegister={handleRegister} />}
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-    </>
-  );
+      </>
+    );
+  } else {
+    return (
+      <>
+        <Grid
+          container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          style={{ minHeight: "100vh" }}
+        >
+          <Grid item>
+            <Paper elevation={3} className={styles.root}>
+              <Grid
+                container
+                item
+                spacing={0}
+                justifyContent="center"
+                alignContent="center"
+                style={{ height: "100%" }}
+              >
+                <CircularProgress size={60} />
+              </Grid>
+            </Paper>
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
 };
 
 export default LandingPage;

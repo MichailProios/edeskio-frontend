@@ -41,8 +41,13 @@ import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import CreateIcon from "@material-ui/icons/Create";
 import { Category } from "@material-ui/icons";
 
+import PageHeader from "../../components/PageHeader/PageHeader";
+
 const useStyles = makeStyles((theme) => ({
   root: {
+    padding: "1.5em",
+  },
+  cardRoot: {
     width: "40em",
     margin: "auto",
   },
@@ -164,7 +169,7 @@ const tblTags = [
   },
 ];
 
-const TicketForm = () => {
+const SubmitTicket = () => {
   // create dispatch
   const dispatch = useDispatch();
 
@@ -272,9 +277,10 @@ const TicketForm = () => {
   };
 
   return (
-    <>
+    <div className={styles.root}>
+      <PageHeader title={"Dashboard"} />
       <Grow in={true} timeout={150}>
-        <Card className={styles.root} raised={true}>
+        <Card className={styles.cardRoot} raised={true}>
           <Grid container className={styles.outGrid}>
             <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
               <CardHeader title="Submit Ticket" />
@@ -411,8 +417,8 @@ const TicketForm = () => {
           </CardActions>
         </Card>
       </Grow>
-    </>
+    </div>
   );
 };
 
-export default TicketForm;
+export default SubmitTicket;

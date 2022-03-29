@@ -3,8 +3,8 @@ import Dashboard from "../../pages/Dashboard/Dashboard.jsx";
 import AdminDashboard from "../../pages/AdminDashboard/AdminDashboard.jsx";
 import HelpdeskAdmin from "../../pages/AdminDashboard/HelpdeskAdmin.jsx";
 
-import LandingPage from "../../pages/LandingPage/LandingPage.jsx";
-import TicketForm from "../../pages/SubmitTicket/TicketForm.jsx";
+import SubmitTicket from "../../pages/SubmitTicket/SubmitTicket.jsx";
+import ViewTickets from "../../pages/ViewTickets/ViewTickets.jsx";
 
 export const routes = [];
 
@@ -19,28 +19,33 @@ routes.push(
   },
   {
     path: "/Dashboard/SubmitTicket",
-    component: <TicketForm />,
+    component: <SubmitTicket />,
   },
+
+  {
+    path: "/Dashboard/ViewTickets",
+    component: <ViewTickets />,
+  }
 
   // Temporary routes
-  {
-    path: "/userdashboard",
-    component: <Dashboard />,
-  },
+  // {
+  //   path: "/userdashboard",
+  //   component: <Dashboard />,
+  // },
 
-  {
-    path: "/techdashboard",
-    component: <TechDashboard />,
-  },
-  {
-    path: "/admindashboard",
-    component: <AdminDashboard />,
-  },
+  // {
+  //   path: "/techdashboard",
+  //   component: <TechDashboard />,
+  // },
+  // {
+  //   path: "/admindashboard",
+  //   component: <AdminDashboard />,
+  // },
 
-  {
-    path: "/admin",
-    component: <HelpdeskAdmin />,
-  }
+  // {
+  //   path: "/admin",
+  //   component: <HelpdeskAdmin />,
+  // }
 );
 
 export default routes;

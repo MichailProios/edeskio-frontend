@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   appBar: {
+    backgroundColor: theme.palette.primary.dark,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -40,6 +41,14 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
+  },
+  appbarLink: {
+    textDecoration: "none",
+    color: "#fff",
+    display: "flex",
+    flexDirection: "row",
+    userSelect: "none",
+    userDrag: "none",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -64,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    //padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -80,11 +89,15 @@ const useStyles = makeStyles((theme) => ({
   },
 
   logo: {
-    width: "3.8rem",
+    width: "3.5rem",
     marginRight: "0.2em",
     height: "auto",
     userDrag: "none",
     userSelect: "none",
+    alignSelf: "center",
+  },
+  headerText: {
+    alignSelf: "center",
   },
   menuHeader: {
     userDrag: "none",
@@ -136,11 +149,12 @@ const Navbar = ({ children }) => {
             animationDuration={100}
             className={styles.registerLogo}
           /> */}
-
-          <img src={logoOnly} alt="logo" className={styles.logo} />
-          <Typography variant="h6" noWrap>
-            E-Deskio
-          </Typography>
+          <Link to="/" className={styles.appbarLink}>
+            <img src={logoOnly} alt="logo" className={styles.logo} />
+            <Typography variant="h6" noWrap className={styles.headerText}>
+              E-Deskio
+            </Typography>
+          </Link>
         </Toolbar>
       </AppBar>
       <Drawer

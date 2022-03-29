@@ -39,13 +39,17 @@ const useStyles = makeStyles((theme) => ({
 
 //Main component
 /******************************************************************************************************************/
-const UserViewTicketsButton = () => {
+const ViewTicketsButton = () => {
   const styles = useStyles();
   const theme = useTheme();
 
   return (
     <Card className={styles.root} raised={true}>
-      <CardActionArea className={styles.actionArea} component={Link} to="/">
+      <CardActionArea
+        className={styles.actionArea}
+        component={Link}
+        to="/Dashboard/ViewTickets"
+      >
         <CardHeader
           title={<CgViewList size={100} color={theme.palette.primary.main} />}
           className={styles.title}
@@ -64,4 +68,4 @@ const UserViewTicketsButton = () => {
 };
 /******************************************************************************************************************/
 
-export default UserViewTicketsButton;
+export default ViewTicketsButton;
