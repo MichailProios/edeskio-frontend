@@ -57,7 +57,7 @@ const LandingPage = () => {
           style={{ minHeight: "100vh" }}
         >
           <Grid item>
-            <Paper elevation={3} className={styles.root}>
+            <Paper elevation={10} className={styles.root}>
               {register && (
                 <Slide
                   in={register}

@@ -17,7 +17,7 @@ import {
 import { makeStyles, useTheme } from "@material-ui/styles";
 
 //Icons
-import { RiAdminFill } from "react-icons/ri";
+import { CgViewList } from "react-icons/cg";
 
 //Set NewRandomizedButton Styles
 /******************************************************************************************************************/
@@ -39,26 +39,26 @@ const useStyles = makeStyles((theme) => ({
 
 //Main component
 /******************************************************************************************************************/
-const AdminButton = () => {
+const ViewTicketsButton = () => {
   const styles = useStyles();
   const theme = useTheme();
 
   return (
-    <Card className={styles.root}>
+    <Card className={styles.root} raised={true}>
       <CardActionArea
         className={styles.actionArea}
         component={Link}
-        to="/admin"
+        to="/Dashboard/SubmittedTickets"
       >
         <CardHeader
-          title={<RiAdminFill size={100} color={theme.palette.primary.main} />}
+          title={<CgViewList size={100} color={theme.palette.primary.main} />}
           className={styles.title}
         />
         <Divider />
         <CardContent className={styles.content}>
           <Typography component={"span"}>
             <Box fontWeight="fontWeightBold" fontSize={16}>
-              Admin
+              View Sumbitted Tickets
             </Box>
           </Typography>
         </CardContent>
@@ -68,4 +68,4 @@ const AdminButton = () => {
 };
 /******************************************************************************************************************/
 
-export default AdminButton;
+export default ViewTicketsButton;

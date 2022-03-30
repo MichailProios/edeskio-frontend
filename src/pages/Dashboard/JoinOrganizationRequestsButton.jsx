@@ -18,6 +18,8 @@ import { makeStyles, useTheme } from "@material-ui/styles";
 
 //Icons
 import { CgViewList } from "react-icons/cg";
+import { AiFillUnlock } from "react-icons/ai";
+import { GoOrganization } from "react-icons/go";
 
 //Set NewRandomizedButton Styles
 /******************************************************************************************************************/
@@ -39,26 +41,28 @@ const useStyles = makeStyles((theme) => ({
 
 //Main component
 /******************************************************************************************************************/
-const TechDashboardButton = () => {
+const JoinOrganizationRequestsButton = () => {
   const styles = useStyles();
   const theme = useTheme();
 
   return (
-    <Card className={styles.root}>
+    <Card className={styles.root} raised={true}>
       <CardActionArea
         className={styles.actionArea}
         component={Link}
-        to="/techdashboard"
+        to="/Dashboard/ViewSubmittedTickets"
       >
         <CardHeader
-          title={<CgViewList size={100} color={theme.palette.primary.main} />}
+          title={
+            <GoOrganization size={100} color={theme.palette.primary.main} />
+          }
           className={styles.title}
         />
         <Divider />
         <CardContent className={styles.content}>
           <Typography component={"span"}>
             <Box fontWeight="fontWeightBold" fontSize={16}>
-              Technician Dashboard
+              Join Organization Requests
             </Box>
           </Typography>
         </CardContent>
@@ -68,4 +72,4 @@ const TechDashboardButton = () => {
 };
 /******************************************************************************************************************/
 
-export default TechDashboardButton;
+export default JoinOrganizationRequestsButton;

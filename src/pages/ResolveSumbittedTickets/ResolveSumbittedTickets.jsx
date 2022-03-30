@@ -25,13 +25,13 @@ const useStyles = makeStyles((theme) => ({
     padding: "1.5em",
   },
 }));
-const ViewTickets = () => {
+const ResolveSumbittedTickets = () => {
   const styles = useStyles();
   const dispatch = useDispatch();
 
   return (
     <div className={styles.root}>
-      <PageHeader title="Tickets" />
+      <PageHeader title="Resolve Tickets" />
       <Grid container spacing={2}>
         <Grow in={true} timeout={100}>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -61,4 +61,4 @@ const ViewTickets = () => {
   );
 };
 
-export default ViewTickets;
+export default ResolveSumbittedTickets;

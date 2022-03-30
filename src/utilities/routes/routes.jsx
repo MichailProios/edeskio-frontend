@@ -1,14 +1,13 @@
-import TechDashboard from "../../pages/TechDashboard/TechDashboard.jsx";
 import Dashboard from "../../pages/Dashboard/Dashboard.jsx";
-import AdminDashboard from "../../pages/AdminDashboard/AdminDashboard.jsx";
-import HelpdeskAdmin from "../../pages/AdminDashboard/HelpdeskAdmin.jsx";
-
 import SubmitTicket from "../../pages/SubmitTicket/SubmitTicket.jsx";
-import ViewTickets from "../../pages/ViewTickets/ViewTickets.jsx";
+import SubmittedTickets from "../../pages/SumbittedTickets/SumbittedTickets.jsx";
+import Permissions from "../../pages/Permissions/Permissions";
+import ApprovalNeeded from "../../pages/ApprovalNeeded/ApprovalNeeded.jsx";
 
 export const routes = [];
 
 routes.push(
+  //basic user routes
   {
     path: "/",
     component: <Dashboard />,
@@ -22,30 +21,25 @@ routes.push(
     component: <SubmitTicket />,
   },
 
+  //User/Tech Routes
   {
-    path: "/Dashboard/ViewTickets",
-    component: <ViewTickets />,
+    path: "/Dashboard/SubmittedTickets",
+    component: <SubmittedTickets />,
+  },
+
+  //Tech/Admin Routes
+
+  //Admin only routes
+  {
+    path: "/Dashboard/Permissions",
+    component: <Permissions />,
+  },
+
+  //Approval Needed User
+  {
+    path: "*",
+    component: <ApprovalNeeded />,
   }
-
-  // Temporary routes
-  // {
-  //   path: "/userdashboard",
-  //   component: <Dashboard />,
-  // },
-
-  // {
-  //   path: "/techdashboard",
-  //   component: <TechDashboard />,
-  // },
-  // {
-  //   path: "/admindashboard",
-  //   component: <AdminDashboard />,
-  // },
-
-  // {
-  //   path: "/admin",
-  //   component: <HelpdeskAdmin />,
-  // }
 );
 
 export default routes;

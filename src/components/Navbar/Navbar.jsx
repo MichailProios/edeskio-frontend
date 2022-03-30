@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -16,10 +16,17 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
+import BusinessIcon from "@material-ui/icons/Business";
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { MenuItem, Menu, Tooltip, Grid } from "@material-ui/core";
 
-import { Link } from "react-router-dom";
+import { AccountCircle } from "@material-ui/icons";
+
+import { Link, useLocation } from "react-router-dom";
 
 import logoOnly from "../../utilities/images/Logos/logo-only.png";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -51,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     userDrag: "none",
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(1),
   },
   hide: {
     display: "none",
@@ -104,12 +111,39 @@ const useStyles = makeStyles((theme) => ({
     userSelect: "none",
     marginRight: "2.3em",
   },
+  options: {
+    marginLeft: "auto",
+  },
+
+  accountIcon: {
+    color: "#fff",
+    fontSize: "1.2em",
+    [theme.breakpoints.down("xs")]: {
+      color: theme.palette.secondary.light,
+      fontSize: "1.5em",
+    },
+  },
+
+  accountButton: {
+    color: "#fff",
+    [theme.breakpoints.down("xs")]: {
+      color: "rgba(0, 0, 0, 0.54)",
+      fontSize: "1.5em",
+    },
+  },
+
+  appbarUserText: {
+    userSelect: "none",
+  },
 }));
 
 const Navbar = ({ children }) => {
   const styles = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const user = useSelector((state) => state.User.sessionUser);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -118,6 +152,42 @@ const Navbar = ({ children }) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  // Fire to open drop down menu on user icon click
+  const handleAccountClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  // Fire to close drop down menu on user icon click
+  const handleAccountClose = (e) => {
+    setAnchorEl(null);
+  };
+
+  const handleProfileOpen = (e) => {
+    setAnchorEl(null);
+  };
+
+  const [selectedIndex, setSelectedIndex] = useState();
+  const location = useLocation();
+
+  useEffect(() => {
+    const pathnames = location.pathname.toLowerCase();
+
+    switch (true) {
+      case pathnames === "/":
+        setSelectedIndex(0);
+        break;
+      case pathnames.startsWith("/dashboard"):
+        setSelectedIndex(0);
+        break;
+      case pathnames.startsWith("/organization"):
+        setSelectedIndex(1);
+        break;
+      default:
+        setSelectedIndex(null);
+        break;
+    }
+  }, [location]);
 
   return (
     <div className={styles.root}>
@@ -135,7 +205,7 @@ const Navbar = ({ children }) => {
             edge="start"
             className={clsx(styles.menuButton, open && styles.hide)}
           >
-            <MenuIcon />
+            <MenuIcon style={{ fontSize: "1.2em" }} />
           </IconButton>
           {/* <MuiImage
             imageStyle={{
@@ -155,6 +225,69 @@ const Navbar = ({ children }) => {
               E-Deskio
             </Typography>
           </Link>
+
+          <div className={styles.options}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item>
+                <Typography className={styles.appbarUserText}>
+                  Welcome {user}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <IconButton
+                  className={styles.accountButton}
+                  onClick={handleAccountClick}
+                  aria-controls="simple-menu"
+                  aria-haspopup="true"
+                >
+                  <Tooltip title="My Account" placement="bottom">
+                    <AccountCircle className={styles.accountIcon} />
+                  </Tooltip>
+                </IconButton>
+
+                <Menu
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleAccountClose}
+                  getContentAnchorEl={null}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                  transformOrigin={{ vertical: "top", horizontal: "center" }}
+                >
+                  <MenuItem onClick={handleProfileOpen}>
+                    <ListItemIcon>
+                      <AssignmentIndIcon className={styles.menuIcons} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        <Typography variant="body1" color="textPrimary">
+                          My Profile
+                        </Typography>
+                      }
+                    />
+                  </MenuItem>
+
+                  <MenuItem>
+                    <ListItemIcon>
+                      <ExitToAppIcon className={styles.menuIcons} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        <Typography variant="body1" color="textPrimary">
+                          Logout
+                        </Typography>
+                      }
+                    />
+                  </MenuItem>
+                </Menu>
+              </Grid>
+            </Grid>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -180,11 +313,27 @@ const Navbar = ({ children }) => {
         </div>
         <Divider />
         <List>
-          <ListItem button component={Link} to="/Dashboard">
+          <ListItem
+            button
+            component={Link}
+            to="/Dashboard"
+            selected={selectedIndex === 0}
+          >
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary={"Dashboard"} />
+          </ListItem>
+          <ListItem
+            button
+            component={Link}
+            to="/Organization"
+            selected={selectedIndex === 1}
+          >
+            <ListItemIcon>
+              <BusinessIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Organization"} />
           </ListItem>
         </List>
         <Divider />
@@ -199,6 +348,7 @@ const Navbar = ({ children }) => {
           ))}
         </List> */}
       </Drawer>
+
       <main
         className={clsx(styles.content, {
           [styles.contentShift]: open,

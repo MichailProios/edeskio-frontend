@@ -18,6 +18,7 @@ import { makeStyles, useTheme } from "@material-ui/styles";
 
 //Icons
 import { CgViewList } from "react-icons/cg";
+import { AiFillUnlock } from "react-icons/ai";
 
 //Set NewRandomizedButton Styles
 /******************************************************************************************************************/
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 //Main component
 /******************************************************************************************************************/
-const ViewTicketsButton = () => {
+const PermissionsButton = () => {
   const styles = useStyles();
   const theme = useTheme();
 
@@ -48,17 +49,17 @@ const ViewTicketsButton = () => {
       <CardActionArea
         className={styles.actionArea}
         component={Link}
-        to="/Dashboard/ViewTickets"
+        to="/Dashboard/ViewSubmittedTickets"
       >
         <CardHeader
-          title={<CgViewList size={100} color={theme.palette.primary.main} />}
+          title={<AiFillUnlock size={100} color={theme.palette.primary.main} />}
           className={styles.title}
         />
         <Divider />
         <CardContent className={styles.content}>
           <Typography component={"span"}>
             <Box fontWeight="fontWeightBold" fontSize={16}>
-              View Sumbitted Tickets
+              Permissions
             </Box>
           </Typography>
         </CardContent>
@@ -68,4 +69,4 @@ const ViewTicketsButton = () => {
 };
 /******************************************************************************************************************/
 
-export default ViewTicketsButton;
+export default PermissionsButton;
