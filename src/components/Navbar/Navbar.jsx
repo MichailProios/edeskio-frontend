@@ -19,6 +19,7 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import BusinessIcon from "@material-ui/icons/Business";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import { MenuItem, Menu, Tooltip, Grid } from "@material-ui/core";
 
 import { AccountCircle } from "@material-ui/icons";
@@ -26,7 +27,12 @@ import { AccountCircle } from "@material-ui/icons";
 import { Link, useLocation } from "react-router-dom";
 
 import logoOnly from "../../utilities/images/Logos/logo-only.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAllTagsAction,
+  getUserAction,
+  getUsersAllAction,
+} from "../../redux/user/userActions";
 
 const drawerWidth = 240;
 
@@ -62,6 +68,10 @@ const useStyles = makeStyles((theme) => ({
   },
   hide: {
     display: "none",
+  },
+  loading: {
+    zIndex: theme.zIndex.drawer + 5,
+    height: "0.18em",
   },
   drawer: {
     width: drawerWidth,
@@ -143,7 +153,14 @@ const Navbar = ({ children }) => {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const user = useSelector((state) => state.User.sessionUser);
+  const user = useSelector(
+    (state) =>
+      state.User.user.tblUser.FirstName + " " + state.User.user.tblUser.LastName
+  );
+
+  const organization = useSelector(
+    (state) => state.User.user.tblOrganization.Name
+  );
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -166,6 +183,10 @@ const Navbar = ({ children }) => {
   const handleProfileOpen = (e) => {
     setAnchorEl(null);
   };
+
+  const dispatch = useDispatch();
+
+  const loading = useSelector((state) => state.User.loading);
 
   const [selectedIndex, setSelectedIndex] = useState();
   const location = useLocation();
@@ -222,7 +243,7 @@ const Navbar = ({ children }) => {
           <Link to="/" className={styles.appbarLink}>
             <img src={logoOnly} alt="logo" className={styles.logo} />
             <Typography variant="h6" noWrap className={styles.headerText}>
-              E-Deskio
+              E-Deskio | {organization}
             </Typography>
           </Link>
 
@@ -289,6 +310,13 @@ const Navbar = ({ children }) => {
             </Grid>
           </div>
         </Toolbar>
+        {loading === true && (
+          <LinearProgress
+            variant="indeterminate"
+            color="primary"
+            className={styles.loading}
+          />
+        )}
       </AppBar>
       <Drawer
         className={styles.drawer}

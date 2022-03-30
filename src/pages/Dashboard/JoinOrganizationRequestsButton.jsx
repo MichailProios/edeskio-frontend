@@ -50,7 +50,7 @@ const JoinOrganizationRequestsButton = () => {
       <CardActionArea
         className={styles.actionArea}
         component={Link}
-        to="/Dashboard/ViewSubmittedTickets"
+        to="/Dashboard/JoinOrganization"
       >
         <CardHeader
           title={

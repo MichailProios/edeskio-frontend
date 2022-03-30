@@ -17,6 +17,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ExportCsv, ExportPdf } from "@material-table/exporters";
 import { tableIcons } from "../../utilities/DataTable/DataTableIcons.jsx";
 import { AiFillPrinter } from "react-icons/ai";
+import {
+  getPermissionsAllAction,
+  putPermissionsAction,
+} from "../../redux/user/userActions.js";
+import { Satellite } from "@material-ui/icons";
 
 // import store from "../../redux/store";
 
@@ -37,37 +42,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Permissions = () => {
-  const [openAddDialog, setOpenAddDialog] = useState(false);
-
   const styles = useStyles();
 
   const dispatch = useDispatch();
 
+  const tableRows = useSelector((state) => state.User.access);
+
+  const loading = useSelector((state) => state.User.loading);
+
+  useEffect(() => {
+    dispatch(getPermissionsAllAction());
+  }, [dispatch]);
+
   const columns = [
+    {
+      title: "User ID",
+      field: "UserID",
+      editable: false,
+    },
     {
       title: "First Name",
       field: "FirstName",
+      editable: false,
     },
     {
       title: "Last Name",
       field: "LastName",
-    },
-    {
-      title: "Email",
-      field: "Email",
+      editable: false,
     },
     {
       title: "Role",
-      field: "Role",
-      defaultGroupOrder: 1,
+      field: "RoleName",
+      lookup: { Basic: "Basic", Tech: "Tech", Admin: "Admin" },
     },
   ];
-
-  const handleOpen = (e) => {
-    setOpenAddDialog(true);
-  };
-
-  const data = [{ FirstName: "test", LastName: "Test" }];
 
   return (
     <>
@@ -79,8 +87,8 @@ const Permissions = () => {
               title="Permissions"
               icons={tableIcons}
               columns={columns}
-              data={data}
-              isLoading={false}
+              data={tableRows}
+              isLoading={loading}
               options={{
                 // draggable: true,
                 // sorting: true,
@@ -105,55 +113,55 @@ const Permissions = () => {
                   },
                 ],
               }}
-              editable={
-                {
-                  // onRowAdd: (newRow) =>
-                  //   new Promise((resolve, reject) => {
-                  //     // const updatedRows = [
-                  //     //   ...tableData,
-                  //     //   { id: Math.floor(Math.random() * 100), ...newRow },
-                  //     // ];
-                  //     // setTimeout(() => {
-                  //     //   tableData = updatedRows;
-                  //     //   resolve();
-                  //     // }, 2000);
-                  //   }),
-                  // onRowDelete: (selectedRow) =>
-                  //   new Promise((resolve, reject) => {
-                  //     // const index = selectedRow.tableData.id;
-                  //     // const updatedRows = [...tableData];
-                  //     // updatedRows.splice(index, 1);
-                  //     // setTimeout(() => {
-                  //     //   tableData = updatedRows;
-                  //     //   resolve();
-                  //     // }, 2000);
-                  //   }),
-                  // onRowUpdate: (updatedRow, oldRow) =>
-                  //   new Promise((resolve, reject) => {
-                  //     // const index = oldRow.tableData.id;
-                  //     // const updatedRows = [...tableData];
-                  //     // updatedRows[index] = updatedRow;
-                  //     // setTimeout(() => {
-                  //     //   tableData = updatedRows;
-                  //     //   resolve();
-                  //     // }, 2000);
-                  //   }),
-                }
+              editable={{
+                // onRowAdd: (newRow) =>
+                //   new Promise((resolve, reject) => {
+                //     // const updatedRows = [
+                //     //   ...tableData,
+                //     //   { id: Math.floor(Math.random() * 100), ...newRow },
+                //     // ];
+                //     // setTimeout(() => {
+                //     //   tableData = updatedRows;
+                //     //   resolve();
+                //     // }, 2000);
+                //   }),
+                // onRowDelete: (selectedRow) =>
+                //   new Promise((resolve, reject) => {
+                //     // const index = selectedRow.tableData.id;
+                //     // const updatedRows = [...tableData];
+                //     // updatedRows.splice(index, 1);
+                //     // setTimeout(() => {
+                //     //   tableData = updatedRows;
+                //     //   resolve();
+                //     // }, 2000);
+                //   }),
+                onRowUpdate: (updatedRow, oldRow) =>
+                  new Promise((resolve, reject) => {
+                    dispatch(
+                      putPermissionsAction({
+                        updatedRow,
+                        oldRow,
+                      })
+                    );
+                    resolve();
+                  }),
+              }}
+              actions={
+                [
+                  // {
+                  //   icon: tableIcons.Add,
+                  //   tooltip: "Assign Permission",
+                  //   isFreeAction: true,
+                  //   onClick: (event) => handleOpen(event),
+                  // },
+                  // {
+                  //   icon: tableIcons.Edit,
+                  //   tooltip: "Edit Permission",
+                  //   isFreeAction: false,
+                  //   onClick: (event) => alert("You wanna add a permission"),
+                  // },
+                ]
               }
-              actions={[
-                // {
-                //   icon: tableIcons.Add,
-                //   tooltip: "Assign Permission",
-                //   isFreeAction: true,
-                //   onClick: (event) => handleOpen(event),
-                // },
-                {
-                  icon: tableIcons.Edit,
-                  tooltip: "Edit Permission",
-                  isFreeAction: false,
-                  onClick: (event) => alert("You wanna add a permission"),
-                },
-              ]}
             />
           </div>
         </Grow>

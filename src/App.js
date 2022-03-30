@@ -105,9 +105,9 @@ const App = () => {
   const dispatch = useDispatch();
   //const isAuthenticated = useSelector((state) => state.User.authenticated);
 
-  useEffect(() => {
-    dispatch(getUserSessionAction());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getUserSessionAction());
+  // }, [dispatch]);
 
   const routeComponents = routes.map(({ path, component }, key) => (
     <Route path={path} exact element={component} key={key} />

@@ -23,6 +23,7 @@ import TicketCard from "../../components/Tickets/TicketCard.jsx";
 
 import PageHeader from "../../components/PageHeader/PageHeader";
 import { Search } from "@material-ui/icons";
+import { getTicketsAction } from "../../redux/user/userActions.js";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,6 +38,22 @@ const useStyles = makeStyles((theme) => ({
 const SumbittedTickets = () => {
   const styles = useStyles();
   const dispatch = useDispatch();
+
+  const tickets = useSelector((state) => state.User.tickets.tblTickets);
+
+  const organizationID = useSelector(
+    (state) => state.User.user.tblOrganization.ID
+  );
+
+  useEffect(() => {
+    if (organizationID) {
+      dispatch(getTicketsAction(organizationID));
+    }
+  }, [dispatch, organizationID]);
+
+  const delayTime = (index) => {
+    return 150 * index;
+  };
 
   return (
     <div className={styles.root}>
@@ -65,15 +82,22 @@ const SumbittedTickets = () => {
       </Grid>
 
       <Grid container spacing={2}>
-        <Grow in={true} timeout={100}>
-          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-            <TicketCard
-              ticket={{ Subject: "test", ID: 1, Description: "this is a test" }}
-            />
-          </Grid>
-        </Grow>
+        {tickets.map((value, index) => (
+          <Grow in={true} timeout={delayTime(index)}>
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+              <TicketCard
+                ticket={{
+                  Subject: value.Subject,
+                  ID: value.ID,
+                  TechnicianID: value.TechnicianID,
+                  Description: value.Description,
+                }}
+              />
+            </Grid>
+          </Grow>
+        ))}
 
-        <Grow in={true} timeout={300}>
+        {/* <Grow in={true} timeout={300}>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
             <TicketCard
               ticket={{ Subject: "test", ID: 1, Description: "this is a test" }}
@@ -87,7 +111,7 @@ const SumbittedTickets = () => {
               ticket={{ Subject: "test", ID: 1, Description: "this is a test" }}
             />
           </Grid>
-        </Grow>
+        </Grow> */}
       </Grid>
     </div>
   );

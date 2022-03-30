@@ -49,7 +49,7 @@ const PermissionsButton = () => {
       <CardActionArea
         className={styles.actionArea}
         component={Link}
-        to="/Dashboard/ViewSubmittedTickets"
+        to="/Dashboard/Permissions"
       >
         <CardHeader
           title={<AiFillUnlock size={100} color={theme.palette.primary.main} />}

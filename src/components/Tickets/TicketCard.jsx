@@ -19,13 +19,20 @@ import {
 } from "@material-ui/core";
 
 import { useSelector, useDispatch } from "react-redux";
-import { getUserOrganizationAction } from "../../redux/user/userActions";
+import {
+  getUserOrganizationAction,
+  putTicketsSelfAssignAction,
+} from "../../redux/user/userActions";
 import {
   DeleteForever,
   HighlightOff,
   MoreVert,
   TrendingUp,
 } from "@material-ui/icons";
+
+import moment from "momnet";
+
+import AssignmentReturnIcon from "@material-ui/icons/AssignmentReturn";
 
 const useStyles = makeStyles({
   root: {
@@ -57,6 +64,8 @@ const useStyles = makeStyles({
 const TicketCard = ({ ticket }) => {
   const styles = useStyles();
 
+  const dispatch = useDispatch();
+
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -70,12 +79,37 @@ const TicketCard = ({ ticket }) => {
     setAnchorEl(null);
   };
 
+  const userID = useSelector((state) => state.User.user.tblUser.ID);
+  const userFirstName = useSelector(
+    (state) => state.User.user.tblUser.FirstName
+  );
+  const userLastName = useSelector((state) => state.User.user.tblUser.LastName);
+
+  const handleAssignToSelf = () => {
+    dispatch(
+      putTicketsSelfAssignAction(
+        ticket.ID,
+        userID,
+        moment().format("YYYY-MM-DD HH:mm:ss")
+      )
+    );
+
+    setOptionsOpen(false);
+    setAnchorEl(null);
+  };
+
   return (
     <React.Fragment>
       <Card elevation={10}>
         <CardHeader
           title={ticket.Subject}
-          subheader={`Ticket ID: ${ticket.ID}`}
+          subheader={
+            ticket.TechnicianID === userID
+              ? `Ticket ID: ${ticket.ID} | Assigned: ${
+                  userFirstName + " " + userLastName
+                }`
+              : `Ticket ID: ${ticket.ID} | Unassigned`
+          }
           action={
             <IconButton onClick={handleTicketOptionsClick}>
               <MoreVert />
@@ -90,7 +124,7 @@ const TicketCard = ({ ticket }) => {
           </Typography>
         </CardContent>
       </Card>
-      {/* <Menu
+      <Menu
         anchorEl={anchorEl}
         id="ticket-options"
         keepMounted
@@ -103,19 +137,19 @@ const TicketCard = ({ ticket }) => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "top" }}
       >
-        <MenuItem>
-          <HighlightOff />
-          &nbsp;Close Ticket
+        <MenuItem onClick={handleAssignToSelf}>
+          <AssignmentReturnIcon color="primary" />
+          &nbsp;Assign To Self
         </MenuItem>
-        <MenuItem>
+        {/* <MenuItem>
           <TrendingUp />
           &nbsp;Elevate Ticket
         </MenuItem>
         <MenuItem>
           <DeleteForever />
           &nbsp;Delete Ticket
-        </MenuItem>
-      </Menu> */}
+        </MenuItem> */}
+      </Menu>
     </React.Fragment>
   );
 };

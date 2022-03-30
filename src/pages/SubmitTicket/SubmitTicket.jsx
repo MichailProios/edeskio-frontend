@@ -32,6 +32,9 @@ import {
   ListItemText,
   Grow,
 } from "@material-ui/core";
+
+import moment from "momnet";
+
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
@@ -39,9 +42,10 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import CreateIcon from "@material-ui/icons/Create";
-import { Category } from "@material-ui/icons";
+import { Category, Satellite } from "@material-ui/icons";
 
 import PageHeader from "../../components/PageHeader/PageHeader";
+import { postTicketNewTicketAction } from "../../redux/user/userActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -121,64 +125,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const tblTags = [
-  {
-    Type: "Windows 8",
-    Category: "Operating System",
-    Description: "",
-  },
-  {
-    Type: "Windows 8.1",
-    Category: "Operating System",
-    Description: "",
-  },
-  {
-    Type: "Windows 10",
-    Category: "Operating System",
-    Description: "",
-  },
-  {
-    Type: "Windows 11",
-    Category: "Operating System",
-    Description: "",
-  },
-  {
-    Type: "Laptop",
-    Category: "Hardware",
-    Description: "",
-  },
-  {
-    Type: "Desktop",
-    Category: "Hardware",
-    Description: "",
-  },
-  {
-    Type: "Server",
-    Category: "Hardware",
-    Description: "",
-  },
-  {
-    Type: "Website",
-    Category: "Software",
-    Description: "",
-  },
-  {
-    Type: "Intranet",
-    Category: "Software",
-    Description: "",
-  },
-];
+//
 
 const SubmitTicket = () => {
   // create dispatch
   const dispatch = useDispatch();
+
+  const tblTags = useSelector((state) => state.User.tags.tblTags);
 
   // local state
   const styles = useStyles();
 
   const [ticketSubject, setTicketSubject] = useState("");
   const [ticketDescription, setTicketDescription] = useState("");
-  const [ticketTags, setTicketTags] = useState([]);
 
   const [uniqTagCategories, setUniqTagCategories] = useState([
     "All",
@@ -191,6 +150,15 @@ const SubmitTicket = () => {
   ]);
   const [selectedTagsChips, setSelectedTagsChips] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
+
+  useEffect(() => {
+    setUniqTagCategories([
+      "All",
+      ...new Set(tblTags.map((tag) => tag.Category)),
+    ]);
+
+    setSelectedCategoryTags([...new Set(tblTags.map((tag) => tag))]);
+  }, [tblTags]);
 
   const handleCagetoryChange = (e) => {
     let newCategories = [];
@@ -267,8 +235,6 @@ const SubmitTicket = () => {
     setSelectedTags(e.target.value);
   };
 
-  console.log("selectedTagsChips", selectedTagsChips);
-
   const handleTagChipDelete = (deletedTag, e) => {
     setSelectedTagsChips((chips) =>
       chips.filter((chip) => chip.key !== deletedTag)
@@ -276,9 +242,36 @@ const SubmitTicket = () => {
     setSelectedTags((tags) => tags.filter((tag) => tag !== deletedTag));
   };
 
+  const handleTicketSubject = (e) => {
+    setTicketSubject(e.target.value);
+  };
+
+  const handleTicketDescription = (e) => {
+    setTicketDescription(e.target.value);
+  };
+
+  const userID = useSelector((state) => state.User.user.tblUser.ID);
+
+  const handleSubmit = () => {
+    dispatch(
+      postTicketNewTicketAction(
+        userID,
+        ticketSubject,
+        ticketDescription,
+        moment().format("YYYY-MM-DD HH:mm:ss"),
+        selectedTags
+      )
+    );
+
+    setTicketSubject("");
+    setTicketDescription("");
+    setSelectedTags([]);
+    setSelectedTagsChips([]);
+  };
+
   return (
     <div className={styles.root}>
-      <PageHeader title={"Dashboard"} />
+      <PageHeader title={"New Ticket"} />
       <Grow in={true} timeout={150}>
         <Card className={styles.cardRoot} raised={true}>
           <Grid container className={styles.outGrid}>
@@ -303,6 +296,8 @@ const SubmitTicket = () => {
                 <TextField
                   label="Ticket Subject"
                   variant="outlined"
+                  value={ticketSubject}
+                  onChange={handleTicketSubject}
                   required={true}
                   className={styles.inputField}
                 />
@@ -320,6 +315,8 @@ const SubmitTicket = () => {
                 <TextField
                   label="Ticket Description"
                   variant="outlined"
+                  value={ticketDescription}
+                  onChange={handleTicketDescription}
                   required={false}
                   className={styles.inputField}
                   multiline
@@ -411,6 +408,7 @@ const SubmitTicket = () => {
               variant="contained"
               color="primary"
               className={styles.submitButton}
+              onClick={handleSubmit}
             >
               Submit
             </Button>

@@ -13,6 +13,7 @@ import PageHeader from "../../components/PageHeader/PageHeader";
 import PermissionsButton from "./PermissionsButton";
 import JoinOrganizationRequestsButton from "./JoinOrganizationRequestsButton";
 import ResolveSumbittedTicketsButton from "./ResolveSumbittedTicketsButton";
+import { useSelector } from "react-redux";
 
 //Redux
 //import { useSelector } from "react-redux";
@@ -39,7 +40,9 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = () => {
   const styles = useStyles();
 
-  if (false) {
+  const user = useSelector((state) => state.User.user);
+
+  if (user.tblAccess.RoleName === "Basic") {
     return (
       <div className={styles.root}>
         <PageHeader title="Dashboard" showBreadcrumbs={false} />
@@ -57,7 +60,7 @@ const Dashboard = () => {
         </Grid>
       </div>
     );
-  } else if (true) {
+  } else if (user.tblAccess.RoleName === "Tech") {
     return (
       <div className={styles.root}>
         <PageHeader title="Technician Dashboard" showBreadcrumbs={false} />
@@ -75,7 +78,7 @@ const Dashboard = () => {
         </Grid>
       </div>
     );
-  } else {
+  } else if (user.tblAccess.RoleName === "Admin") {
     return (
       <div className={styles.root}>
         <PageHeader title="Admin Dashboard" showBreadcrumbs={false} />
@@ -103,6 +106,8 @@ const Dashboard = () => {
         </Grid>
       </div>
     );
+  } else {
+    return <div>test</div>;
   }
 };
 
