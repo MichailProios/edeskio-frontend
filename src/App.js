@@ -10,11 +10,19 @@ import {
   makeStyles,
 } from "@material-ui/core/styles";
 
+import { useSelector, useDispatch } from "react-redux";
+
+import LandingPage from "./pages/LandingPage/LandingPage.jsx";
+import Authenticated from "./components/Authenticated/Authenticated.jsx";
+
 //Styling
 import "./App.css";
 
-//Pages
-import LandingPage from "./pages/LandingPage/LandingPage";
+import routes from "./utilities/routes/routes.jsx";
+import UnAuthenticated from "./components/UnAuthenticated/UnAuthenticated.jsx";
+import { getUserSessionAction } from "./redux/user/userActions.js";
+
+import Navbar from "./components/Navbar/Navbar.jsx";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -91,22 +99,38 @@ const theme = createTheme({
   },
 });
 
-function App() {
+const App = () => {
   const styles = useStyles();
+
+  const dispatch = useDispatch();
+  //const isAuthenticated = useSelector((state) => state.User.authenticated);
+
+  // useEffect(() => {
+  //   dispatch(getUserSessionAction());
+  // }, [dispatch]);
+
+  const routeComponents = routes.map(({ path, component }, key) => (
+    <Route path={path} exact element={component} key={key} />
+  ));
 
   return (
     <React.Fragment>
-      {/* <CssBaseline /> */}
       <ThemeProvider theme={theme}>
-        <LandingPage />
-        <Router>
-          <Routes>
-            <Route path="/" exact element={<div />} />
-          </Routes>
-        </Router>
+        <UnAuthenticated>
+          <LandingPage />
+        </UnAuthenticated>
+        <Authenticated>
+          <Router>
+            <Navbar>
+              <Routes>
+                <Route>{routeComponents}</Route>
+              </Routes>
+            </Navbar>
+          </Router>
+        </Authenticated>
       </ThemeProvider>
     </React.Fragment>
   );
-}
+};
 
 export default App;
