@@ -1,8 +1,9 @@
 import Dashboard from "../../pages/Dashboard/Dashboard.jsx";
 import SubmitTicket from "../../pages/SubmitTicket/SubmitTicket.jsx";
-import SubmittedTickets from "../../pages/SumbittedTickets/SumbittedTickets.jsx";
+import SubmittedTickets from "../../pages/SubmittedTickets/SubmittedTickets.jsx";
 import Permissions from "../../pages/Permissions/Permissions";
 import ApprovalNeeded from "../../pages/ApprovalNeeded/ApprovalNeeded.jsx";
+import JoinOrganizationRequests from "../../pages/JoinOrganizationRequests/JoinOrganizationRequests.jsx";
 
 export const routes = [];
 
@@ -33,6 +34,10 @@ routes.push(
   {
     path: "/Dashboard/Permissions",
     component: <Permissions />,
+  },
+  {
+    path: "/Dashboard/JoinOrganizationRequests",
+    component: <JoinOrganizationRequests />,
   },
 
   //Approval Needed User

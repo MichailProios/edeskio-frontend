@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     userSelect: "none",
   },
 }));
-const SumbittedTickets = () => {
+const SubmittedTickets = () => {
   const styles = useStyles();
   const dispatch = useDispatch();
 
@@ -54,6 +54,8 @@ const SumbittedTickets = () => {
   const delayTime = (index) => {
     return 150 * index;
   };
+
+  console.log("tickets", tickets);
 
   return (
     <div className={styles.root}>
@@ -91,6 +93,9 @@ const SumbittedTickets = () => {
                   ID: value.ID,
                   TechnicianID: value.TechnicianID,
                   Description: value.Description,
+                  SubmissionDate: value.SubmissionDate,
+                  LastModified: value.LastModified,
+                  Priority: value.Priority,
                 }}
               />
             </Grid>
@@ -117,4 +122,4 @@ const SumbittedTickets = () => {
   );
 };
 
-export default SumbittedTickets;
+export default SubmittedTickets;

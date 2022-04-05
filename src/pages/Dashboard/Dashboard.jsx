@@ -7,12 +7,12 @@ import { makeStyles } from "@material-ui/styles";
 // Material-UI
 import { Grid, Grow } from "@material-ui/core";
 import SubmitNewTicketButton from "./SubmitNewticketButton";
-import ViewSumbittedTicketsButton from "./ViewSumbittedTicketsButton";
+import ViewSubmittedTicketsButton from "./ViewSubmittedTicketsButton";
 
 import PageHeader from "../../components/PageHeader/PageHeader";
 import PermissionsButton from "./PermissionsButton";
 import JoinOrganizationRequestsButton from "./JoinOrganizationRequestsButton";
-import ResolveSumbittedTicketsButton from "./ResolveSumbittedTicketsButton";
+import ResolveSubmittedTicketsButton from "./ResolveSubmittedTicketsButton";
 import { useSelector } from "react-redux";
 
 //Redux
@@ -54,7 +54,7 @@ const Dashboard = () => {
           </Grow>
           <Grow in={true} timeout={300}>
             <Grid item>
-              <ViewSumbittedTicketsButton />
+              <ViewSubmittedTicketsButton />
             </Grid>
           </Grow>
         </Grid>
@@ -72,7 +72,7 @@ const Dashboard = () => {
           </Grow>
           <Grow in={true} timeout={300}>
             <Grid item>
-              <ResolveSumbittedTicketsButton />
+              <ResolveSubmittedTicketsButton />
             </Grid>
           </Grow>
         </Grid>
@@ -90,7 +90,7 @@ const Dashboard = () => {
           </Grow>
           <Grow in={true} timeout={300}>
             <Grid item>
-              <ResolveSumbittedTicketsButton />
+              <ResolveSubmittedTicketsButton />
             </Grid>
           </Grow>
           <Grow in={true} timeout={300}>
