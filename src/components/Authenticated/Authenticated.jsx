@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import CircularPogress from "../CircularLoading/CircularLoading.jsx";
+import CircularProgress from "../CircularLoading/CircularLoading.jsx";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllTagsAction,
   getUserAction,
   getUsersAllAction,
+  getUserSessionAction,
 } from "../../redux/user/userActions.js";
 
 const Authenticated = ({ children }) => {
@@ -17,10 +18,10 @@ const Authenticated = ({ children }) => {
 
   const sessionUsername = useSelector((state) => state.User.sessionUser);
 
-  console.log(sessionUsername);
-
   useEffect(() => {
-    if (sessionUsername !== "") {
+    console.log(sessionUsername.length !== 0);
+
+    if (sessionUsername.length !== 0) {
       dispatch(getUserAction(sessionUsername));
     }
   }, [dispatch, sessionUsername]);
@@ -30,10 +31,14 @@ const Authenticated = ({ children }) => {
     dispatch(getUsersAllAction());
   }, [dispatch]);
 
-  if (isAuthenticated && sessionUsername !== "") {
-    return <div>{children}</div>;
+  if (isAuthenticated) {
+    if (!loading) {
+      return <div>{children}</div>;
+    } else {
+      return <CircularProgress />;
+    }
   } else {
-    return <CircularPogress />;
+    return <div />;
   }
 };
 

@@ -77,9 +77,9 @@ const Login = ({ handleRegister }) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
+    dispatch(postUserLoginAction(username, password));
     setUsername("");
     setPassword("");
-    dispatch(postUserLoginAction(username, password));
   };
 
   const handleUsername = (e) => {
@@ -152,6 +152,7 @@ const Login = ({ handleRegister }) => {
             value={password}
             onChange={handlePassword}
             className={styles.loginTextfields}
+            onKeyDown={(e) => e.keyCode === 13 && handleLogin()}
           />
         </Grid>
         <Grid

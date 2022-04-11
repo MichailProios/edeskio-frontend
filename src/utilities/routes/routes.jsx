@@ -38,13 +38,13 @@ routes.push(
   {
     path: "/Dashboard/JoinOrganizationRequests",
     component: <JoinOrganizationRequests />,
-  },
+  }
 
   //Approval Needed User
-  {
-    path: "*",
-    component: <ApprovalNeeded />,
-  }
+  // {
+  //   path: "*",
+  //   component: <ApprovalNeeded />,
+  // }
 );
 
 export default routes;

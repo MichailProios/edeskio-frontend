@@ -39,6 +39,7 @@ import {
   PUT_PERMISSIONS_REQUEST,
   PUT_PERMISSIONS_SUCCESS,
   PUT_PERMISSIONS_FAILURE,
+  USER_LOGOUT,
 } from "./userTypes";
 
 import { store } from "../store";
@@ -117,10 +118,10 @@ const postUserLoginFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const getUserSessionAction = (username, password) => {
+export const getUserSessionAction = () => {
   return async (dispatch) => {
     dispatch(getUserSessionRequest());
-    await getUserSessionWithAxios(username, password)
+    await getUserSessionWithAxios()
       .then((response) => {
         dispatch(getUserSessionSuccess(response));
       })
@@ -130,7 +131,7 @@ export const getUserSessionAction = (username, password) => {
   };
 };
 
-const getUserSessionWithAxios = async (username, password) => {
+const getUserSessionWithAxios = async () => {
   var session = [];
 
   // await postUserLogin(username, password).then((response) => {
@@ -146,7 +147,7 @@ const getUserSessionWithAxios = async (username, password) => {
   };
 };
 
-const getUserSession = (username, password) => {
+const getUserSession = () => {
   return axios.get(endpoints.userSession, {
     headers: {
       "Content-Type": "application/json",
@@ -941,6 +942,20 @@ const postTicketNewTicketSuccess = (data) => {
 const postTicketNewTicketFailure = () => {
   return {
     type: POST_TICKETS_NEW_TICKET_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const logoutUserAction = () => {
+  return async (dispatch) => {
+    dispatch(logoutUser());
+  };
+};
+
+const logoutUser = () => {
+  return {
+    type: USER_LOGOUT,
   };
 };
 /**************************************************************************************************************/

@@ -25,6 +25,8 @@ import PageHeader from "../../components/PageHeader/PageHeader";
 import { Search } from "@material-ui/icons";
 import { getTicketsAction } from "../../redux/user/userActions.js";
 
+import CloseIcon from "@material-ui/icons/Close";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: "1.5em",
@@ -41,6 +43,21 @@ const SubmittedTickets = () => {
 
   const tickets = useSelector((state) => state.User.tickets.tblTickets);
 
+  const [filteredTickets, setFilteredTickets] = useState(tickets);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const results = tickets.filter(
+      (element) =>
+        element.Subject.toLowerCase().includes(searchTerm) ||
+        element.ID.toString().toLowerCase().includes(searchTerm)
+
+      // element.ID.toLowerCase().includes(searchTerm)
+    );
+    setFilteredTickets(results);
+  }, [searchTerm]);
+
   const organizationID = useSelector(
     (state) => state.User.user.tblOrganization.ID
   );
@@ -55,8 +72,6 @@ const SubmittedTickets = () => {
     return 150 * index;
   };
 
-  console.log("tickets", tickets);
-
   return (
     <div className={styles.root}>
       <PageHeader title="Tickets" />
@@ -65,9 +80,11 @@ const SubmittedTickets = () => {
           <Grid container item justifyContent="center">
             <TextField
               className={styles.search}
-              helperText="Filter Tickets"
+              helperText="Filter by Subject, ID, and Tech"
               autoFocus={true}
               placeholder="Search"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
               name="Search"
               margin="none"
               fullWidth={true}
@@ -77,6 +94,13 @@ const SubmittedTickets = () => {
                     <SearchIcon />
                   </InputAdornment>
                 ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton size="small" onClick={(e) => setSearchTerm("")}>
+                      <CloseIcon className={styles.searchIcons} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
             />
           </Grid>
@@ -84,7 +108,7 @@ const SubmittedTickets = () => {
       </Grid>
 
       <Grid container spacing={2}>
-        {tickets.map((value, index) => (
+        {filteredTickets.map((value, index) => (
           <Grow in={true} timeout={delayTime(index)}>
             <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
               <TicketCard

@@ -32,6 +32,7 @@ import {
   getAllTagsAction,
   getUserAction,
   getUsersAllAction,
+  logoutUserAction,
 } from "../../redux/user/userActions";
 
 import ExpertiseTags from "../ExpertiseTags/ExpertiseTags";
@@ -194,10 +195,13 @@ const Navbar = ({ children }) => {
   const handleExpertiseTagsClose = (e) => {
     setOpenExpertiseTags(false);
   };
-  
 
   const handleProfileOpen = (e) => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = (e) => {
+    dispatch(logoutUserAction());
   };
 
   const dispatch = useDispatch();
@@ -308,22 +312,25 @@ const Navbar = ({ children }) => {
                       }
                     />
                   </MenuItem>
-                  {user.tblAccess.RoleName === "Admin" || user.tblAccess.RoleName == "Tech" ? (
+                  {user.tblAccess.RoleName === "Admin" ||
+                  user.tblAccess.RoleName === "Tech" ? (
                     <MenuItem onClick={handleExpertiseTagsOpen}>
-                    <ListItemIcon>
-                      <LocalOffer className={styles.menuIcons} />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={
-                        <Typography variant="body1" color="textPrimary">
-                          Expertise Tags
-                        </Typography>
-                      }
-                    />
-                  </MenuItem>
-                  ) : "" }
+                      <ListItemIcon>
+                        <LocalOffer className={styles.menuIcons} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={
+                          <Typography variant="body1" color="textPrimary">
+                            Expertise Tags
+                          </Typography>
+                        }
+                      />
+                    </MenuItem>
+                  ) : (
+                    ""
+                  )}
 
-                  <MenuItem>
+                  <MenuItem onClick={(e) => handleLogout()}>
                     <ListItemIcon>
                       <ExitToAppIcon className={styles.menuIcons} />
                     </ListItemIcon>

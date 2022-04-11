@@ -14,17 +14,17 @@ import storage from "redux-persist/lib/storage";
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["User"],
+  // blacklist: ["User"],
 };
 
 // const userPersistConfig = {
 //   key: "User",
 //   storage: storage,
-//   blacklist: ["authenticated"],
+//   whitelist: ["sessionUser", "authenticated"],
 // };
 
 const reducer = combineReducers({
-  // User: persistReducer(userPersistConfig, UserReducer),
+  //User: persistReducer(userPersistConfig, UserReducer),
   User: UserReducer,
 });
 

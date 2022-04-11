@@ -10,7 +10,10 @@ import Register from "../../components/Register/Register";
 import Login from "../../components/Login/Login";
 
 import { useSelector, useDispatch } from "react-redux";
-import { getUserOrganizationAction } from "../../redux/user/userActions";
+import {
+  getUserOrganizationAction,
+  getUserSessionAction,
+} from "../../redux/user/userActions";
 
 const useStyles = makeStyles((theme) => ({
   root: { width: "30em", height: "40em", overflow: "hidden" },

@@ -38,6 +38,7 @@ import {
   PUT_PERMISSIONS_REQUEST,
   PUT_PERMISSIONS_SUCCESS,
   PUT_PERMISSIONS_FAILURE,
+  USER_LOGOUT,
 } from "./userTypes";
 import { store } from "../store";
 
@@ -80,7 +81,7 @@ export const initialState = {
   access: [],
 
   //Tickets
-  tickets: { tblTickets: [{}] },
+  tickets: { tblTickets: [{ ID: null, Subject: "" }] },
 
   //Organization
   organizations: [],
@@ -272,7 +273,6 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case GET_TICKETS_SUCCESS:
-      console.log(action.payload.tickets[0].data);
       return {
         ...state,
         loading: false,
@@ -438,6 +438,23 @@ export const UserReducer = (state = initialState, action) => {
         loading: false,
         successfull: false,
         error: action.payload,
+      };
+
+    case USER_LOGOUT:
+      return {
+        ...state,
+        authenticated: false,
+        sessionUser: "",
+        // users: { tblUsers: [{}] },
+        // tickets: { tblTickets: [{}] },
+        // tags: {
+        //   tblTags: [
+        //     {
+        //       Type: null,
+        //       Category: null,
+        //     },
+        //   ],
+        // },
       };
 
     default:

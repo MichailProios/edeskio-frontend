@@ -76,31 +76,30 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "12pt",
   },
   assignedChip: {
-    backgroundColor: theme.palette.primary.main, 
+    backgroundColor: theme.palette.primary.main,
     color: "#ffffff",
-  }
+  },
 }));
 
 const tags = [
   {
     Type: "Windows 11",
-    Category: "Operating System"
+    Category: "Operating System",
   },
   {
     Type: "Desktop",
-    Category: "Hardware"
+    Category: "Hardware",
   },
   {
     Type: "Website",
-    Category: "Software"
+    Category: "Software",
   },
-]
+];
 
 const TicketCard = ({ ticket }) => {
   const styles = useStyles();
 
   const dispatch = useDispatch();
-  
 
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -141,12 +140,10 @@ const TicketCard = ({ ticket }) => {
   };
 
   const getTagChips = () => {
-
     let tagChips = [];
 
     // ticket.tags.forEach({
     tags.forEach((tag) => {
-
       if (tag.Category === "Operating System") {
         tagChips.push(
           <Chip
@@ -175,11 +172,8 @@ const TicketCard = ({ ticket }) => {
     });
 
     return tagChips;
-  }
+  };
 
-  console.log(tags);
-  console.log(tagChips);
-  
   return (
     <React.Fragment>
       <Card elevation={10}>
@@ -194,101 +188,135 @@ const TicketCard = ({ ticket }) => {
         />
         <Divider />
         <CardContent>
-        <Grid
-          container
-          item
-          justifyContent="flex-end"
-          xs={12}
-          sm={12}
-          md={12}
-          lg={12}
-          xl={12}
-        >
           <Grid
             container
             item
-            justifyContent="flex-start"
-            xs={9}
-            sm={9}
-            md={9}
-            lg={9}
-            xl={9}
-            style={{ borderRight: "1.5px solid #e0e0e0" }}
-          >
-            <Grid item xs={9} sm={9} md={9} lg={9} xl={9}>
-              <Typography className={styles.description}>
-                {ticket.Description !== null ? ticket.Description : "No Description"} 
-              </Typography>
-            </Grid>
-            
-            <Grid container item xs={9} sm={9} md={9} lg={9} xl={9} alignContent="flex-end">
-              <div className={styles.chipField}>
-                { tagChips.length === 0 
-                  ? <Chip label="No Tags" key="none" />
-                  : tagChips}
-              </div>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            direction="column"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            xs={3}
-            sm={3}
-            md={3}
-            lg={3}
-            xl={3}
-            style={{ paddingLeft: "1em" }}
+            justifyContent="flex-end"
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
           >
             <Grid
               container
-              direction="row"
+              item
               justifyContent="flex-start"
-              alignItems="center"
+              xs={9}
+              sm={9}
+              md={9}
+              lg={9}
+              xl={9}
+              style={{ borderRight: "1.5px solid #e0e0e0" }}
             >
-              <Typography className={styles.info} style={{ paddingRight: "5px" }} >
-                 {"Assigned To:"}
-              </Typography>
-              <Chip
-                // className={styles.infoChip}
-                label={  ticket.TechnicianID !== null
-                        ? ticket.TechnicianID == userID ? userFirstName + " " + userLastName : ticket.TechnicianID 
-                        : "Unassigned"}
-                className={ ticket.TechnicianID !== null ? styles.assignedChip : "" }
-              />
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="flex-start"
-              alignItems="center"
-            >
-              <Typography className={styles.info} style={{ paddingRight: "5px" }} >
-                 {"Priority:"}
-              </Typography>
-              <Chip
-                // className={styles.infoChip}
-                label={ ticket.Priority !== null
-                        ? ticket.Priority
-                        : "None"}
-                style={ticket.Priority !== null 
-                  ? ticket.Priority === "High" ? { backgroundColor: "#ff0000", color: "#ffffff" } 
-                    : ticket.Priority === "Medium" || ticket.Priority === "Normal" ? { backgroundColor: "#ffd700", color: "#000000" } 
-                      : ticket.Priority === "Low" ? { backgroundColor: "#0000ff", color: "#ffffff" } 
-                        : {}
-                  : {} }
-              />
-            </Grid>
-            <Typography className={styles.info}>
-              {"Submitted: "}{ticket.SubmittedDate !== null ? moment(ticket.SubmissionDate).format("LL") : "Never"}
-            </Typography>
-            <Typography className={styles.info}>
-              {"Last Modified: "}{ticket.LastModified !== null ? moment(ticket.SubmissionDate).format("LL") : "Never"}
-            </Typography>
-          </Grid>
-        </Grid>
+              <Grid item xs={9} sm={9} md={9} lg={9} xl={9}>
+                <Typography className={styles.description}>
+                  {ticket.Description !== null
+                    ? ticket.Description
+                    : "No Description"}
+                </Typography>
+              </Grid>
 
+              <Grid
+                container
+                item
+                xs={9}
+                sm={9}
+                md={9}
+                lg={9}
+                xl={9}
+                alignContent="flex-end"
+              >
+                <div className={styles.chipField}>
+                  {tagChips.length === 0 ? (
+                    <Chip label="No Tags" key="none" />
+                  ) : (
+                    tagChips
+                  )}
+                </div>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="column"
+              justifyContent="space-between"
+              alignItems="flex-start"
+              xs={3}
+              sm={3}
+              md={3}
+              lg={3}
+              xl={3}
+              style={{ paddingLeft: "1em" }}
+            >
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <Typography
+                  className={styles.info}
+                  style={{ paddingRight: "5px" }}
+                >
+                  {"Assigned To:"}
+                </Typography>
+                <Chip
+                  // className={styles.infoChip}
+                  label={
+                    ticket.TechnicianID !== null
+                      ? ticket.TechnicianID == userID
+                        ? userFirstName + " " + userLastName
+                        : ticket.TechnicianID
+                      : "Unassigned"
+                  }
+                  className={
+                    ticket.TechnicianID !== null ? styles.assignedChip : ""
+                  }
+                />
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <Typography
+                  className={styles.info}
+                  style={{ paddingRight: "5px" }}
+                >
+                  {"Priority:"}
+                </Typography>
+                <Chip
+                  // className={styles.infoChip}
+                  label={ticket.Priority !== null ? ticket.Priority : "None"}
+                  style={
+                    ticket.Priority !== null
+                      ? ticket.Priority === "High"
+                        ? { backgroundColor: "#ff0000", color: "#ffffff" }
+                        : ticket.Priority === "Medium" ||
+                          ticket.Priority === "Normal"
+                        ? { backgroundColor: "#ffd700", color: "#000000" }
+                        : ticket.Priority === "Low"
+                        ? { backgroundColor: "#0000ff", color: "#ffffff" }
+                        : {}
+                      : {}
+                  }
+                />
+              </Grid>
+              <Typography className={styles.info}>
+                {"Submitted: "}
+                {ticket.SubmittedDate !== null
+                  ? moment(ticket.SubmissionDate).format("LL")
+                  : "Never"}
+              </Typography>
+              <Typography className={styles.info}>
+                {"Last Modified: "}
+                {ticket.LastModified !== null
+                  ? moment(ticket.SubmissionDate).format("LL")
+                  : "Never"}
+              </Typography>
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
       <Menu
