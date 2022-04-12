@@ -26,6 +26,7 @@ import { Search } from "@material-ui/icons";
 import { getTicketsAction } from "../../redux/user/userActions.js";
 
 import CloseIcon from "@material-ui/icons/Close";
+import CircularLoading from "../../components/CircularLoading/CircularLoading.jsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +43,8 @@ const SubmittedTickets = () => {
   const dispatch = useDispatch();
 
   const tickets = useSelector((state) => state.User.tickets.tblTickets);
+
+  const loading = useSelector((state) => state.User.loading);
 
   const [filteredTickets, setFilteredTickets] = useState(tickets);
 
@@ -66,84 +69,81 @@ const SubmittedTickets = () => {
     if (organizationID) {
       dispatch(getTicketsAction(organizationID));
     }
+
+    console.log("here");
   }, [dispatch, organizationID]);
 
   const delayTime = (index) => {
     return 150 * index;
   };
 
-  return (
-    <div className={styles.root}>
-      <PageHeader title="Tickets" />
-      <Grid container spacing={2}>
-        <Grow in={true} timeout={10}>
-          <Grid container item justifyContent="center">
-            <TextField
-              className={styles.search}
-              helperText="Filter by Subject, ID, and Tech"
-              autoFocus={true}
-              placeholder="Search"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              name="Search"
-              margin="none"
-              fullWidth={true}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton size="small" onClick={(e) => setSearchTerm("")}>
-                      <CloseIcon className={styles.searchIcons} />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-        </Grow>
-      </Grid>
-
-      <Grid container spacing={2}>
-        {filteredTickets.map((value, index) => (
-          <Grow in={true} timeout={delayTime(index)}>
-            <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-              <TicketCard
-                ticket={{
-                  Subject: value.Subject,
-                  ID: value.ID,
-                  TechnicianID: value.TechnicianID,
-                  Description: value.Description,
-                  SubmissionDate: value.SubmissionDate,
-                  LastModified: value.LastModified,
-                  Priority: value.Priority,
+  if (!loading) {
+    return (
+      <div className={styles.root}>
+        <PageHeader title="Tickets" />
+        <Grid container spacing={2}>
+          <Grow in={true} timeout={10}>
+            <Grid container item justifyContent="center">
+              <TextField
+                className={styles.search}
+                helperText="Filter by Subject, ID, and Tech"
+                autoFocus={true}
+                placeholder="Search"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                name="Search"
+                margin="none"
+                fullWidth={true}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        size="small"
+                        onClick={(e) => setSearchTerm("")}
+                      >
+                        <CloseIcon className={styles.searchIcons} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
               />
             </Grid>
           </Grow>
-        ))}
+        </Grid>
 
-        {/* <Grow in={true} timeout={300}>
-          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-            <TicketCard
-              ticket={{ Subject: "test", ID: 1, Description: "this is a test" }}
-            />
-          </Grid>
-        </Grow>
-
-        <Grow in={true} timeout={600}>
-          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-            <TicketCard
-              ticket={{ Subject: "test", ID: 1, Description: "this is a test" }}
-            />
-          </Grid>
-        </Grow> */}
-      </Grid>
-    </div>
-  );
+        <Grid container spacing={2}>
+          {filteredTickets.map((value, index) => (
+            <Grow in={true} timeout={delayTime(index)}>
+              <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                <TicketCard
+                  ticket={{
+                    Subject: value.Subject,
+                    ID: value.ID,
+                    TechnicianID: value.TechnicianID,
+                    Description: value.Description,
+                    SubmissionDate: value.SubmissionDate,
+                    LastModified: value.LastModified,
+                    Priority: value.Priority,
+                  }}
+                />
+              </Grid>
+            </Grow>
+          ))}
+        </Grid>
+      </div>
+    );
+  } else {
+    return (
+      <div className={styles.root}>
+        <CircularLoading />
+      </div>
+    );
+  }
 };
 
 export default SubmittedTickets;

@@ -276,7 +276,7 @@ const Navbar = ({ children }) => {
             >
               <Grid item>
                 <Typography className={styles.appbarUserText}>
-                  Welcome {user.tblUser.FirstName + " " + user.tblUser.LastName}
+                  {user.tblUser.FirstName + " " + user.tblUser.LastName}
                 </Typography>
               </Grid>
               <Grid item>
