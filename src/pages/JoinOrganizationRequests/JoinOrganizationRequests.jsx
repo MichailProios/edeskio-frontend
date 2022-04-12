@@ -80,11 +80,11 @@ const JoinOrganizationRequests = () => {
   return (
     <>
       <div className={styles.root}>
-        <PageHeader title={"Approve Users"} />
+        <PageHeader title={"Organizaton Requests"} />
         <Grow in={true} timeout={150}>
           <div>
             <MaterialTable
-              title="Approve Users to Join"
+              title="Approve Users"
               icons={tableIcons}
               columns={columns}
               data={tableRows}
@@ -113,34 +113,32 @@ const JoinOrganizationRequests = () => {
                   },
                 ],
               }}
-              editable={{
-                onRowUpdate: (updatedRow, oldRow) =>
-                  new Promise((resolve, reject) => {
-                    dispatch(
-                      putPermissionsAction({
-                        updatedRow,
-                        oldRow,
-                      })
-                    );
-                    resolve();
-                  }),
-              }}
-              actions={
-                [
-                  {
-                    icon: tableIcons.Approve,
-                    tooltip: "Approve",
-                    isFreeAction: false,
-                    onClick: (event) => alert("You wanna approve"),
-                  },
-                  {
-                    icon: tableIcons.Deny,
-                    tooltip: "Deny",
-                    isFreeAction: false,
-                    onClick: (event) => alert("You wanna deny"),
-                  },
-                ]
-              }
+              // editable={{
+              //   onRowUpdate: (updatedRow, oldRow) =>
+              //     new Promise((resolve, reject) => {
+              //       dispatch(
+              //         putPermissionsAction({
+              //           updatedRow,
+              //           oldRow,
+              //         })
+              //       );
+              //       resolve();
+              //     }),
+              // }}
+              actions={[
+                {
+                  icon: tableIcons.Approve,
+                  tooltip: "Approve",
+                  isFreeAction: false,
+                  onClick: (event) => alert("You wanna approve"),
+                },
+                {
+                  icon: tableIcons.Deny,
+                  tooltip: "Deny",
+                  isFreeAction: false,
+                  onClick: (event) => alert("You wanna deny"),
+                },
+              ]}
             />
           </div>
         </Grow>

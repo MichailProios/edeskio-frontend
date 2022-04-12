@@ -77,7 +77,9 @@ const Login = ({ handleRegister }) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    dispatch(postUserLoginAction(username, password));
+    if (username.length > 0 && password.length > 0) {
+      dispatch(postUserLoginAction(username, password));
+    }
     setUsername("");
     setPassword("");
   };
@@ -167,7 +169,7 @@ const Login = ({ handleRegister }) => {
         >
           <FormControlLabel
             className={styles.loginRememberMeCheckbox}
-            control={<Checkbox name="checkedC" />}
+            control={<Checkbox name="checked" />}
             label="Remember Me"
           />
         </Grid>

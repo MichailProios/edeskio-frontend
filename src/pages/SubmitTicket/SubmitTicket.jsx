@@ -253,15 +253,17 @@ const SubmitTicket = () => {
   const userID = useSelector((state) => state.User.user.tblUser.ID);
 
   const handleSubmit = () => {
-    dispatch(
-      postTicketNewTicketAction(
-        userID,
-        ticketSubject,
-        ticketDescription,
-        moment().format("YYYY-MM-DD HH:mm:ss"),
-        selectedTags
-      )
-    );
+    if (ticketSubject.length > 0 && ticketDescription.length > 0) {
+      dispatch(
+        postTicketNewTicketAction(
+          userID,
+          ticketSubject,
+          ticketDescription,
+          moment().format("YYYY-MM-DD HH:mm:ss"),
+          selectedTags
+        )
+      );
+    }
 
     setTicketSubject("");
     setTicketDescription("");

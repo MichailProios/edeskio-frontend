@@ -263,12 +263,6 @@ const getStepContent = (
   }
 };
 
-const temp = [
-  { title: "Business1" },
-  { title: "Business2" },
-  { title: "Business3" },
-];
-
 const getSteps = () => {
   return ["Information", "Account", "Organization"];
 };
@@ -280,14 +274,6 @@ const RegisterStepperCreate = ({ handleRegisterBack }) => {
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -295,19 +281,45 @@ const RegisterStepperCreate = ({ handleRegisterBack }) => {
   const [password, setPassword] = useState("");
   const [companyName, setCompanyName] = useState("");
 
-  const handleRegister = () => {
-    dispatch(
-      postUserRegisterNewOrganizationAction(
-        email,
-        username,
-        password,
-        firstName,
-        lastName,
-        companyName
-      )
-    );
+  const handleNext = () => {
+    if (
+      (activeStep === 0 &&
+        firstName.length > 0 &&
+        lastName.length > 0 &&
+        email.length > 0) ||
+      (activeStep === 1 && username.length > 0 && password.length > 0) ||
+      (activeStep === 2 && companyName.length > 0)
+    ) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
+  };
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleRegister = () => {
+    if (
+      firstName.length > 0 &&
+      lastName.length > 0 &&
+      email.length > 0 &&
+      username.length > 0 &&
+      password.length > 0 &&
+      companyName.length > 0
+    ) {
+      dispatch(
+        postUserRegisterNewOrganizationAction(
+          email,
+          username,
+          password,
+          firstName,
+          lastName,
+          companyName
+        )
+      );
+
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const handleFirstName = (e) => {
