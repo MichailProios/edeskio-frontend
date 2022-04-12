@@ -23,6 +23,12 @@ import {
   POST_TICKETS_NEW_TICKET_REQUEST,
   POST_TICKETS_NEW_TICKET_SUCCESS,
   POST_TICKETS_NEW_TICKET_FAILURE,
+  POST_EXPERTISE_TAGS_REQUEST,
+  POST_EXPERTISE_TAGS_SUCCESS,
+  POST_EXPERTISE_TAGS_FAILURE,
+  GET_EXPERTISE_TAGS_REQUEST,
+  GET_EXPERTISE_TAGS_SUCCESS,
+  GET_EXPERTISE_TAGS_FAILURE,
   GET_TICKETS_REQUEST,
   GET_TICKETS_SUCCESS,
   GET_TICKETS_FAILURE,
@@ -266,6 +272,26 @@ export const UserReducer = (state = initialState, action) => {
         error: action.payload,
       };
 
+    case POST_EXPERTISE_TAGS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case POST_EXPERTISE_TAGS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        successfull: true,
+      };
+    case POST_EXPERTISE_TAGS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
     case GET_TICKETS_REQUEST:
       return {
         ...state,
@@ -280,6 +306,27 @@ export const UserReducer = (state = initialState, action) => {
         successfull: true,
       };
     case GET_TICKETS_FAILURE:
+      return {
+        ...state,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case GET_EXPERTISE_TAGS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case GET_EXPERTISE_TAGS_SUCCESS:
+      console.log(action.payload);
+      return {
+        ...state,
+        loading: false,
+        //expertiseTags: action.payload.tags[0].data,
+        successfull: true,
+      };
+    case GET_EXPERTISE_TAGS_FAILURE:
       return {
         ...state,
         successfull: false,

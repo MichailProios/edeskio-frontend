@@ -24,6 +24,12 @@ import {
   POST_TICKETS_NEW_TICKET_REQUEST,
   POST_TICKETS_NEW_TICKET_SUCCESS,
   POST_TICKETS_NEW_TICKET_FAILURE,
+  POST_EXPERTISE_TAGS_REQUEST,
+  POST_EXPERTISE_TAGS_SUCCESS,
+  POST_EXPERTISE_TAGS_FAILURE,
+  GET_EXPERTISE_TAGS_REQUEST,
+  GET_EXPERTISE_TAGS_SUCCESS,
+  GET_EXPERTISE_TAGS_FAILURE,
   GET_TICKETS_REQUEST,
   GET_TICKETS_SUCCESS,
   GET_TICKETS_FAILURE,
@@ -460,6 +466,64 @@ const getUsersAllSuccess = (data) => {
 const getUsersAllFailure = (error) => {
   return {
     type: GET_USER_ALL_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const getExpertiseTagsOneAction = (userID) => {
+  return async (dispatch) => {
+    dispatch(getExpertiseTagsOneRequest());
+    await getExpertiseTagsOneWithAxios(userID)
+      .then((response) => {
+        dispatch(getExpertiseTagsOneSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getExpertiseTagsOneFailure(error.message));
+      });
+  };
+};
+
+const getExpertiseTagsOneWithAxios = async (userID) => {
+  var expertiseTags = [];
+
+  await getExpertiseTagsOne(userID).then((response) => {
+    expertiseTags.push(response);
+  });
+
+  return {
+    expertiseTags,
+  };
+};
+
+const getExpertiseTagsOne = (userID) => {
+  return axios.get(endpoints.getExpertiseTags, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: {
+      TechnicianID: userID,
+    },
+  });
+};
+
+const getExpertiseTagsOneRequest = () => {
+  return {
+    type: GET_EXPERTISE_TAGS_REQUEST,
+  };
+};
+
+const getExpertiseTagsOneSuccess = (data) => {
+  return {
+    type: GET_EXPERTISE_TAGS_SUCCESS,
+    payload: data,
+  };
+};
+
+const getExpertiseTagsOneFailure = (error) => {
+  return {
+    type: GET_EXPERTISE_TAGS_FAILURE,
     payload: error,
   };
 };
@@ -942,6 +1006,83 @@ const postTicketNewTicketSuccess = (data) => {
 const postTicketNewTicketFailure = () => {
   return {
     type: POST_TICKETS_NEW_TICKET_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const postExpertiseTagsAction = (
+  userID,
+  tags
+) => {
+  return async (dispatch) => {
+    dispatch(postExpertiseTagsRequest());
+    await postExpertiseTagsWithAxios(
+      userID,
+      tags
+    )
+      .then((response) => {
+        dispatch(postExpertiseTagsSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(postExpertiseTagsFailure(error.message));
+      });
+  };
+};
+
+const postExpertiseTagsWithAxios = async (
+  userID,
+  tags
+) => {
+  var reponse = [];
+
+  await postExpertiseTags (
+    userID,
+    tags
+  ).then((response) => {
+    reponse.push(response);
+  });
+
+  return {
+    reponse,
+  };
+};
+
+const postExpertiseTags = (
+  userID,
+  tags
+) => {
+  return axios.post(
+    endpoints.expertiseTags,
+    {
+      UserID: userID,
+      Tags: tags,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const postExpertiseTagsRequest = (error) => {
+  return {
+    type: POST_EXPERTISE_TAGS_REQUEST,
+    payload: error,
+  };
+};
+
+const postExpertiseTagsSuccess = (data) => {
+  return {
+    type: POST_EXPERTISE_TAGS_SUCCESS,
+    payload: data,
+  };
+};
+
+const postExpertiseTagsFailure = () => {
+  return {
+    type: POST_EXPERTISE_TAGS_FAILURE,
   };
 };
 /**************************************************************************************************************/

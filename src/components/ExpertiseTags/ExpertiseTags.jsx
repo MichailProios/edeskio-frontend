@@ -22,9 +22,11 @@ import Skeleton from "@material-ui/lab/Skeleton";
 
 import CloseIcon from "@material-ui/icons/Close";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
+
+import { getExpertiseTagsOneAction, postExpertiseTagsAction } from "../../redux/user/userActions";
 
 const useStyles = makeStyles((theme) => ({
   disabledField: {
@@ -121,8 +123,13 @@ const useStyles = makeStyles((theme) => ({
 
 const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
 
+  // create dispatch
+  const dispatch = useDispatch();
+
   //const loading = useSelector((state) => state.User.loading);
   const user = useSelector((state) => state.User.user);
+  const userID = useSelector((state) => state.User.user.tblUser.ID);
+
   const styles = useStyles();
 
 
@@ -147,7 +154,13 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
     ]);
 
     setSelectedCategoryTags([...new Set(tblTags.map((tag) => tag))]);
-  }, [tblTags]);
+
+    if (userID !== "")
+    {
+      //setSelectedTags( dispatch(getExpertiseTagsOneAction(userID)) );
+    }
+
+  }, [dispatch, tblTags]);
 
   const handleCagetoryChange = (e) => {
     let newCategories = [];
@@ -231,15 +244,13 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
     setSelectedTags((tags) => tags.filter((tag) => tag !== deletedTag));
   };
 
-  const userID = useSelector((state) => state.User.user.tblUser.ID);
-
   const handleSave = () => {
-    // dispatch(
-    //   postTicketNewTicketAction(
-    //     userID,
-    //     selectedTags
-    //   )
-    // );
+    dispatch(
+      postExpertiseTagsAction(
+        userID,
+        selectedTags
+      )
+    );
 
     handleClose();
   };
