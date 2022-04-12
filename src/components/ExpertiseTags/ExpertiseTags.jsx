@@ -364,30 +364,29 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
               </Grid>
             </Grid>
           </Grow>
-          <Grow in={true} timeout={600}>
-            <Grid container item justifyContent="flex-end" spacing={2}>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={styles.saveBtn}
-                  onClick={handleSave}
-                >
-                  Save
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  className={styles.cancelBtn}
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </Button>
-              </Grid>
+
+          <Grid container item justifyContent="flex-end" spacing={1}>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                className={styles.saveBtn}
+                onClick={handleSave}
+              >
+                Save
+              </Button>
             </Grid>
-          </Grow>
+            <Grid item>
+              <Button
+                variant="outlined"
+                color="primary"
+                className={styles.cancelBtn}
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
       </DialogContent>
     </Dialog>

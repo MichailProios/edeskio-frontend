@@ -19,8 +19,6 @@ const Authenticated = ({ children }) => {
   const sessionUsername = useSelector((state) => state.User.sessionUser);
 
   useEffect(() => {
-    console.log(sessionUsername.length !== 0);
-
     if (sessionUsername.length !== 0) {
       dispatch(getUserAction(sessionUsername));
     }
