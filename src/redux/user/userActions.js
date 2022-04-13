@@ -24,6 +24,12 @@ import {
   POST_TICKETS_NEW_TICKET_REQUEST,
   POST_TICKETS_NEW_TICKET_SUCCESS,
   POST_TICKETS_NEW_TICKET_FAILURE,
+  POST_EXPERTISE_TAGS_REQUEST,
+  POST_EXPERTISE_TAGS_SUCCESS,
+  POST_EXPERTISE_TAGS_FAILURE,
+  GET_EXPERTISE_TAGS_REQUEST,
+  GET_EXPERTISE_TAGS_SUCCESS,
+  GET_EXPERTISE_TAGS_FAILURE,
   GET_TICKETS_REQUEST,
   GET_TICKETS_SUCCESS,
   GET_TICKETS_FAILURE,
@@ -39,6 +45,10 @@ import {
   PUT_PERMISSIONS_REQUEST,
   PUT_PERMISSIONS_SUCCESS,
   PUT_PERMISSIONS_FAILURE,
+  PUT_USER_APPROVED_REQUEST,
+  PUT_USER_APPROVED_SUCCESS,
+  PUT_USER_APPROVED_FAILURE,
+  USER_LOGOUT,
 } from "./userTypes";
 
 import { store } from "../store";
@@ -76,7 +86,6 @@ const postUserLoginWithAxios = async (username, password) => {
 };
 
 const postUserLogin = (username, password) => {
-  console.log(username);
   return axios.post(
     endpoints.loginUser,
     {
@@ -117,10 +126,10 @@ const postUserLoginFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const getUserSessionAction = (username, password) => {
+export const getUserSessionAction = () => {
   return async (dispatch) => {
     dispatch(getUserSessionRequest());
-    await getUserSessionWithAxios(username, password)
+    await getUserSessionWithAxios()
       .then((response) => {
         dispatch(getUserSessionSuccess(response));
       })
@@ -130,7 +139,7 @@ export const getUserSessionAction = (username, password) => {
   };
 };
 
-const getUserSessionWithAxios = async (username, password) => {
+const getUserSessionWithAxios = async () => {
   var session = [];
 
   // await postUserLogin(username, password).then((response) => {
@@ -146,7 +155,7 @@ const getUserSessionWithAxios = async (username, password) => {
   };
 };
 
-const getUserSession = (username, password) => {
+const getUserSession = () => {
   return axios.get(endpoints.userSession, {
     headers: {
       "Content-Type": "application/json",
@@ -178,10 +187,10 @@ const getUserSessionFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const getPermissionsAllAction = () => {
+export const getPermissionsAllAction = (organizationID) => {
   return async (dispatch) => {
     dispatch(getPermissionsAllRequest());
-    await getPermissionsAllWithAxios()
+    await getPermissionsAllWithAxios(organizationID)
       .then((response) => {
         dispatch(getPermissionsAllSuccess(response));
       })
@@ -191,14 +200,14 @@ export const getPermissionsAllAction = () => {
   };
 };
 
-const getPermissionsAllWithAxios = async () => {
+const getPermissionsAllWithAxios = async (organizationID) => {
   var roles = [];
 
   // await postUserLogin().then((response) => {
   //   user.push(response);
   // });
 
-  await getPermissionsAll().then((response) => {
+  await getPermissionsAll(organizationID).then((response) => {
     roles.push(response);
   });
 
@@ -207,10 +216,13 @@ const getPermissionsAllWithAxios = async () => {
   };
 };
 
-const getPermissionsAll = () => {
+const getPermissionsAll = (organizationID) => {
   return axios.get(endpoints.rolesAll, {
     headers: {
       "Content-Type": "application/json",
+    },
+    params: {
+      organizationID: organizationID,
     },
   });
 };
@@ -410,10 +422,10 @@ const getTicketsFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const getUsersAllAction = () => {
+export const getUsersAllAction = (organizationID) => {
   return async (dispatch) => {
     dispatch(getUsersAllRequest());
-    await getUsersAllWithAxios()
+    await getUsersAllWithAxios(organizationID)
       .then((response) => {
         dispatch(getUsersAllSuccess(response));
       })
@@ -423,10 +435,10 @@ export const getUsersAllAction = () => {
   };
 };
 
-const getUsersAllWithAxios = async () => {
+const getUsersAllWithAxios = async (organizationID) => {
   var users = [];
 
-  await getUsersAll().then((response) => {
+  await getUsersAll(organizationID).then((response) => {
     users.push(response);
   });
 
@@ -435,10 +447,13 @@ const getUsersAllWithAxios = async () => {
   };
 };
 
-const getUsersAll = () => {
+const getUsersAll = (organizationID) => {
   return axios.get(endpoints.usersAll, {
     headers: {
       "Content-Type": "application/json",
+    },
+    params: {
+      organizationID: organizationID,
     },
   });
 };
@@ -459,6 +474,64 @@ const getUsersAllSuccess = (data) => {
 const getUsersAllFailure = (error) => {
   return {
     type: GET_USER_ALL_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const getExpertiseTagsOneAction = (userID) => {
+  return async (dispatch) => {
+    dispatch(getExpertiseTagsOneRequest());
+    await getExpertiseTagsOneWithAxios(userID)
+      .then((response) => {
+        dispatch(getExpertiseTagsOneSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getExpertiseTagsOneFailure(error.message));
+      });
+  };
+};
+
+const getExpertiseTagsOneWithAxios = async (userID) => {
+  var expertiseTags = [];
+
+  await getExpertiseTagsOne(userID).then((response) => {
+    expertiseTags.push(response);
+  });
+
+  return {
+    expertiseTags,
+  };
+};
+
+const getExpertiseTagsOne = (userID) => {
+  return axios.get(endpoints.getExpertiseTags, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: {
+      TechnicianID: userID,
+    },
+  });
+};
+
+const getExpertiseTagsOneRequest = () => {
+  return {
+    type: GET_EXPERTISE_TAGS_REQUEST,
+  };
+};
+
+const getExpertiseTagsOneSuccess = (data) => {
+  return {
+    type: GET_EXPERTISE_TAGS_SUCCESS,
+    payload: data,
+  };
+};
+
+const getExpertiseTagsOneFailure = (error) => {
+  return {
+    type: GET_EXPERTISE_TAGS_FAILURE,
     payload: error,
   };
 };
@@ -534,10 +607,12 @@ const putTicketsSelfAssignFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putPermissionsAction = (updatedRow, oldRow) => {
+export const putPermissionsAction = (updatedRow, oldRow, organizationID) => {
+  console.log(organizationID);
+
   return async (dispatch) => {
     dispatch(putPermissionsRequest());
-    await putPermissionsWithAxios(updatedRow, oldRow)
+    await putPermissionsWithAxios(updatedRow, oldRow, organizationID)
       .then((response) => {
         dispatch(putPermissionsSuccess(response));
       })
@@ -547,10 +622,10 @@ export const putPermissionsAction = (updatedRow, oldRow) => {
   };
 };
 
-const putPermissionsWithAxios = async (updatedRow, oldRow) => {
+const putPermissionsWithAxios = async (updatedRow, oldRow, organizationID) => {
   var access = [];
 
-  await putPermissions(updatedRow, oldRow).then((response) => {
+  await putPermissions(updatedRow, oldRow, organizationID).then((response) => {
     access.push(response);
   });
 
@@ -559,10 +634,10 @@ const putPermissionsWithAxios = async (updatedRow, oldRow) => {
   };
 };
 
-const putPermissions = (updatedRow, oldRow) => {
+const putPermissions = (updatedRow, oldRow, organizationID) => {
   return axios.put(
     endpoints.permissionsUpdate,
-    { updatedRow: updatedRow },
+    { updatedRow: updatedRow, organizationID: organizationID },
     {
       headers: {
         "Content-Type": "application/json",
@@ -810,7 +885,6 @@ const postUserRegisterNewOrganization = (
   lastName,
   companyName
 ) => {
-  console.log(companyName);
   return axios.post(
     endpoints.registerUserNewOrganization,
     {
@@ -941,6 +1015,141 @@ const postTicketNewTicketSuccess = (data) => {
 const postTicketNewTicketFailure = () => {
   return {
     type: POST_TICKETS_NEW_TICKET_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const postExpertiseTagsAction = (userID, tags) => {
+  return async (dispatch) => {
+    dispatch(postExpertiseTagsRequest());
+    await postExpertiseTagsWithAxios(userID, tags)
+      .then((response) => {
+        dispatch(postExpertiseTagsSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(postExpertiseTagsFailure(error.message));
+      });
+  };
+};
+
+const postExpertiseTagsWithAxios = async (userID, tags) => {
+  var expertiseTags = [];
+
+  await postExpertiseTags(userID, tags).then((response) => {
+    expertiseTags.push(response);
+  });
+
+  return {
+    expertiseTags,
+  };
+};
+
+const postExpertiseTags = (userID, tags) => {
+  return axios.post(
+    endpoints.expertiseTags,
+    {
+      UserID: userID,
+      Tags: tags,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const postExpertiseTagsRequest = (error) => {
+  return {
+    type: POST_EXPERTISE_TAGS_REQUEST,
+    payload: error,
+  };
+};
+
+const postExpertiseTagsSuccess = (data) => {
+  return {
+    type: POST_EXPERTISE_TAGS_SUCCESS,
+    payload: data,
+  };
+};
+
+const postExpertiseTagsFailure = () => {
+  return {
+    type: POST_EXPERTISE_TAGS_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const logoutUserAction = () => {
+  return async (dispatch) => {
+    dispatch(logoutUser());
+  };
+};
+
+const logoutUser = () => {
+  return {
+    type: USER_LOGOUT,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTblUsersApprovedAction = (UserID, status, organizationID) => {
+  return async (dispatch) => {
+    dispatch(putTblUsersApprovedRequest());
+    await putTblUsersApprovedWithAxios(UserID, status, organizationID)
+      .then((response) => {
+        dispatch(putTblUsersApprovedSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTblUsersApprovedFailure(error.message));
+      });
+  };
+};
+
+const putTblUsersApprovedWithAxios = async (UserID, status, organizationID) => {
+  var users = [];
+
+  await putTblUsersApproved(UserID, status, organizationID).then((response) => {
+    users.push(response);
+  });
+
+  return {
+    users,
+  };
+};
+
+const putTblUsersApproved = (UserID, status, organizationID) => {
+  return axios.put(
+    endpoints.approved,
+    { UserID: UserID, status: status, organizationID: organizationID },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTblUsersApprovedRequest = () => {
+  return {
+    type: PUT_USER_APPROVED_REQUEST,
+  };
+};
+
+const putTblUsersApprovedSuccess = (data) => {
+  return {
+    type: PUT_USER_APPROVED_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTblUsersApprovedFailure = (error) => {
+  return {
+    type: PUT_USER_APPROVED_FAILURE,
+    payload: error,
   };
 };
 /**************************************************************************************************************/

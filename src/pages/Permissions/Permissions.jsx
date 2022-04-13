@@ -21,19 +21,6 @@ import {
   getPermissionsAllAction,
   putPermissionsAction,
 } from "../../redux/user/userActions.js";
-import { Satellite } from "@material-ui/icons";
-
-// import store from "../../redux/store";
-
-// import {
-//   // permissionsSelector,
-//   permissionsUsersEmailSelector,
-//   permissionsRolesNameSelector,
-//   permissionsModulesNameSelector,
-//   permissionsLoadingSelector,
-// } from "../../redux/permissions/permissionsReducer";
-
-//Redux
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,9 +37,15 @@ const Permissions = () => {
 
   const loading = useSelector((state) => state.User.loading);
 
+  const organizationID = useSelector(
+    (state) => state.User.user.tblOrganization.ID
+  );
+
   useEffect(() => {
-    dispatch(getPermissionsAllAction());
-  }, [dispatch]);
+    if (organizationID.toString().length > 0) {
+      dispatch(getPermissionsAllAction(organizationID));
+    }
+  }, [dispatch, organizationID]);
 
   const columns = [
     {
@@ -137,12 +130,12 @@ const Permissions = () => {
                 //   }),
                 onRowUpdate: (updatedRow, oldRow) =>
                   new Promise((resolve, reject) => {
-                    dispatch(
-                      putPermissionsAction({
-                        updatedRow,
-                        oldRow,
-                      })
-                    );
+                    if (organizationID.toString().length > 0) {
+                      dispatch(
+                        putPermissionsAction(updatedRow, oldRow, organizationID)
+                      );
+                    }
+
                     resolve();
                   }),
               }}

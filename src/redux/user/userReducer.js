@@ -23,6 +23,12 @@ import {
   POST_TICKETS_NEW_TICKET_REQUEST,
   POST_TICKETS_NEW_TICKET_SUCCESS,
   POST_TICKETS_NEW_TICKET_FAILURE,
+  POST_EXPERTISE_TAGS_REQUEST,
+  POST_EXPERTISE_TAGS_SUCCESS,
+  POST_EXPERTISE_TAGS_FAILURE,
+  GET_EXPERTISE_TAGS_REQUEST,
+  GET_EXPERTISE_TAGS_SUCCESS,
+  GET_EXPERTISE_TAGS_FAILURE,
   GET_TICKETS_REQUEST,
   GET_TICKETS_SUCCESS,
   GET_TICKETS_FAILURE,
@@ -38,6 +44,10 @@ import {
   PUT_PERMISSIONS_REQUEST,
   PUT_PERMISSIONS_SUCCESS,
   PUT_PERMISSIONS_FAILURE,
+  PUT_USER_APPROVED_REQUEST,
+  PUT_USER_APPROVED_SUCCESS,
+  PUT_USER_APPROVED_FAILURE,
+  USER_LOGOUT,
 } from "./userTypes";
 import { store } from "../store";
 
@@ -61,26 +71,27 @@ export const initialState = {
   user: {
     tblAccess: {},
     tblOrganization: {},
-    tblUser: {},
+    tblUser: { ID: null },
   },
+
+  //Expertise Tags
+  expertiseTagsLoading: false,
+  expertiseTags: [],
 
   //Tags
   tags: {
-    tblTags: [
-      {
-        Type: null,
-        Category: null,
-      },
-    ],
+    tblTags: [],
   },
 
   //Permissions
   roles: [],
-  users: { tblUsers: [{}] },
+  users: [],
   access: [],
+  usersApproved: [],
 
   //Tickets
-  tickets: { tblTickets: [{}] },
+  tickets: { tblTickets: [] },
+  ticketTags: [],
 
   //Organization
   organizations: [],
@@ -90,6 +101,8 @@ export const UserReducer = (state = initialState, action) => {
   let roles;
   let access;
   let users;
+  let expertiseTags;
+  let ticketTags;
 
   switch (action.type) {
     case POST_USER_LOGIN_REQUEST:
@@ -265,6 +278,35 @@ export const UserReducer = (state = initialState, action) => {
         error: action.payload,
       };
 
+    case POST_EXPERTISE_TAGS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case POST_EXPERTISE_TAGS_SUCCESS:
+      expertiseTags = action.payload.expertiseTags[0].data.tblExpertiseTags.map(
+        ({ ID, TechnicianID, ...tag }) => tag
+      );
+
+      expertiseTags = Object.values(expertiseTags).map(
+        (element) => element.TagType
+      );
+
+      return {
+        ...state,
+        loading: false,
+        expertiseTags: expertiseTags,
+        successfull: true,
+      };
+    case POST_EXPERTISE_TAGS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
     case GET_TICKETS_REQUEST:
       return {
         ...state,
@@ -272,14 +314,42 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case GET_TICKETS_SUCCESS:
-      console.log(action.payload.tickets[0].data);
       return {
         ...state,
         loading: false,
         tickets: action.payload.tickets[0].data,
+        ticketTags: action.payload.tickets[0].data.tblTicketTags,
         successfull: true,
       };
     case GET_TICKETS_FAILURE:
+      return {
+        ...state,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case GET_EXPERTISE_TAGS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case GET_EXPERTISE_TAGS_SUCCESS:
+      expertiseTags = action.payload.expertiseTags[0].data.tblExpertiseTags.map(
+        ({ ID, TechnicianID, ...tag }) => tag
+      );
+
+      expertiseTags = Object.values(expertiseTags).map(
+        (element) => element.TagType
+      );
+
+      return {
+        ...state,
+        loading: false,
+        expertiseTags: expertiseTags,
+        successfull: true,
+      };
+    case GET_EXPERTISE_TAGS_FAILURE:
       return {
         ...state,
         successfull: false,
@@ -297,6 +367,7 @@ export const UserReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         tickets: action.payload.tickets[0].data,
+        ticketTags: action.payload.tickets[0].data.tblTicketTags,
         successfull: true,
       };
     case PUT_TICKETS_SELF_ASSIGN_FAILURE:
@@ -314,10 +385,17 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case GET_USER_ALL_SUCCESS:
+      let usersFiltered = action.payload.users[0].data.tblUsers;
+
+      usersFiltered = usersFiltered.filter(
+        (element) => element.Approved === null
+      );
+
       return {
         ...state,
         loading: false,
         users: action.payload.users[0].data,
+        usersApproved: usersFiltered,
         successfull: true,
       };
     case GET_USER_ALL_FAILURE:
@@ -338,42 +416,32 @@ export const UserReducer = (state = initialState, action) => {
       roles = action.payload.roles[0].data.tblRoles;
       users = action.payload.roles[0].data.tblUsers;
 
-      console.log(access);
-
       access = access.map((record) => {
-        let user = users.find((userRecord) => userRecord.ID === record.UserID);
-
-        let role = roles.find(
-          (roleRecord) => roleRecord.Name === record.RoleName
+        let user = users.find(
+          (userRecord) =>
+            userRecord.ID === record.UserID && userRecord.Approved !== null
         );
 
-        // const roleName = (roleID) => {
-        //   switch (roleID) {
-        //     case 1:
-        //       return "Entry";
-        //     case 2:
-        //       return "Basic";
-        //     case 3:
-        //       return "Admin";
-        //     case 4:
-        //       return "Super Admin";
-        //     default:
-        //       return "";
-        //   }
-        // };
+        if (typeof user === "undefined") {
+          return false;
+        } else {
+          let role = roles.find(
+            (roleRecord) => roleRecord.Name === record.RoleName
+          );
 
-        record.FirstName = user.FirstName;
-        record.LastName = user.LastName;
-        // record.Module = typeof module === "undefined" ? "None" : module.Name;
-        // record.Role = roleName(role.ID);
+          record.FirstName = user.FirstName;
+          record.LastName = user.LastName;
 
-        return record;
+          return record;
+        }
       });
+
+      access = access.filter((element) => element !== false);
 
       return {
         ...state,
         loading: false,
-        roles: action.payload.roles[0].data.tblRoles,
+        //roles: action.payload.roles[0].data.tblRoles,
         access: access,
         successfull: true,
       };
@@ -397,34 +465,26 @@ export const UserReducer = (state = initialState, action) => {
       users = action.payload.access[0].data.tblUsers;
 
       access = access.map((record) => {
-        let user = users.find((userRecord) => userRecord.ID === record.UserID);
-
-        let role = roles.find(
-          (roleRecord) => roleRecord.Name === record.RoleName
+        let user = users.find(
+          (userRecord) =>
+            userRecord.ID === record.UserID && userRecord.Approved !== null
         );
 
-        // const roleName = (roleID) => {
-        //   switch (roleID) {
-        //     case 1:
-        //       return "Entry";
-        //     case 2:
-        //       return "Basic";
-        //     case 3:
-        //       return "Admin";
-        //     case 4:
-        //       return "Super Admin";
-        //     default:
-        //       return "";
-        //   }
-        // };
+        if (typeof user === "undefined") {
+          return false;
+        } else {
+          let role = roles.find(
+            (roleRecord) => roleRecord.Name === record.RoleName
+          );
 
-        record.FirstName = user.FirstName;
-        record.LastName = user.LastName;
-        // record.Module = typeof module === "undefined" ? "None" : module.Name;
-        // record.Role = roleName(role.ID);
+          record.FirstName = user.FirstName;
+          record.LastName = user.LastName;
 
-        return record;
+          return record;
+        }
       });
+
+      access = access.filter((element) => element !== false);
 
       return {
         ...state,
@@ -436,6 +496,51 @@ export const UserReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case USER_LOGOUT:
+      return {
+        ...state,
+        authenticated: false,
+        sessionUser: "",
+        user: {
+          tblAccess: {},
+          tblOrganization: {},
+          tblUser: { ID: null },
+        },
+        expertiseTagsLoading: false,
+        expertiseTags: [],
+        roles: [],
+        users: [],
+        access: [],
+        usersApproved: [],
+        tickets: { tblTickets: [] },
+        ticketTags: [],
+      };
+
+    case PUT_USER_APPROVED_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case PUT_USER_APPROVED_SUCCESS:
+      let usersApproved = action.payload.users[0].data.tblUsers;
+
+      usersApproved = usersApproved.filter(
+        (element) => element.Approved === null
+      );
+      return {
+        ...state,
+        loading: false,
+        usersApproved: usersApproved,
+        successfull: true,
+      };
+    case PUT_USER_APPROVED_FAILURE:
+      return {
+        ...state,
         successfull: false,
         error: action.payload,
       };

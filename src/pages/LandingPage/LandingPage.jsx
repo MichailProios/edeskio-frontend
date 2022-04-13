@@ -3,14 +3,17 @@ import React, { useState, useEffect } from "react";
 //Material-UI Styles
 import { makeStyles, useTheme } from "@material-ui/styles";
 
-import { Slide, Paper, Grid, CircularProgress } from "@material-ui/core";
+import { Slide, Paper, Grid, CircularProgress, Grow } from "@material-ui/core";
 
 import Register from "../../components/Register/Register";
 
 import Login from "../../components/Login/Login";
 
 import { useSelector, useDispatch } from "react-redux";
-import { getUserOrganizationAction } from "../../redux/user/userActions";
+import {
+  getUserOrganizationAction,
+  getUserSessionAction,
+} from "../../redux/user/userActions";
 
 const useStyles = makeStyles((theme) => ({
   root: { width: "30em", height: "40em", overflow: "hidden" },
@@ -22,15 +25,19 @@ const LandingPage = () => {
 
   const [register, setRegister] = useState(false);
   const [initialSlideFlag, setInitialSlideFlag] = useState(false);
+  const [grow, setGrow] = useState(true);
 
   const loading = useSelector((state) => state.User.loginLoading);
+  const successfull = useSelector((state) => state.User.successfull);
 
   const handleRegisterBack = () => {
     setRegister(false);
+    setInitialSlideFlag(true);
   };
 
   const handleRegister = () => {
     setRegister(true);
+    setInitialSlideFlag(true);
   };
 
   useEffect(() => {
@@ -39,56 +46,64 @@ const LandingPage = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setInitialSlideFlag(true);
+      setGrow(false);
     }, 1);
 
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (!successfull) {
+      setInitialSlideFlag(false);
+    }
+  }, [successfull]);
+
   if (!loading) {
     return (
       <>
-        <Grid
-          container
-          spacing={0}
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
-          style={{ minHeight: "100vh" }}
-        >
-          <Grid item>
-            <Paper elevation={10} className={styles.root}>
-              {register && (
-                <Slide
-                  in={register}
-                  direction={register ? "left" : "right"}
-                  mountOnEnter
-                  unmountOnExit
-                >
-                  <div>
-                    <Register handleRegisterBack={handleRegisterBack} />
-                  </div>
-                </Slide>
-              )}
+        <Grow in={true} timeout={grow ? 300 : 0}>
+          <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            style={{ minHeight: "100vh" }}
+          >
+            <Grid item>
+              <Paper elevation={10} className={styles.root}>
+                {register && (
+                  <Slide
+                    in={register}
+                    direction={register ? "left" : "right"}
+                    mountOnEnter
+                    unmountOnExit
+                  >
+                    <div>
+                      <Register handleRegisterBack={handleRegisterBack} />
+                    </div>
+                  </Slide>
+                )}
 
-              {!register && (
-                <Slide
-                  in={!register}
-                  direction={register ? "left" : "right"}
-                  mountOnEnter
-                  unmountOnExit
-                  timeout={initialSlideFlag ? 250 : 0}
-                >
-                  <div>
-                    <Login handleRegister={handleRegister} />
-                  </div>
-                </Slide>
-              )}
+                {!register && (
+                  <Slide
+                    in={!register}
+                    direction={register ? "left" : "right"}
+                    mountOnEnter
+                    unmountOnExit
+                    timeout={initialSlideFlag ? 250 : 0}
+                  >
+                    <div>
+                      <Login handleRegister={handleRegister} />
+                    </div>
+                  </Slide>
+                )}
 
-              {!initialSlideFlag && <Login handleRegister={handleRegister} />}
-            </Paper>
+                {/* {!initialSlideFlag && <Login handleRegister={handleRegister} />} */}
+              </Paper>
+            </Grid>
           </Grid>
-        </Grid>
+        </Grow>
       </>
     );
   } else {

@@ -270,7 +270,16 @@ const RegisterStepperJoin = ({ handleRegisterBack }) => {
   const steps = getSteps();
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (
+      (activeStep === 0 &&
+        firstName.length > 0 &&
+        lastName.length > 0 &&
+        email.length > 0) ||
+      (activeStep === 1 && username.length > 0 && password.length > 0) ||
+      (activeStep === 2 && companyName.length > 0)
+    ) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const handleBack = () => {
@@ -287,18 +296,26 @@ const RegisterStepperJoin = ({ handleRegisterBack }) => {
   const organizations = useSelector((state) => state.User.organizations);
 
   const handleRegister = () => {
-    dispatch(
-      postUserRegisterExistingOrganizationAction(
-        email,
-        username,
-        password,
-        firstName,
-        lastName,
-        companyName
-      )
-    );
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (
+      firstName.length > 0 &&
+      lastName.length > 0 &&
+      email.length > 0 &&
+      username.length > 0 &&
+      password.length > 0 &&
+      companyName.length > 0
+    ) {
+      dispatch(
+        postUserRegisterExistingOrganizationAction(
+          email,
+          username,
+          password,
+          firstName,
+          lastName,
+          companyName
+        )
+      );
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const handleFirstName = (e) => {

@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 //Main component
 /******************************************************************************************************************/
-const ResolveSumbittedTicketsButton = () => {
+const ResolveSubmittedTicketsButton = () => {
   const styles = useStyles();
   const theme = useTheme();
 
@@ -60,7 +60,7 @@ const ResolveSumbittedTicketsButton = () => {
         <CardContent className={styles.content}>
           <Typography component={"span"}>
             <Box fontWeight="fontWeightBold" fontSize={16}>
-              Resolve Sumbitted Tickets
+              Resolve Submitted Tickets
             </Box>
           </Typography>
         </CardContent>
@@ -70,4 +70,4 @@ const ResolveSumbittedTicketsButton = () => {
 };
 /******************************************************************************************************************/
 
-export default ResolveSumbittedTicketsButton;
+export default ResolveSubmittedTicketsButton;

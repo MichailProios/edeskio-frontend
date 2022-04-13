@@ -58,7 +58,7 @@ const ViewTicketsButton = () => {
         <CardContent className={styles.content}>
           <Typography component={"span"}>
             <Box fontWeight="fontWeightBold" fontSize={16}>
-              View Sumbitted Tickets
+              View Submitted Tickets
             </Box>
           </Typography>
         </CardContent>

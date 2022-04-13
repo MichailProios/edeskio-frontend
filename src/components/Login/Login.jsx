@@ -77,9 +77,11 @@ const Login = ({ handleRegister }) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
+    if (username.length > 0 && password.length > 0) {
+      dispatch(postUserLoginAction(username, password));
+    }
     setUsername("");
     setPassword("");
-    dispatch(postUserLoginAction(username, password));
   };
 
   const handleUsername = (e) => {
@@ -152,6 +154,7 @@ const Login = ({ handleRegister }) => {
             value={password}
             onChange={handlePassword}
             className={styles.loginTextfields}
+            onKeyDown={(e) => e.keyCode === 13 && handleLogin()}
           />
         </Grid>
         <Grid
@@ -166,7 +169,7 @@ const Login = ({ handleRegister }) => {
         >
           <FormControlLabel
             className={styles.loginRememberMeCheckbox}
-            control={<Checkbox name="checkedC" />}
+            control={<Checkbox name="checked" />}
             label="Remember Me"
           />
         </Grid>

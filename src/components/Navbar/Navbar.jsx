@@ -22,17 +22,15 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { MenuItem, Menu, Tooltip, Grid } from "@material-ui/core";
 
-import { AccountCircle } from "@material-ui/icons";
+import { AccountCircle, LocalOffer } from "@material-ui/icons";
 
 import { Link, useLocation } from "react-router-dom";
 
 import logoOnly from "../../utilities/images/Logos/logo-only.png";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllTagsAction,
-  getUserAction,
-  getUsersAllAction,
-} from "../../redux/user/userActions";
+import { logoutUserAction } from "../../redux/user/userActions";
+
+import ExpertiseTags from "../ExpertiseTags/ExpertiseTags";
 
 const drawerWidth = 240;
 
@@ -153,10 +151,14 @@ const Navbar = ({ children }) => {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const user = useSelector(
-    (state) =>
-      state.User.user.tblUser.FirstName + " " + state.User.user.tblUser.LastName
-  );
+  const [openExpertiseTags, setOpenExpertiseTags] = useState(false);
+
+  const user = useSelector((state) => state.User.user);
+
+  // const user = useSelector(
+  //   (state) =>
+  //     state.User.user.tblUser.FirstName + " " + state.User.user.tblUser.LastName
+  // );
 
   const organization = useSelector(
     (state) => state.User.user.tblOrganization.Name
@@ -180,8 +182,21 @@ const Navbar = ({ children }) => {
     setAnchorEl(null);
   };
 
+  const handleExpertiseTagsOpen = (e) => {
+    setOpenExpertiseTags(true);
+    setAnchorEl(null);
+  };
+
+  const handleExpertiseTagsClose = (e) => {
+    setOpenExpertiseTags(false);
+  };
+
   const handleProfileOpen = (e) => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = (e) => {
+    dispatch(logoutUserAction());
   };
 
   const dispatch = useDispatch();
@@ -256,7 +271,7 @@ const Navbar = ({ children }) => {
             >
               <Grid item>
                 <Typography className={styles.appbarUserText}>
-                  Welcome {user}
+                  {user.tblUser.FirstName + " " + user.tblUser.LastName}
                 </Typography>
               </Grid>
               <Grid item>
@@ -292,8 +307,25 @@ const Navbar = ({ children }) => {
                       }
                     />
                   </MenuItem>
+                  {user.tblAccess.RoleName === "Admin" ||
+                  user.tblAccess.RoleName === "Tech" ? (
+                    <MenuItem onClick={handleExpertiseTagsOpen}>
+                      <ListItemIcon>
+                        <LocalOffer className={styles.menuIcons} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={
+                          <Typography variant="body1" color="textPrimary">
+                            Expertise Tags
+                          </Typography>
+                        }
+                      />
+                    </MenuItem>
+                  ) : (
+                    ""
+                  )}
 
-                  <MenuItem>
+                  <MenuItem onClick={(e) => handleLogout()}>
                     <ListItemIcon>
                       <ExitToAppIcon className={styles.menuIcons} />
                     </ListItemIcon>
@@ -376,6 +408,11 @@ const Navbar = ({ children }) => {
           ))}
         </List> */}
       </Drawer>
+      <ExpertiseTags
+        open={openExpertiseTags}
+        handleOpen={handleExpertiseTagsOpen}
+        handleClose={handleExpertiseTagsClose}
+      />
 
       <main
         className={clsx(styles.content, {
