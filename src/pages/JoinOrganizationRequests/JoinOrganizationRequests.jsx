@@ -51,17 +51,26 @@ const JoinOrganizationRequests = () => {
   const tableRows = useSelector((state) => state.User.usersApproved);
 
   const loading = useSelector((state) => state.User.userLoading);
+  const organizationID = useSelector(
+    (state) => state.User.user.tblOrganization.ID
+  );
 
   useEffect(() => {
-    dispatch(getUsersAllAction());
-  }, [dispatch]);
+    if (organizationID.toString().length > 0) {
+      dispatch(getUsersAllAction(organizationID));
+    }
+  }, [dispatch, organizationID]);
 
   const handleApproved = (tableRow) => {
-    dispatch(putTblUsersApprovedAction(tableRow.ID, true));
+    if (organizationID.toString().length > 0) {
+      dispatch(putTblUsersApprovedAction(tableRow.ID, true, organizationID));
+    }
   };
 
   const handleDenied = (tableRow) => {
-    dispatch(putTblUsersApprovedAction(tableRow.ID, false));
+    if (organizationID.toString().length > 0) {
+      dispatch(putTblUsersApprovedAction(tableRow.ID, false, organizationID));
+    }
   };
 
   const columns = [

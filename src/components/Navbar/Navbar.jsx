@@ -28,12 +28,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import logoOnly from "../../utilities/images/Logos/logo-only.png";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllTagsAction,
-  getUserAction,
-  getUsersAllAction,
-  logoutUserAction,
-} from "../../redux/user/userActions";
+import { logoutUserAction } from "../../redux/user/userActions";
 
 import ExpertiseTags from "../ExpertiseTags/ExpertiseTags";
 

@@ -187,10 +187,10 @@ const getUserSessionFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const getPermissionsAllAction = () => {
+export const getPermissionsAllAction = (organizationID) => {
   return async (dispatch) => {
     dispatch(getPermissionsAllRequest());
-    await getPermissionsAllWithAxios()
+    await getPermissionsAllWithAxios(organizationID)
       .then((response) => {
         dispatch(getPermissionsAllSuccess(response));
       })
@@ -200,14 +200,14 @@ export const getPermissionsAllAction = () => {
   };
 };
 
-const getPermissionsAllWithAxios = async () => {
+const getPermissionsAllWithAxios = async (organizationID) => {
   var roles = [];
 
   // await postUserLogin().then((response) => {
   //   user.push(response);
   // });
 
-  await getPermissionsAll().then((response) => {
+  await getPermissionsAll(organizationID).then((response) => {
     roles.push(response);
   });
 
@@ -216,10 +216,13 @@ const getPermissionsAllWithAxios = async () => {
   };
 };
 
-const getPermissionsAll = () => {
+const getPermissionsAll = (organizationID) => {
   return axios.get(endpoints.rolesAll, {
     headers: {
       "Content-Type": "application/json",
+    },
+    params: {
+      organizationID: organizationID,
     },
   });
 };
@@ -419,10 +422,10 @@ const getTicketsFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const getUsersAllAction = () => {
+export const getUsersAllAction = (organizationID) => {
   return async (dispatch) => {
     dispatch(getUsersAllRequest());
-    await getUsersAllWithAxios()
+    await getUsersAllWithAxios(organizationID)
       .then((response) => {
         dispatch(getUsersAllSuccess(response));
       })
@@ -432,10 +435,10 @@ export const getUsersAllAction = () => {
   };
 };
 
-const getUsersAllWithAxios = async () => {
+const getUsersAllWithAxios = async (organizationID) => {
   var users = [];
 
-  await getUsersAll().then((response) => {
+  await getUsersAll(organizationID).then((response) => {
     users.push(response);
   });
 
@@ -444,10 +447,13 @@ const getUsersAllWithAxios = async () => {
   };
 };
 
-const getUsersAll = () => {
+const getUsersAll = (organizationID) => {
   return axios.get(endpoints.usersAll, {
     headers: {
       "Content-Type": "application/json",
+    },
+    params: {
+      organizationID: organizationID,
     },
   });
 };
@@ -601,10 +607,12 @@ const putTicketsSelfAssignFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putPermissionsAction = (updatedRow, oldRow) => {
+export const putPermissionsAction = (updatedRow, oldRow, organizationID) => {
+  console.log(organizationID);
+
   return async (dispatch) => {
     dispatch(putPermissionsRequest());
-    await putPermissionsWithAxios(updatedRow, oldRow)
+    await putPermissionsWithAxios(updatedRow, oldRow, organizationID)
       .then((response) => {
         dispatch(putPermissionsSuccess(response));
       })
@@ -614,10 +622,10 @@ export const putPermissionsAction = (updatedRow, oldRow) => {
   };
 };
 
-const putPermissionsWithAxios = async (updatedRow, oldRow) => {
+const putPermissionsWithAxios = async (updatedRow, oldRow, organizationID) => {
   var access = [];
 
-  await putPermissions(updatedRow, oldRow).then((response) => {
+  await putPermissions(updatedRow, oldRow, organizationID).then((response) => {
     access.push(response);
   });
 
@@ -626,10 +634,10 @@ const putPermissionsWithAxios = async (updatedRow, oldRow) => {
   };
 };
 
-const putPermissions = (updatedRow, oldRow) => {
+const putPermissions = (updatedRow, oldRow, organizationID) => {
   return axios.put(
     endpoints.permissionsUpdate,
-    { updatedRow: updatedRow },
+    { updatedRow: updatedRow, organizationID: organizationID },
     {
       headers: {
         "Content-Type": "application/json",
@@ -1088,10 +1096,10 @@ const logoutUser = () => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putTblUsersApprovedAction = (UserID, status) => {
+export const putTblUsersApprovedAction = (UserID, status, organizationID) => {
   return async (dispatch) => {
     dispatch(putTblUsersApprovedRequest());
-    await putTblUsersApprovedWithAxios(UserID, status)
+    await putTblUsersApprovedWithAxios(UserID, status, organizationID)
       .then((response) => {
         dispatch(putTblUsersApprovedSuccess(response));
       })
@@ -1101,10 +1109,10 @@ export const putTblUsersApprovedAction = (UserID, status) => {
   };
 };
 
-const putTblUsersApprovedWithAxios = async (UserID, status) => {
+const putTblUsersApprovedWithAxios = async (UserID, status, organizationID) => {
   var users = [];
 
-  await putTblUsersApproved(UserID, status).then((response) => {
+  await putTblUsersApproved(UserID, status, organizationID).then((response) => {
     users.push(response);
   });
 
@@ -1113,10 +1121,10 @@ const putTblUsersApprovedWithAxios = async (UserID, status) => {
   };
 };
 
-const putTblUsersApproved = (UserID, status) => {
+const putTblUsersApproved = (UserID, status, organizationID) => {
   return axios.put(
     endpoints.approved,
-    { UserID: UserID, status: status },
+    { UserID: UserID, status: status, organizationID: organizationID },
     {
       headers: {
         "Content-Type": "application/json",

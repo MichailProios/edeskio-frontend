@@ -128,19 +128,13 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
   const dispatch = useDispatch();
 
   //const loading = useSelector((state) => state.User.loading);
-  const userID = useSelector((state) => state.User.user.tblUser.ID);
+  const user = useSelector((state) => state.User.user.tblUser.ID);
 
   const styles = useStyles();
 
   const tblTags = useSelector((state) => state.User.tags.tblTags);
 
-  let expertiseTags = useSelector((state) =>
-    state.User.expertiseTags.map(({ ID, TechnicianID, ...tag }) => tag)
-  );
-
-  expertiseTags = Object.values(expertiseTags).map(
-    (element) => element.TagType
-  );
+  const expertiseTags = useSelector((state) => state.User.expertiseTags);
 
   const [uniqTagCategories, setUniqTagCategories] = useState([
     "All",
@@ -155,6 +149,10 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
   const [selectedTags, setSelectedTags] = useState(expertiseTags);
 
   useEffect(() => {
+    setSelectedTags(expertiseTags);
+  }, [expertiseTags]);
+
+  useEffect(() => {
     setUniqTagCategories([
       "All",
       ...new Set(tblTags.map((tag) => tag.Category)),
@@ -162,10 +160,6 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
 
     setSelectedCategoryTags([...new Set(tblTags.map((tag) => tag))]);
   }, [tblTags]);
-
-  useEffect(() => {
-    handleSetChipsInitial(selectedTags);
-  }, [selectedTags]);
 
   const handleCagetoryChange = (e) => {
     let newCategories = [];
@@ -281,6 +275,10 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
     setSelectedTagsChips(newChips);
   };
 
+  useEffect(() => {
+    handleSetChipsInitial(selectedTags);
+  }, [selectedTags]);
+
   const handleTagChipDelete = (deletedTag, e) => {
     setSelectedTagsChips((chips) =>
       chips.filter((chip) => chip.key !== deletedTag)
@@ -289,7 +287,7 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
   };
 
   const handleSave = () => {
-    dispatch(postExpertiseTagsAction(userID, selectedTags));
+    dispatch(postExpertiseTagsAction(user, selectedTags));
 
     handleClose();
   };
@@ -302,12 +300,6 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
 
     handleClose();
   };
-
-  useEffect(() => {
-    if (userID.toString().length > 0) {
-      dispatch(getExpertiseTagsOneAction(userID));
-    }
-  }, [dispatch, userID]);
 
   //if (!loading) {
   return (

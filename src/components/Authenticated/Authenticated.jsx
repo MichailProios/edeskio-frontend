@@ -4,6 +4,7 @@ import CircularProgress from "../CircularLoading/CircularLoading.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllTagsAction,
+  getExpertiseTagsOneAction,
   getUserAction,
   getUsersAllAction,
   getUserSessionAction,
@@ -21,6 +22,12 @@ const Authenticated = ({ children }) => {
 
   const status = useSelector((state) => state.User.user.tblUser.Approved);
 
+  const user = useSelector((state) => state.User.user.tblUser.ID);
+
+  const organizationID = useSelector(
+    (state) => state.User.user.tblOrganization.ID
+  );
+
   useEffect(() => {
     if (sessionUsername.length !== 0) {
       dispatch(getUserAction(sessionUsername));
@@ -29,8 +36,21 @@ const Authenticated = ({ children }) => {
 
   useEffect(() => {
     dispatch(getAllTagsAction());
-    dispatch(getUsersAllAction());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      if (organizationID.toString().length > 0) {
+        dispatch(getUsersAllAction(organizationID));
+      }
+    }
+  }, [dispatch, organizationID, user]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getExpertiseTagsOneAction(user));
+    }
+  }, [dispatch, user]);
 
   if (isAuthenticated) {
     if (!loading) {

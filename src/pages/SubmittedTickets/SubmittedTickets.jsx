@@ -61,6 +61,10 @@ const SubmittedTickets = () => {
     setFilteredTickets(results);
   }, [searchTerm]);
 
+  useEffect(() => {
+    setFilteredTickets(tickets);
+  }, [tickets]);
+
   const organizationID = useSelector(
     (state) => state.User.user.tblOrganization.ID
   );
@@ -116,7 +120,7 @@ const SubmittedTickets = () => {
 
         <Grid container spacing={2}>
           {filteredTickets.map((value, index) => (
-            <Grow in={true} timeout={delayTime(index)}>
+            <Grow in={true} timeout={delayTime(index + 1)} key={index}>
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                 <TicketCard
                   ticket={{
