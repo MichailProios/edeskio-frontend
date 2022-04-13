@@ -69,8 +69,6 @@ const SubmittedTickets = () => {
     if (organizationID) {
       dispatch(getTicketsAction(organizationID));
     }
-
-    console.log("here");
   }, [dispatch, organizationID]);
 
   const delayTime = (index) => {

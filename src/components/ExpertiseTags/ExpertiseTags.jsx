@@ -128,12 +128,19 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
   const dispatch = useDispatch();
 
   //const loading = useSelector((state) => state.User.loading);
-  const user = useSelector((state) => state.User.user);
   const userID = useSelector((state) => state.User.user.tblUser.ID);
 
   const styles = useStyles();
 
   const tblTags = useSelector((state) => state.User.tags.tblTags);
+
+  let expertiseTags = useSelector((state) =>
+    state.User.expertiseTags.map(({ ID, TechnicianID, ...tag }) => tag)
+  );
+
+  expertiseTags = Object.values(expertiseTags).map(
+    (element) => element.TagType
+  );
 
   const [uniqTagCategories, setUniqTagCategories] = useState([
     "All",
@@ -145,7 +152,7 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
     ...new Set(tblTags.map((tag) => tag)),
   ]);
   const [selectedTagsChips, setSelectedTagsChips] = useState([]);
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(expertiseTags);
 
   useEffect(() => {
     setUniqTagCategories([
@@ -154,11 +161,11 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
     ]);
 
     setSelectedCategoryTags([...new Set(tblTags.map((tag) => tag))]);
+  }, [tblTags]);
 
-    if (userID !== "") {
-      //setSelectedTags( dispatch(getExpertiseTagsOneAction(userID)) );
-    }
-  }, [dispatch, tblTags]);
+  useEffect(() => {
+    handleSetChipsInitial(selectedTags);
+  }, [selectedTags]);
 
   const handleCagetoryChange = (e) => {
     let newCategories = [];
@@ -235,6 +242,45 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
     setSelectedTags(e.target.value);
   };
 
+  const handleSetChipsInitial = (array) => {
+    let newChips = [];
+
+    array.forEach((tag) => {
+      const tagFromtbl = tblTags.find((record) => record.Type === tag);
+
+      if (tagFromtbl.Category === "Operating System") {
+        newChips.push(
+          <Chip
+            label={tag}
+            key={tag}
+            style={{ backgroundColor: "#3399ff", color: "#ffffff" }}
+            onDelete={handleTagChipDelete.bind(this, tag)}
+          />
+        );
+      } else if (tagFromtbl.Category === "Hardware") {
+        newChips.push(
+          <Chip
+            label={tag}
+            key={tag}
+            style={{ backgroundColor: "#cc0000", color: "#ffffff" }}
+            onDelete={handleTagChipDelete.bind(this, tag)}
+          />
+        );
+      } else if (tagFromtbl.Category === "Software") {
+        newChips.push(
+          <Chip
+            label={tag}
+            key={tag}
+            style={{ backgroundColor: "#0000ff", color: "#ffffff" }}
+            onDelete={handleTagChipDelete.bind(this, tag)}
+          />
+        );
+      }
+    });
+
+    setSelectedTagsChips(newChips);
+  };
+
   const handleTagChipDelete = (deletedTag, e) => {
     setSelectedTagsChips((chips) =>
       chips.filter((chip) => chip.key !== deletedTag)
@@ -251,11 +297,17 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
   const handleCancel = () => {
     setSelectedCategories(["All"]);
     setSelectedCategoryTags([...new Set(tblTags.map((tag) => tag))]);
-    setSelectedTags([]);
-    setSelectedTagsChips([]);
+    // setSelectedTags([]);
+    // setSelectedTagsChips([]);
 
     handleClose();
   };
+
+  useEffect(() => {
+    if (userID.toString().length > 0) {
+      dispatch(getExpertiseTagsOneAction(userID));
+    }
+  }, [dispatch, userID]);
 
   //if (!loading) {
   return (

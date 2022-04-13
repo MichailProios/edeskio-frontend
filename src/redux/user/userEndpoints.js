@@ -24,7 +24,9 @@ if (
     permissionsUpdate:
       "https://edeskio.com:8443/api/edeskio/put_tblPermissions",
     expertiseTags: "https://edeskio.com:8443/api/edeskio/post_tblExpertiseTags",
-    getExpertiseTags: "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
+    getExpertiseTags:
+      "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
+    approved: "https://edeskio.com:8443/api/edeskio/put_tblUsers_Approved",
   };
 } else if (
   window.location.hostname === "localhost" ||
@@ -51,7 +53,9 @@ if (
     permissionsUpdate:
       "https://edeskio.com:8443/api/edeskio/put_tblPermissions",
     expertiseTags: "https://edeskio.com:8443/api/edeskio/post_tblExpertiseTags",
-    getExpertiseTags: "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
+    getExpertiseTags:
+      "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
+    approved: "https://edeskio.com:8443/api/edeskio/put_tblUsers_Approved",
   };
 } else {
   endpoints = {
@@ -74,6 +78,8 @@ if (
     permissionsUpdate:
       "https://edeskio.com:8443/api/edeskio/put_tblPermissions",
     expertiseTags: "https://edeskio.com:8443/api/edeskio/post_tblExpertiseTags",
-    getExpertiseTags: "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
+    getExpertiseTags:
+      "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
+    approved: "https://edeskio.com:8443/api/edeskio/put_tblUsers_Approved",
   };
 }

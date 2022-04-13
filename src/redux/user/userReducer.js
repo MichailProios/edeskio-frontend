@@ -44,6 +44,9 @@ import {
   PUT_PERMISSIONS_REQUEST,
   PUT_PERMISSIONS_SUCCESS,
   PUT_PERMISSIONS_FAILURE,
+  PUT_USER_APPROVED_REQUEST,
+  PUT_USER_APPROVED_SUCCESS,
+  PUT_USER_APPROVED_FAILURE,
   USER_LOGOUT,
 } from "./userTypes";
 import { store } from "../store";
@@ -71,6 +74,10 @@ export const initialState = {
     tblUser: {},
   },
 
+  //Expertise Tags
+  expertiseTagsLoading: false,
+  expertiseTags: [{}],
+
   //Tags
   tags: {
     tblTags: [
@@ -83,8 +90,9 @@ export const initialState = {
 
   //Permissions
   roles: [],
-  users: { tblUsers: [{}] },
+  users: [],
   access: [],
+  usersApproved: [],
 
   //Tickets
   tickets: { tblTickets: [{ ID: null, Subject: "" }] },
@@ -282,6 +290,7 @@ export const UserReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
+        expertiseTags: action.payload.expertiseTags[0].data.tblExpertiseTags,
         successfull: true,
       };
     case POST_EXPERTISE_TAGS_FAILURE:
@@ -319,11 +328,10 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case GET_EXPERTISE_TAGS_SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         loading: false,
-        //expertiseTags: action.payload.tags[0].data,
+        expertiseTags: action.payload.expertiseTags[0].data.tblExpertiseTags,
         successfull: true,
       };
     case GET_EXPERTISE_TAGS_FAILURE:
@@ -361,10 +369,16 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case GET_USER_ALL_SUCCESS:
+      let usersFiltered = action.payload.users[0].data.tblUsers;
+
+      usersFiltered = usersFiltered.filter(
+        (element) => element.Approved === null
+      );
       return {
         ...state,
         loading: false,
         users: action.payload.users[0].data,
+        usersApproved: usersFiltered,
         successfull: true,
       };
     case GET_USER_ALL_FAILURE:
@@ -385,8 +399,6 @@ export const UserReducer = (state = initialState, action) => {
       roles = action.payload.roles[0].data.tblRoles;
       users = action.payload.roles[0].data.tblUsers;
 
-      console.log(access);
-
       access = access.map((record) => {
         let user = users.find((userRecord) => userRecord.ID === record.UserID);
 
@@ -394,28 +406,15 @@ export const UserReducer = (state = initialState, action) => {
           (roleRecord) => roleRecord.Name === record.RoleName
         );
 
-        // const roleName = (roleID) => {
-        //   switch (roleID) {
-        //     case 1:
-        //       return "Entry";
-        //     case 2:
-        //       return "Basic";
-        //     case 3:
-        //       return "Admin";
-        //     case 4:
-        //       return "Super Admin";
-        //     default:
-        //       return "";
-        //   }
-        // };
-
         record.FirstName = user.FirstName;
         record.LastName = user.LastName;
-        // record.Module = typeof module === "undefined" ? "None" : module.Name;
-        // record.Role = roleName(role.ID);
 
         return record;
       });
+
+      access = access.filter((element) => element.Approved !== null);
+
+      console.log(access);
 
       return {
         ...state,
@@ -450,28 +449,13 @@ export const UserReducer = (state = initialState, action) => {
           (roleRecord) => roleRecord.Name === record.RoleName
         );
 
-        // const roleName = (roleID) => {
-        //   switch (roleID) {
-        //     case 1:
-        //       return "Entry";
-        //     case 2:
-        //       return "Basic";
-        //     case 3:
-        //       return "Admin";
-        //     case 4:
-        //       return "Super Admin";
-        //     default:
-        //       return "";
-        //   }
-        // };
-
         record.FirstName = user.FirstName;
         record.LastName = user.LastName;
-        // record.Module = typeof module === "undefined" ? "None" : module.Name;
-        // record.Role = roleName(role.ID);
 
         return record;
       });
+
+      access = access.filter((element) => element.Approved !== null);
 
       return {
         ...state,
@@ -502,6 +486,29 @@ export const UserReducer = (state = initialState, action) => {
         //     },
         //   ],
         // },
+      };
+
+    case PUT_USER_APPROVED_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case PUT_USER_APPROVED_SUCCESS:
+      let users = action.payload.users[0].data.tblUsers;
+
+      users = users.filter((element) => element.Approved === null);
+      return {
+        ...state,
+        loading: false,
+        usersApproved: users,
+        successfull: true,
+      };
+    case PUT_USER_APPROVED_FAILURE:
+      return {
+        ...state,
+        successfull: false,
+        error: action.payload,
       };
 
     default:

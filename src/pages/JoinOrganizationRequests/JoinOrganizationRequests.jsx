@@ -19,7 +19,9 @@ import { tableIcons } from "../../utilities/DataTable/DataTableIcons.jsx";
 import { AiFillPrinter } from "react-icons/ai";
 import {
   getPermissionsAllAction,
+  getUsersAllAction,
   putPermissionsAction,
+  putTblUsersApprovedAction,
 } from "../../redux/user/userActions.js";
 import { Satellite } from "@material-ui/icons";
 
@@ -46,18 +48,26 @@ const JoinOrganizationRequests = () => {
 
   const dispatch = useDispatch();
 
-  const tableRows = useSelector((state) => state.User.access);
+  const tableRows = useSelector((state) => state.User.usersApproved);
 
-  const loading = useSelector((state) => state.User.loading);
+  const loading = useSelector((state) => state.User.userLoading);
 
   useEffect(() => {
-    dispatch(getPermissionsAllAction());
+    dispatch(getUsersAllAction());
   }, [dispatch]);
+
+  const handleApproved = (tableRow) => {
+    dispatch(putTblUsersApprovedAction(tableRow.ID, true));
+  };
+
+  const handleDenied = (tableRow) => {
+    dispatch(putTblUsersApprovedAction(tableRow.ID, false));
+  };
 
   const columns = [
     {
       title: "User ID",
-      field: "UserID",
+      field: "ID",
       editable: "never",
     },
     {
@@ -71,9 +81,9 @@ const JoinOrganizationRequests = () => {
       editable: "never",
     },
     {
-      title: "Requested Role",
-      field: "RoleName",
-      lookup: { Basic: "Basic", Tech: "Tech", Admin: "Admin" },
+      title: "Email",
+      field: "Email",
+      editable: "never",
     },
   ];
 
@@ -130,13 +140,13 @@ const JoinOrganizationRequests = () => {
                   icon: tableIcons.Approve,
                   tooltip: "Approve",
                   isFreeAction: false,
-                  onClick: (event) => alert("You wanna approve"),
+                  onClick: (event, data) => handleApproved(data),
                 },
                 {
                   icon: tableIcons.Deny,
                   tooltip: "Deny",
                   isFreeAction: false,
-                  onClick: (event) => alert("You wanna deny"),
+                  onClick: (event, data) => handleDenied(data),
                 },
               ]}
             />

@@ -8,6 +8,7 @@ import {
   getUsersAllAction,
   getUserSessionAction,
 } from "../../redux/user/userActions.js";
+import ApprovalNeeded from "../ApprovalNeeded/ApprovalNeeded.jsx";
 
 const Authenticated = ({ children }) => {
   const dispatch = useDispatch();
@@ -17,6 +18,8 @@ const Authenticated = ({ children }) => {
   const loading = useSelector((state) => state.User.userLoading);
 
   const sessionUsername = useSelector((state) => state.User.sessionUser);
+
+  const status = useSelector((state) => state.User.user.tblUser.Approved);
 
   useEffect(() => {
     if (sessionUsername.length !== 0) {
@@ -31,7 +34,11 @@ const Authenticated = ({ children }) => {
 
   if (isAuthenticated) {
     if (!loading) {
-      return <div>{children}</div>;
+      if (status) {
+        return <div>{children}</div>;
+      } else {
+        return <ApprovalNeeded status={status} />;
+      }
     } else {
       return <CircularProgress />;
     }
