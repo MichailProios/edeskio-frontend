@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAllTagsAction,
   getExpertiseTagsOneAction,
+  
+  getTechniciansAssignAction,
+  
   getUserAction,
   getUsersAllAction,
   getUserSessionAction,
@@ -49,6 +52,12 @@ const Authenticated = ({ children }) => {
   useEffect(() => {
     if (user) {
       dispatch(getExpertiseTagsOneAction(user));
+    }
+  }, [dispatch, user]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getTechniciansAssignAction(user));
     }
   }, [dispatch, user]);
 

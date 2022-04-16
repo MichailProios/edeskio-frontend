@@ -24,7 +24,7 @@ import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getUserOrganizationAction,
-  putTicketsSelfAssignAction,
+  putTicketsAssignAction,
 } from "../../redux/user/userActions";
 import {
   DeleteForever,
@@ -176,14 +176,16 @@ const TicketCard = ({ ticket }) => {
   );
   const userLastName = useSelector((state) => state.User.user.tblUser.LastName);
 
+  const techs = useSelector((state) => state.User.techs); 
+
   const handleAssignToSelf = () => {
-    // dispatch(
-    //   putTicketsSelfAssignAction(
-    //     ticket.ID,
-    //     userID,
-    //     moment().format("YYYY-MM-DD HH:mm:ss")
-    //   )
-    // );
+    dispatch(
+      putTicketsAssignAction(
+        ticket.ID,
+        userID,
+        moment().format("YYYY-MM-DD HH:mm:ss")
+      )
+    );
 
     setOptionsOpen(false);
     setAnchorEl(null);
@@ -207,7 +209,18 @@ const TicketCard = ({ ticket }) => {
 
   const [selected, setSelected] = useState("");
 
-  console.log(selected);
+  const getTechnicianName = () => {
+    const tech = techs.find((record) => record.ID === ticket.TechnicianID);
+
+    if (tech)
+    {
+      return tech.FirstName + " " + tech.LastName;
+    }
+    else
+    {
+      return "Unassigned"
+    }
+  }
 
   return (
     <>
@@ -292,9 +305,8 @@ const TicketCard = ({ ticket }) => {
                     {"Assigned To:"}
                   </Typography>
                   <Chip
-                    // className={styles.infoChip}
-                    label={selected.length > 0 ? selected : "Unassigned"}
-                    className={selected.length > 0 ? styles.assignedChip : ""}
+                    label={ticket.TechnicianID !== null ? getTechnicianName() : "Unassigned"}
+                    className={ticket.TechnicianID !== null ? styles.assignedChip : ""}
                   />
                 </Grid>
                 <Grid
@@ -400,6 +412,8 @@ const TicketCard = ({ ticket }) => {
         handleOpen={handleAssignOpen}
         handleClose={handleAssignClose}
         setSelected={setSelected}
+        ticketID={ticket.ID}
+        ticketTags={selectedTags}
       />
     </>
   );

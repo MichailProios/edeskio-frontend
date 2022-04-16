@@ -32,12 +32,15 @@ import {
   GET_TICKETS_REQUEST,
   GET_TICKETS_SUCCESS,
   GET_TICKETS_FAILURE,
-  PUT_TICKETS_SELF_ASSIGN_REQUEST,
-  PUT_TICKETS_SELF_ASSIGN_SUCCESS,
-  PUT_TICKETS_SELF_ASSIGN_FAILURE,
+  PUT_TICKETS_ASSIGN_REQUEST,
+  PUT_TICKETS_ASSIGN_SUCCESS,
+  PUT_TICKETS_ASSIGN_FAILURE,
   GET_USER_ALL_REQUEST,
   GET_USER_ALL_SUCCESS,
   GET_USER_ALL_FAILURE,
+  GET_TECHNICIANS_ASSIGN_REQUEST,
+  GET_TECHNICIANS_ASSIGN_SUCCESS,
+  GET_TECHNICIANS_ASSIGN_FAILURE,
   GET_PERMISSIONS_ALL_REQUEST,
   GET_PERMISSIONS_ALL_SUCCESS,
   GET_PERMISSIONS_ALL_FAILURE,
@@ -95,6 +98,11 @@ export const initialState = {
 
   //Organization
   organizations: [],
+
+  //TechAssign
+  techs: [],
+  expertiseTags_All: [],
+  techsTicketCount: [],
 };
 
 export const UserReducer = (state = initialState, action) => {
@@ -103,6 +111,7 @@ export const UserReducer = (state = initialState, action) => {
   let users;
   let expertiseTags;
   let ticketTags;
+
 
   switch (action.type) {
     case POST_USER_LOGIN_REQUEST:
@@ -356,13 +365,35 @@ export const UserReducer = (state = initialState, action) => {
         error: action.payload,
       };
 
-    case PUT_TICKETS_SELF_ASSIGN_REQUEST:
+    case GET_TECHNICIANS_ASSIGN_REQUEST:
       return {
         ...state,
         loading: true,
         successfull: false,
       };
-    case PUT_TICKETS_SELF_ASSIGN_SUCCESS:
+    case GET_TECHNICIANS_ASSIGN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        techs: action.payload.technicianAssign[0].data.tblUsers_AllTechs,
+        expertiseTags_All :action.payload.technicianAssign[0].data.tblExpertiseTags_AllTechs,
+        techsTicketCount: action.payload.technicianAssign[0].data.TechTicketCount[0],
+        successfull: true,
+      };
+    case GET_TECHNICIANS_ASSIGN_FAILURE:
+      return {
+        ...state,
+        successfull: false,
+        error: action.payload,
+      };
+      
+    case PUT_TICKETS_ASSIGN_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case PUT_TICKETS_ASSIGN_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -370,7 +401,7 @@ export const UserReducer = (state = initialState, action) => {
         ticketTags: action.payload.tickets[0].data.tblTicketTags,
         successfull: true,
       };
-    case PUT_TICKETS_SELF_ASSIGN_FAILURE:
+    case PUT_TICKETS_ASSIGN_FAILURE:
       return {
         ...state,
         loading: false,

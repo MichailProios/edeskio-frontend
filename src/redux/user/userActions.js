@@ -33,12 +33,15 @@ import {
   GET_TICKETS_REQUEST,
   GET_TICKETS_SUCCESS,
   GET_TICKETS_FAILURE,
-  PUT_TICKETS_SELF_ASSIGN_REQUEST,
-  PUT_TICKETS_SELF_ASSIGN_SUCCESS,
-  PUT_TICKETS_SELF_ASSIGN_FAILURE,
+  PUT_TICKETS_ASSIGN_REQUEST,
+  PUT_TICKETS_ASSIGN_SUCCESS,
+  PUT_TICKETS_ASSIGN_FAILURE,
   GET_USER_ALL_FAILURE,
   GET_USER_ALL_SUCCESS,
   GET_USER_ALL_REQUEST,
+  GET_TECHNICIANS_ASSIGN_REQUEST,
+  GET_TECHNICIANS_ASSIGN_SUCCESS,
+  GET_TECHNICIANS_ASSIGN_FAILURE,
   GET_PERMISSIONS_ALL_REQUEST,
   GET_PERMISSIONS_ALL_SUCCESS,
   GET_PERMISSIONS_ALL_FAILURE,
@@ -538,31 +541,89 @@ const getExpertiseTagsOneFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putTicketsSelfAssignAction = (
+export const getTechniciansAssignAction = (userID) => {
+  return async (dispatch) => {
+    dispatch(getTechniciansAssignRequest());
+    await getTechniciansAssignWithAxios(userID)
+      .then((response) => {
+        dispatch(getTechniciansAssignSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getTechniciansAssignFailure(error.message));
+      });
+  };
+};
+
+const getTechniciansAssignWithAxios = async (userID) => {
+  var technicianAssign = [];
+
+  await getTechniciansAssign(userID).then((response) => {
+    technicianAssign.push(response);
+  });
+
+  return {
+    technicianAssign,
+  };
+};
+
+const getTechniciansAssign = (userID) => {
+  return axios.get(endpoints.getTechniciansAssign, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: {
+      UserID: userID,
+    },
+  });
+};
+
+const getTechniciansAssignRequest = () => {
+  return {
+    type: GET_TECHNICIANS_ASSIGN_REQUEST,
+  };
+};
+
+const getTechniciansAssignSuccess = (data) => {
+  return {
+    type: GET_TECHNICIANS_ASSIGN_SUCCESS,
+    payload: data,
+  };
+};
+
+const getTechniciansAssignFailure = (error) => {
+  return {
+    type: GET_TECHNICIANS_ASSIGN_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTicketsAssignAction = (
   ticketID,
   technicianID,
   openDate
 ) => {
   return async (dispatch) => {
-    dispatch(putTicketsSelfAssignRequest());
-    await putTicketsSelfAssignWithAxios(ticketID, technicianID, openDate)
+    dispatch(putTicketsAssignRequest());
+    await putTicketsAssignWithAxios(ticketID, technicianID, openDate)
       .then((response) => {
-        dispatch(putTicketsSelfAssignSuccess(response));
+        dispatch(putTicketsAssignSuccess(response));
       })
       .catch((error) => {
-        dispatch(putTicketsSelfAssignFailure(error.message));
+        dispatch(putTicketsAssignFailure(error.message));
       });
   };
 };
 
-const putTicketsSelfAssignWithAxios = async (
+const putTicketsAssignWithAxios = async (
   ticketID,
   technicianID,
   openDate
 ) => {
   var tickets = [];
 
-  await putTicketsSelfAssign(ticketID, technicianID, openDate).then(
+  await putTicketsAssign(ticketID, technicianID, openDate).then(
     (response) => {
       tickets.push(response);
     }
@@ -573,9 +634,9 @@ const putTicketsSelfAssignWithAxios = async (
   };
 };
 
-const putTicketsSelfAssign = (ticketID, technicianID, openDate) => {
+const putTicketsAssign = (ticketID, technicianID, openDate) => {
   return axios.put(
-    endpoints.selfAssignTicket,
+    endpoints.assignTicket,
     { TicketID: ticketID, TechnicianID: technicianID, OpenDate: openDate },
     {
       headers: {
@@ -585,22 +646,22 @@ const putTicketsSelfAssign = (ticketID, technicianID, openDate) => {
   );
 };
 
-const putTicketsSelfAssignRequest = () => {
+const putTicketsAssignRequest = () => {
   return {
-    type: PUT_TICKETS_SELF_ASSIGN_REQUEST,
+    type: PUT_TICKETS_ASSIGN_REQUEST,
   };
 };
 
-const putTicketsSelfAssignSuccess = (data) => {
+const putTicketsAssignSuccess = (data) => {
   return {
-    type: PUT_TICKETS_SELF_ASSIGN_SUCCESS,
+    type: PUT_TICKETS_ASSIGN_SUCCESS,
     payload: data,
   };
 };
 
-const putTicketsSelfAssignFailure = (error) => {
+const putTicketsAssignFailure = (error) => {
   return {
-    type: PUT_TICKETS_SELF_ASSIGN_FAILURE,
+    type: PUT_TICKETS_ASSIGN_FAILURE,
     payload: error,
   };
 };
@@ -608,8 +669,6 @@ const putTicketsSelfAssignFailure = (error) => {
 
 /**************************************************************************************************************/
 export const putPermissionsAction = (updatedRow, oldRow, organizationID) => {
-  console.log(organizationID);
-
   return async (dispatch) => {
     dispatch(putPermissionsRequest());
     await putPermissionsWithAxios(updatedRow, oldRow, organizationID)
