@@ -36,6 +36,9 @@ import {
   PUT_TICKETS_ASSIGN_REQUEST,
   PUT_TICKETS_ASSIGN_SUCCESS,
   PUT_TICKETS_ASSIGN_FAILURE,
+  PUT_TICKETS_AUTO_ASSIGN_REQUEST,
+  PUT_TICKETS_AUTO_ASSIGN_SUCCESS,
+  PUT_TICKETS_AUTO_ASSIGN_FAILURE,
   GET_USER_ALL_FAILURE,
   GET_USER_ALL_SUCCESS,
   GET_USER_ALL_REQUEST,
@@ -662,6 +665,75 @@ const putTicketsAssignSuccess = (data) => {
 const putTicketsAssignFailure = (error) => {
   return {
     type: PUT_TICKETS_ASSIGN_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTicketsAutoAssignAction = (
+  ticketID,
+  technicianID,
+  openDate
+) => {
+  return async (dispatch) => {
+    dispatch(putTicketsAutoAssignRequest());
+    await putTicketsAutoAssignWithAxios(ticketID, technicianID, openDate)
+      .then((response) => {
+        dispatch(putTicketsAutoAssignSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTicketsAutoAssignFailure(error.message));
+      });
+  };
+};
+
+const putTicketsAutoAssignWithAxios = async (
+  ticketID,
+  technicianID,
+  openDate
+) => {
+  var tickets = [];
+
+  await putTicketsAutoAssign(ticketID, technicianID, openDate).then(
+    (response) => {
+      tickets.push(response);
+    }
+  );
+
+  return {
+    tickets,
+  };
+};
+
+const putTicketsAutoAssign = (ticketID, caseNumber, openDate) => {
+  return axios.put(
+    endpoints.autoAssignTicket,
+    { TicketID: ticketID, CaseNumber: caseNumber, OpenDate: openDate },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTicketsAutoAssignRequest = () => {
+  return {
+    type: PUT_TICKETS_AUTO_ASSIGN_REQUEST,
+  };
+};
+
+const putTicketsAutoAssignSuccess = (data) => {
+  return {
+    type: PUT_TICKETS_AUTO_ASSIGN_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTicketsAutoAssignFailure = (error) => {
+  return {
+    type: PUT_TICKETS_AUTO_ASSIGN_FAILURE,
     payload: error,
   };
 };

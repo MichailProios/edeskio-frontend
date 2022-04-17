@@ -20,6 +20,7 @@ if (
     usersAll: "https://edeskio.com:8443/api/edeskio/get_tblUsers_All",
     assignTicket:
       "https://edeskio.com:8443/api/edeskio/put_tblTickets_Assign",
+    autoAssignTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_AutoAssign",
     rolesAll: "https://edeskio.com:8443/api/edeskio/get_tblRoles_All",
     permissionsUpdate:
       "https://edeskio.com:8443/api/edeskio/put_tblPermissions",
@@ -50,6 +51,7 @@ if (
     usersAll: "https://edeskio.com:8443/api/edeskio/get_tblUsers_All",
     assignTicket:
       "https://edeskio.com:8443/api/edeskio/put_tblTickets_Assign",
+    autoAssignTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_AutoAssign",
     rolesAll: "https://edeskio.com:8443/api/edeskio/get_tblRoles_All",
     permissionsUpdate:
       "https://edeskio.com:8443/api/edeskio/put_tblPermissions",
@@ -76,6 +78,7 @@ if (
     usersAll: "https://edeskio.com:8443/api/edeskio/get_tblUsers_All",
     assignTicket:
       "https://edeskio.com:8443/api/edeskio/put_tblTickets_Assign",
+    autoAssignTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_AutoAssign",
     rolesAll: "https://edeskio.com:8443/api/edeskio/get_tblRoles_All",
     permissionsUpdate:
       "https://edeskio.com:8443/api/edeskio/put_tblPermissions",

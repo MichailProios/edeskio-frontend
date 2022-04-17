@@ -37,6 +37,7 @@ import moment from "momnet";
 
 import AssignmentReturnIcon from "@material-ui/icons/AssignmentReturn";
 import AssignToTechnician from "../AssignToTechnician/AssignToTechnician";
+import AutoAssignToTechnician from "../AutoAssignToTechnician/AutoAssignToTechnician"
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -196,6 +197,7 @@ const TicketCard = ({ ticket }) => {
   }, [selectedTags]);
 
   const [openAssign, setOpenAssign] = useState(false);
+  const [openAutoAssign, setOpenAutoAssign] = useState(false);
 
   const handleAssignOpen = () => {
     setOpenAssign(true);
@@ -205,6 +207,16 @@ const TicketCard = ({ ticket }) => {
 
   const handleAssignClose = () => {
     setOpenAssign(false);
+  };
+
+  const handleAutoAssignOpen = () => {
+    setOpenAutoAssign(true);
+    setOptionsOpen(false);
+    setAnchorEl(null);
+  };
+
+  const handleAutoAssignClose = () => {
+    setOpenAutoAssign(false);
   };
 
   const [selected, setSelected] = useState("");
@@ -404,6 +416,15 @@ const TicketCard = ({ ticket }) => {
           ) : (
             <div />
           )}
+
+          {userRole === "Admin" ? (
+            <MenuItem onClick={handleAutoAssignOpen}>
+              <AssignmentIndIcon color="primary" />
+              Auto-Assign to Tech
+            </MenuItem>
+          ) : (
+            <div />
+          )}
         </Menu>
       )}
 
@@ -414,6 +435,13 @@ const TicketCard = ({ ticket }) => {
         setSelected={setSelected}
         ticketID={ticket.ID}
         ticketTags={selectedTags}
+      />
+
+      <AutoAssignToTechnician
+        open={openAutoAssign}
+        handleOpen={handleAutoAssignOpen}
+        handleClose={handleAutoAssignClose}
+        ticketID={ticket.ID}
       />
     </>
   );

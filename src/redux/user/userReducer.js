@@ -35,6 +35,9 @@ import {
   PUT_TICKETS_ASSIGN_REQUEST,
   PUT_TICKETS_ASSIGN_SUCCESS,
   PUT_TICKETS_ASSIGN_FAILURE,
+  PUT_TICKETS_AUTO_ASSIGN_REQUEST,
+  PUT_TICKETS_AUTO_ASSIGN_SUCCESS,
+  PUT_TICKETS_AUTO_ASSIGN_FAILURE,
   GET_USER_ALL_REQUEST,
   GET_USER_ALL_SUCCESS,
   GET_USER_ALL_FAILURE,
@@ -402,6 +405,28 @@ export const UserReducer = (state = initialState, action) => {
         successfull: true,
       };
     case PUT_TICKETS_ASSIGN_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case PUT_TICKETS_AUTO_ASSIGN_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case PUT_TICKETS_AUTO_ASSIGN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        tickets: action.payload.tickets[0].data,
+        ticketTags: action.payload.tickets[0].data.tblTicketTags,
+        successfull: true,
+      };
+    case PUT_TICKETS_AUTO_ASSIGN_FAILURE:
       return {
         ...state,
         loading: false,
