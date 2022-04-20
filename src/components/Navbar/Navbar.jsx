@@ -31,6 +31,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUserAction } from "../../redux/user/userActions";
 
 import ExpertiseTags from "../ExpertiseTags/ExpertiseTags";
+import Notifications from "../Notifications/Notifications";
 
 const drawerWidth = 240;
 
@@ -273,6 +274,9 @@ const Navbar = ({ children }) => {
                 <Typography className={styles.appbarUserText}>
                   {user.tblUser.FirstName + " " + user.tblUser.LastName}
                 </Typography>
+              </Grid>
+              <Grid item>
+                <Notifications />
               </Grid>
               <Grid item>
                 <IconButton
