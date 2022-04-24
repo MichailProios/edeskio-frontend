@@ -281,15 +281,17 @@ export const UserReducer = (state = initialState, action) => {
     case GET_ALL_TAGS_SUCCESS:
 
       tags = action.payload.tags[0].data.tblTags;
+      console.log(tags);
       tags = tags.map((tag) => {
         return { 
           Type : tag.Type, 
-          Category : tag.Category,
+          Category : tag["tblTagCategory.Category"],
           BackgroundColor: tag["tblTagCategory.BackgroundColor"],
           Color: tag["tblTagCategory.Color"],
+          CategoryID: tag.CategoryID,
         }
       })
-    
+    console.log(tags);
 
       return {
         ...state,
@@ -386,9 +388,10 @@ export const UserReducer = (state = initialState, action) => {
       tags = tags.map((tag) => {
         return { 
           Type : tag.Type, 
-          Category : tag.Category,
+          Category : tag["tblTagCategory.Category"],
           BackgroundColor: tag["tblTagCategory.BackgroundColor"],
           Color: tag["tblTagCategory.Color"],
+          CategoryID: tag.CategoryID,
         }
       })
 
@@ -439,9 +442,10 @@ export const UserReducer = (state = initialState, action) => {
         tags = tags.map((tag) => {
           return { 
             Type : tag.Type, 
-            Category : tag.Category,
+            Category : tag["tblTagCategory.Category"],
             BackgroundColor: tag["tblTagCategory.BackgroundColor"],
             Color: tag["tblTagCategory.Color"],
+            CategoryID: tag.CategoryID,
           }
         })
         return {
@@ -606,9 +610,10 @@ export const UserReducer = (state = initialState, action) => {
         tags = tags.map((tag) => {
           return { 
             Type : tag.Type, 
-            Category : tag.Category,
+            Category : tag["tblTagCategory.Category"],
             BackgroundColor: tag["tblTagCategory.BackgroundColor"],
             Color: tag["tblTagCategory.Color"],
+            CategoryID: tag.CategoryID,
           }
         })
 
@@ -634,12 +639,14 @@ export const UserReducer = (state = initialState, action) => {
         };
       case PUT_TAG_CATEGORIES_SUCCESS:
         tags = action.payload.tagCategories[0].data.tblTags;
+        console.log(tags)
         tags = tags.map((tag) => {
           return { 
             Type : tag.Type, 
-            Category : tag.Category,
+            Category : tag["tblTagCategory.Category"],
             BackgroundColor: tag["tblTagCategory.BackgroundColor"],
             Color: tag["tblTagCategory.Color"],
+            CategoryID: tag.CategoryID,
           }
         })
 

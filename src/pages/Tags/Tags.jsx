@@ -73,25 +73,12 @@ const Tags = () => {
     {
       title: "Tag Type",
       field: "Type",
-     // editable: "onAdd",
-      // can't make type editable because this is PK and there is no ID
+      editable: "onAdd",
     },
     {
       title: "Category",
       field: "Category",
       lookup: categoryReduce,
-      // editComponent: props => (
-      //       <Select
-      //           onChange={e => {props.onChange(e.target.value)}}
-      //           value={props.value === undefined ? "Hardware" : props.value}
-      //       >
-      //           {uniqTagCategories.map((Category) => (
-      //               <MenuItem key={Category} value={Category}>
-      //               <   ListItemText primary={Category} />
-      //               </MenuItem>
-      //           ))}
-      //       </Select>
-      //   )
     },
     {
       title: "Chip Color",
@@ -183,9 +170,11 @@ const Tags = () => {
                     const category = newRow.Category;
 
                     if (tagType !== "" && category !== undefined)
-                    {
+                    {                        
+                        const fromCategories = tagCategories.find((record) => record.Category === category);
+
                         dispatch(
-                            postTagsAction(tagType, category)
+                            postTagsAction(tagType, fromCategories.CategoryID, organizationID)
                         );
                     }
 
@@ -199,7 +188,7 @@ const Tags = () => {
                     if (tagType !== "")
                     {
                         dispatch(
-                            deleteTagAction(tagType)
+                            deleteTagAction(tagType, organizationID)
                         );
                     }
 
@@ -217,13 +206,19 @@ const Tags = () => {
                     const newColor = updatedRow.Color;
 
                     dispatch(
-                      putTagsAction(tagType, category),
+                      putTagsAction(tagType, category, organizationID),
                     )
                     .then(() => {
                       if (oldBgColor !== newBgColor || oldColor !== newColor)
                       {
+                        
+
+
+                        
+                        const fromCategories = tableRows.find((record) => record.Category === category);
+
                         dispatch(
-                          putTagCategoriesAction(category, newBgColor, newColor),
+                          putTagCategoriesAction(fromCategories.CategoryID, newBgColor, newColor),
                         )
                       }
                     })

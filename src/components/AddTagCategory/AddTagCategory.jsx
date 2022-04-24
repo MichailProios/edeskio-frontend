@@ -130,6 +130,10 @@ const AddTagCategory = ({ open, handleOpen, handleClose, ticketID }) => {
   const [backgroundColor, setBackgroundColor] = useState("");
   const [color, setColor] = useState("#000000");
 
+  const organizationID = useSelector(
+    (state) => state.User.user.tblOrganization.ID
+  );
+
   const handleAddTagCategory = () => {
     
     if (category !== "" && backgroundColor != "")
@@ -138,7 +142,8 @@ const AddTagCategory = ({ open, handleOpen, handleClose, ticketID }) => {
             postTagCategoryAction(
                 category,
                 backgroundColor,
-                color
+                color,
+                organizationID,
             )
         );
     }

@@ -40,14 +40,6 @@ const Authenticated = ({ children }) => {
   }, [dispatch, sessionUsername]);
 
   useEffect(() => {
-    dispatch(getAllTagsAction());
-  }, [dispatch]);
-  
-  useEffect(() => {
-    dispatch(getTagCategoriesAction());
-  }, [dispatch]);
-
-  useEffect(() => {
     if (user) {
       if (organizationID.toString().length > 0) {
         dispatch(getUsersAllAction(organizationID));
@@ -66,6 +58,23 @@ const Authenticated = ({ children }) => {
       dispatch(getTechniciansAssignAction(user));
     }
   }, [dispatch, user]);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     if (organizationID.toString().length > 0) {
+        dispatch(getTagCategoriesAction(organizationID));
+  //     }
+  //   }
+  // }, [dispatch, organizationID, user]);
+
+
+  // useEffect(() => {
+  //   if (user) {
+  //     if (organizationID.toString().length > 0) {
+        dispatch(getAllTagsAction(organizationID));
+  //     }
+  //   }
+  // }, [dispatch, organizationID, user]);
 
   if (isAuthenticated) {
     if (!loading) {
