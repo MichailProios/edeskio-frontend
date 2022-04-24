@@ -20,10 +20,13 @@ import {
 } from "@material-ui/core";
 
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
 import { useSelector, useDispatch } from "react-redux";
 import {
   getUserOrganizationAction,
+  putTicketPriorityAction,
   putTicketsAssignAction,
 } from "../../redux/user/userActions";
 import {
@@ -108,37 +111,19 @@ const TicketCard = ({ ticket }) => {
     tags.forEach((tag) => {
       const tagFromtbl = tblTags.find((record) => record.Type === tag);
 
-      if (tagFromtbl.Category === "Operating System") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#3399ff", color: "#ffffff" }}
-          />
-        );
-      } else if (tagFromtbl.Category === "Hardware") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#cc0000", color: "#ffffff" }}
-          />
-        );
-      } else if (tagFromtbl.Category === "Software") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#0000ff", color: "#ffffff" }}
-          />
-        );
-      }
+      newChips.push(
+        <Chip
+          label={tag}
+          key={tag}
+          style={{ backgroundColor: tagFromtbl.BackgroundColor, color: tagFromtbl.Color}}
+        />
+      );
     });
 
     setSelectedTagsChips(newChips);
   };
 
-  const tblTags = useSelector((state) => state.User.tags.tblTags);
+  const tblTags = useSelector((state) => state.User.tags);
 
   const ticketTagsTbl = useSelector((state) => state.User.ticketTags);
 
@@ -217,6 +202,46 @@ const TicketCard = ({ ticket }) => {
 
   const handleAutoAssignClose = () => {
     setOpenAutoAssign(false);
+  };
+
+  const handleRaisePriority = () => {
+
+    let priority = "";
+
+    if (ticket.Priority === "Medium")
+    {
+      priority = "High";
+    }
+    else if (ticket.Priority === "Low")
+    {
+      priority = "Medium";
+    }
+    else
+    {
+      return;
+    }
+
+    dispatch(putTicketPriorityAction(ticket.ID, priority))
+  };
+
+  const handleLowerPriority = () => {
+    
+    let priority = "";
+
+    if (ticket.Priority === "Medium")
+    {
+      priority = "Low";
+    }
+    else if (ticket.Priority === "High")
+    {
+      priority = "Medium";
+    }
+    else
+    {
+      return;
+    }
+
+    dispatch(putTicketPriorityAction(ticket.ID, priority))
   };
 
   const [selected, setSelected] = useState("");
@@ -425,8 +450,28 @@ const TicketCard = ({ ticket }) => {
           ) : (
             <div />
           )}
+        
+        {(ticket.Priority === "Low" || ticket.Priority === "Medium") && (userRole === "Admin" || userRole === "Tech") ? (
+            <MenuItem onClick={handleRaisePriority}>
+              <ArrowUpwardIcon color="primary" />
+              Raise Priority
+            </MenuItem>
+          ) : (
+          <div />
+        )}
+
+        {(ticket.Priority === "High" || ticket.Priority === "Medium") && (userRole === "Admin" || userRole === "Tech") ? (
+            <MenuItem onClick={handleLowerPriority}>
+              <ArrowDownwardIcon color="primary" />
+              Lower Priority
+            </MenuItem>
+          ) : (
+            <div />
+          )}
+
+
         </Menu>
-      )}
+        )}
 
       <AssignToTechnician
         open={openAssign}

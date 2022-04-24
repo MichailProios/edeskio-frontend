@@ -4,6 +4,7 @@ import SubmittedTickets from "../../pages/SubmittedTickets/SubmittedTickets.jsx"
 import Permissions from "../../pages/Permissions/Permissions";
 
 import JoinOrganizationRequests from "../../pages/JoinOrganizationRequests/JoinOrganizationRequests.jsx";
+import Tags from "../../pages/Tags/Tags.jsx";
 
 export const routes = [];
 
@@ -38,7 +39,11 @@ routes.push(
   {
     path: "/Dashboard/JoinOrganizationRequests",
     component: <JoinOrganizationRequests />,
-  }
+  },
+  {
+    path: "/Dashboard/ManageTags",
+    component: <Tags />,
+  },
 
   //Approval Needed User
   // {

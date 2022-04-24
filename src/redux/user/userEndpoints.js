@@ -29,6 +29,11 @@ if (
       "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
     approved: "https://edeskio.com:8443/api/edeskio/put_tblUsers_Approved",
     getTechniciansAssign: "https://edeskio.com:8443/api/edeskio/get_TechniciansAssignInfo",
+    postTags: "https://edeskio.com:8443/api/edeskio/post_tblTags_NewTag",
+    deleteTag: "https://edeskio.com:8443/api/edeskio/delete_tblTags",
+    putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
+    putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
+    putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
   };
 } else if (
   window.location.hostname === "localhost" ||
@@ -60,6 +65,11 @@ if (
       "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
     approved: "https://edeskio.com:8443/api/edeskio/put_tblUsers_Approved",
     getTechniciansAssign: "https://edeskio.com:8443/api/edeskio/get_TechniciansAssignInfo",
+    postTags: "https://edeskio.com:8443/api/edeskio/post_tblTags_NewTag",
+    deleteTag: "https://edeskio.com:8443/api/edeskio/delete_tblTags",
+    putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
+    putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
+    putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
   };
 } else {
   endpoints = {
@@ -87,5 +97,10 @@ if (
       "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
     approved: "https://edeskio.com:8443/api/edeskio/put_tblUsers_Approved",
     getTechniciansAssign: "https://edeskio.com:8443/api/edeskio/get_TechniciansAssignInfo",
+    postTags: "https://edeskio.com:8443/api/edeskio/post_tblTags_NewTag",
+    deleteTag: "https://edeskio.com:8443/api/edeskio/delete_tblTags",
+    putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
+    putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
+    putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
   };
 }

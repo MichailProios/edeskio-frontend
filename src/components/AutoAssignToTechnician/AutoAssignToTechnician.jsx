@@ -187,7 +187,7 @@ const AutoAssignToTechnician = ({ open, handleOpen, handleClose, ticketID }) => 
   };
 
   //const users = useSelector((state) => state.User.users.tblUsers); 
-  const tblTags = useSelector((state) => state.User.tags.tblTags);
+  const tblTags = useSelector((state) => state.User.tags);
 
   const techs = useSelector((state) => state.User.techs); 
   const techExpertiseTags = useSelector((state) => state.User.expertiseTags_All); 

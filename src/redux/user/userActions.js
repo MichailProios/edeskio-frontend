@@ -54,6 +54,21 @@ import {
   PUT_USER_APPROVED_REQUEST,
   PUT_USER_APPROVED_SUCCESS,
   PUT_USER_APPROVED_FAILURE,
+  POST_TAGS_REQUEST,
+  POST_TAGS_SUCCESS,
+  POST_TAGS_FAILURE,
+  DELETE_TAG_REQUEST,
+  DELETE_TAG_SUCCESS,
+  DELETE_TAG_FAILURE,
+  PUT_TAGS_SUCCESS,
+  PUT_TAGS_FAILURE,
+  PUT_TAGS_REQUEST,
+  PUT_TAG_CATEGORIES_REQUEST,
+  PUT_TAG_CATEGORIES_SUCCESS,
+  PUT_TAG_CATEGORIES_FAILURE,
+  PUT_TICKET_PRIORITY_REQUEST,
+  PUT_TICKET_PRIORITY_SUCCESS,
+  PUT_TICKET_PRIORITY_FAILURE,
   USER_LOGOUT,
 } from "./userTypes";
 
@@ -671,6 +686,209 @@ const putTicketsAssignFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
+export const putTicketPriorityAction = (
+  ticketID,
+  priority
+) => {
+  return async (dispatch) => {
+    dispatch(putTicketPriorityRequest());
+    await putTicketPriorityWithAxios(ticketID, priority)
+      .then((response) => {
+        dispatch(putTicketPrioritySuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTicketPriorityFailure(error.message));
+      });
+  };
+};
+
+const putTicketPriorityWithAxios = async (
+  ticketID,
+  priority
+) => {
+  var tickets = [];
+
+  await putTicketPriority(ticketID, priority).then(
+    (response) => {
+      tickets.push(response);
+    }
+  );
+
+  return {
+    tickets,
+  };
+};
+
+const putTicketPriority = (ticketID, priority) => {
+  return axios.put(
+    endpoints.putTicketPriority,
+    { TicketID: ticketID, Priority: priority },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTicketPriorityRequest = () => {
+  return {
+    type: PUT_TICKET_PRIORITY_REQUEST,
+  };
+};
+
+const putTicketPrioritySuccess = (data) => {
+  return {
+    type: PUT_TICKET_PRIORITY_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTicketPriorityFailure = (error) => {
+  return {
+    type: PUT_TICKET_PRIORITY_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTagsAction = (
+  tagType,
+  category
+) => {
+  return async (dispatch) => {
+    dispatch(putTagsRequest());
+    await putTagsWithAxios(tagType, category)
+      .then((response) => {
+        dispatch(putTagsSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTagsFailure(error.message));
+      });
+  };
+};
+
+const putTagsWithAxios = async (
+  tagType,
+  category
+) => {
+  var tags = [];
+
+  await putTags(tagType, category).then(
+    (response) => {
+      tags.push(response);
+    }
+  );
+
+  return {
+    tags,
+  };
+};
+
+const putTags = (tagType, category) => {
+  return axios.put(
+    endpoints.putTags,
+    { TagType: tagType, Category: category },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTagsRequest = () => {
+  return {
+    type: PUT_TAGS_REQUEST,
+  };
+};
+
+const putTagsSuccess = (data) => {
+  return {
+    type: PUT_TAGS_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTagsFailure = (error) => {
+  return {
+    type: PUT_TAGS_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTagCategoriesAction = (
+  category,
+  bgColor,
+  color
+) => {
+  return async (dispatch) => {
+    dispatch(putTagCategoriesRequest());
+    await putTagCategoriesWithAxios(category, bgColor, color)
+      .then((response) => {
+        dispatch(putTagCategoriesSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTagCategoriesFailure(error.message));
+      });
+  };
+};
+
+const putTagCategoriesWithAxios = async (
+  category,
+  bgColor,
+  color
+) => {
+  var tagCategories = [];
+
+  await putTagCategories(category, bgColor, color).then(
+    (response) => {
+      tagCategories.push(response);
+    }
+  );
+
+  return {
+    tagCategories,
+  };
+};
+
+const putTagCategories = (category, bgColor, color) => {
+  return axios.put(
+    endpoints.putTagCategory,
+    { Category: category, BackgroundColor: bgColor, Color: color },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTagCategoriesRequest = () => {
+  return {
+    type: PUT_TAG_CATEGORIES_REQUEST,
+  };
+};
+
+const putTagCategoriesSuccess = (data) => {
+  return {
+    type: PUT_TAG_CATEGORIES_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTagCategoriesFailure = (error) => {
+  return {
+    type: PUT_TAG_CATEGORIES_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
 export const putTicketsAutoAssignAction = (
   ticketID,
   technicianID,
@@ -1208,6 +1426,129 @@ const postExpertiseTagsSuccess = (data) => {
 const postExpertiseTagsFailure = () => {
   return {
     type: POST_EXPERTISE_TAGS_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const postTagsAction = (tagType, category) => {
+  return async (dispatch) => {
+    dispatch(postTagsRequest());
+    await postTagsWithAxios(tagType, category)
+      .then((response) => {
+        dispatch(postTagsSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(postTagsFailure(error.message));
+      });
+  };
+};
+
+const postTagsWithAxios = async (tagType, category) => {
+  var tags = [];
+
+  await postTags(tagType, category).then((response) => {
+    tags.push(response);
+  });
+
+  return {
+    tags,
+  };
+};
+
+const postTags = (tagType, category) => {
+  return axios.post(
+    endpoints.postTags,
+    {
+      TagType: tagType,
+      Category: category,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const postTagsRequest = (error) => {
+  return {
+    type: POST_TAGS_REQUEST,
+    payload: error,
+  };
+};
+
+const postTagsSuccess = (data) => {
+  return {
+    type: POST_TAGS_SUCCESS,
+    payload: data,
+  };
+};
+
+const postTagsFailure = () => {
+  return {
+    type: POST_TAGS_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const deleteTagAction = (tagType) => {
+  return async (dispatch) => {
+    dispatch(deleteTagRequest());
+    await deleteTagWithAxios(tagType)
+      .then((response) => {
+        dispatch(deleteTagSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(deleteTagFailure(error.message));
+      });
+  };
+};
+
+const deleteTagWithAxios = async (tagType) => {
+  var tags = [];
+
+  await deleteTag(tagType).then((response) => {
+    tags.push(response);
+  });
+
+  return {
+    tags,
+  };
+};
+
+const deleteTag = (tagType) => {
+  return axios.delete(
+    endpoints.deleteTag, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        TagType: tagType,
+      },
+    }
+  )
+};
+
+const deleteTagRequest = (error) => {
+  return {
+    type: DELETE_TAG_REQUEST,
+    payload: error,
+  };
+};
+
+const deleteTagSuccess = (data) => {
+  return {
+    type: DELETE_TAG_SUCCESS,
+    payload: data,
+  };
+};
+
+const deleteTagFailure = (error) => {
+  return {
+    type: DELETE_TAG_FAILURE,
+    payload: error,
   };
 };
 /**************************************************************************************************************/
