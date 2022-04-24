@@ -157,7 +157,7 @@ const AssignToTechnician = ({ open, handleOpen, handleClose, setSelected, ticket
   };
 
   //const users = useSelector((state) => state.User.users.tblUsers); 
-  const tblTags = useSelector((state) => state.User.tags.tblTags);
+  const tblTags = useSelector((state) => state.User.tags);
 
   const techs = useSelector((state) => state.User.techs); 
   const techExpertiseTags = useSelector((state) => state.User.expertiseTags_All); 
@@ -197,31 +197,13 @@ const AssignToTechnician = ({ open, handleOpen, handleClose, setSelected, ticket
       {
         const tagFromtbl = tblTags.find((record) => record.Type === tag);
 
-        if (tagFromtbl.Category === "Operating System") {
-          matchingTagChips.push(
-            <Chip
-              label={tag}
-              key={tag}
-              style={{ backgroundColor: "#3399ff", color: "#ffffff" }}
-            />
-          );
-        } else if (tagFromtbl.Category === "Hardware") {
-          matchingTagChips.push(
-            <Chip
-              label={tag}
-              key={tag}
-              style={{ backgroundColor: "#cc0000", color: "#ffffff" }}
-            />
-          );
-        } else if (tagFromtbl.Category === "Software") {
-          matchingTagChips.push(
-            <Chip
-              label={tag}
-              key={tag}
-              style={{ backgroundColor: "#0000ff", color: "#ffffff" }}
-            />
-          );
-        }
+        matchingTagChips.push(
+          <Chip
+            label={tag}
+            key={tag}
+            style={{ backgroundColor: tagFromtbl.BackgroundColor, color: tagFromtbl.Color}}
+          />
+        );
       }
     })
 

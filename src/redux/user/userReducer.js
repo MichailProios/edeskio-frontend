@@ -53,6 +53,18 @@ import {
   PUT_USER_APPROVED_REQUEST,
   PUT_USER_APPROVED_SUCCESS,
   PUT_USER_APPROVED_FAILURE,
+  POST_TAGS_REQUEST,
+  POST_TAGS_SUCCESS,
+  POST_TAGS_FAILURE,
+  DELETE_TAG_REQUEST,
+  DELETE_TAG_SUCCESS,
+  DELETE_TAG_FAILURE,
+  PUT_TAGS_SUCCESS,
+  PUT_TAGS_FAILURE,
+  PUT_TAGS_REQUEST,
+  PUT_TAG_CATEGORIES_REQUEST,
+  PUT_TAG_CATEGORIES_SUCCESS,
+  PUT_TAG_CATEGORIES_FAILURE,
   USER_LOGOUT,
 } from "./userTypes";
 import { store } from "../store";
@@ -114,6 +126,7 @@ export const UserReducer = (state = initialState, action) => {
   let users;
   let expertiseTags;
   let ticketTags;
+  let tags;
 
 
   switch (action.type) {
@@ -256,9 +269,21 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case GET_ALL_TAGS_SUCCESS:
+
+      tags = action.payload.tags[0].data.tblTags;
+      tags = tags.map((tag) => {
+        return { 
+          Type : tag.Type, 
+          Category : tag.Category,
+          BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+          Color: tag["tblTagCategory.Color"],
+        }
+      })
+    
+
       return {
         ...state,
-        tags: action.payload.tags[0].data,
+        tags: tags,
         loading: false,
         successfull: true,
       };
@@ -318,6 +343,66 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
         error: action.payload,
       };
+
+    case POST_TAGS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case POST_TAGS_SUCCESS:
+      tags = action.payload.tags[0].data.tblTags;
+      tags = tags.map((tag) => {
+        return { 
+          Type : tag.Type, 
+          Category : tag.Category,
+          BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+          Color: tag["tblTagCategory.Color"],
+        }
+      })
+
+      return {
+        ...state,
+        loading: false,
+        tags: tags,
+        successfull: true,
+      };
+    case POST_TAGS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+      case DELETE_TAG_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          successfull: false,
+        };
+      case DELETE_TAG_SUCCESS:
+        tags = action.payload.tags[0].data.tblTags;
+        tags = tags.map((tag) => {
+          return { 
+            Type : tag.Type, 
+            Category : tag.Category,
+            BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+            Color: tag["tblTagCategory.Color"],
+          }
+        })
+        return {
+          ...state,
+          loading: false,
+          tags: tags,
+          successfull: true,
+        };
+      case DELETE_TAG_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          successfull: false,
+          error: action.payload,
+        };
 
     case GET_TICKETS_REQUEST:
       return {
@@ -433,6 +518,68 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
         error: action.payload,
       };
+
+      case PUT_TAGS_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          successfull: false,
+        };
+      case PUT_TAGS_SUCCESS:
+        tags = action.payload.tags[0].data.tblTags;
+        tags = tags.map((tag) => {
+          return { 
+            Type : tag.Type, 
+            Category : tag.Category,
+            BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+            Color: tag["tblTagCategory.Color"],
+          }
+        })
+
+        return {
+          ...state,
+          loading: false,
+          tags: tags,
+          successfull: true,
+        };
+      case PUT_TAGS_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          successfull: false,
+          error: action.payload,
+        };
+
+      case PUT_TAG_CATEGORIES_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          successfull: false,
+        };
+      case PUT_TAG_CATEGORIES_SUCCESS:
+        tags = action.payload.tagCategories[0].data.tblTags;
+        tags = tags.map((tag) => {
+          return { 
+            Type : tag.Type, 
+            Category : tag.Category,
+            BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+            Color: tag["tblTagCategory.Color"],
+          }
+        })
+
+        return {
+          ...state,
+          loading: false,
+          tags: tags,
+          successfull: true,
+        };
+      case PUT_TAG_CATEGORIES_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          successfull: false,
+          error: action.payload,
+        };
 
     case GET_USER_ALL_REQUEST:
       return {

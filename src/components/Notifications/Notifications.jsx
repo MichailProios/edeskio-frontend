@@ -35,7 +35,7 @@ const Notifications = () => {
   return (
     <>
       <IconButton className={styles.notificationButton}>
-        <Badge badgeContent={2} color="error" overlap="rectangle">
+        <Badge badgeContent={2} color="error" overlap="rectangular">
           <Tooltip title="Notifications" placement="bottom">
             <NotificationsNone className={styles.notificationIcon} />
           </Tooltip>

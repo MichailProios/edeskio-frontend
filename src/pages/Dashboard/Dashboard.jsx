@@ -11,6 +11,7 @@ import ViewSubmittedTicketsButton from "./ViewSubmittedTicketsButton";
 
 import PageHeader from "../../components/PageHeader/PageHeader";
 import PermissionsButton from "./PermissionsButton";
+import ManageTagsButton from "./ManageTagsButton";
 import JoinOrganizationRequestsButton from "./JoinOrganizationRequestsButton";
 import ResolveSubmittedTicketsButton from "./ResolveSubmittedTicketsButton";
 import { useSelector } from "react-redux";
@@ -91,6 +92,11 @@ const Dashboard = () => {
           <Grow in={true} timeout={300}>
             <Grid item>
               <ResolveSubmittedTicketsButton />
+            </Grid>
+          </Grow>
+          <Grow in={true} timeout={300}>
+            <Grid item>
+              <ManageTagsButton />
             </Grid>
           </Grow>
           <Grow in={true} timeout={300}>
