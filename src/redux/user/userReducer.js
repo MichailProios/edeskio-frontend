@@ -312,8 +312,6 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case GET_TAG_CATEGORIES_SUCCESS:
-
-    console.log(action.payload);
       return {
         ...state,
         tagCategories: action.payload.tagCategories[0].data.tblTagCategories,

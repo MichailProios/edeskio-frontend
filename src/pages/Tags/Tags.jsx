@@ -18,9 +18,7 @@ import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ExportCsv, ExportPdf } from "@material-table/exporters";
 import { tableIcons } from "../../utilities/DataTable/DataTableIcons.jsx";
-import { AiFillPrinter } from "react-icons/ai";
 import { deleteTagAction, postTagsAction, putTagCategoriesAction, putTagsAction } from "../../redux/user/userActions.js";
-import { Autocomplete } from "@material-ui/lab";
 import AddTagCategory from "../../components/AddTagCategory/AddTagCategory.jsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -59,8 +57,6 @@ const Tags = () => {
   );
 
   const [uniqTagCategories, setUniqTagCategories] = useState(tagCategories.map((record) => {return record.Category}));
-
-  console.log(uniqTagCategories)
 
   const [openAddTagCategory, setOpenAddTagCategory] = useState(false);
 
