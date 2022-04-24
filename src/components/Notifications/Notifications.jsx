@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import io from "socket.io-client";
 
 import { IconButton, Tooltip, Badge } from "@material-ui/core";
 
@@ -32,10 +33,27 @@ const useStyles = makeStyles((theme) => ({
 const Notifications = () => {
   const styles = useStyles();
 
+  const [notifications, setNotifications] = useState([]);
+
+  const socketRef = useRef();
+
+  useEffect(() => {
+    socketRef.current = io.connect(
+      "https://edeskio.com:8443/websocket/notifications"
+    );
+    socketRef.current.on("message", ({ name, message }) => {
+      setNotifications([...notifications, { name, message }]);
+    });
+    return () => socketRef.current.disconnect();
+  }, [notifications]);
   return (
     <>
       <IconButton className={styles.notificationButton}>
-        <Badge badgeContent={2} color="error" overlap="rectangle">
+        <Badge
+          badgeContent={notifications.length}
+          color="error"
+          overlap="rectangular"
+        >
           <Tooltip title="Notifications" placement="bottom">
             <NotificationsNone className={styles.notificationIcon} />
           </Tooltip>
