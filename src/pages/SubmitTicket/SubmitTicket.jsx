@@ -151,8 +151,6 @@ const SubmitTicket = () => {
   const [selectedTagsChips, setSelectedTagsChips] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
 
-  console.log(selectedTags);
-
   useEffect(() => {
     setUniqTagCategories([
       "All",

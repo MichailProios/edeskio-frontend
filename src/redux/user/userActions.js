@@ -66,6 +66,9 @@ import {
   PUT_TAG_CATEGORIES_REQUEST,
   PUT_TAG_CATEGORIES_SUCCESS,
   PUT_TAG_CATEGORIES_FAILURE,
+  PUT_TICKET_PRIORITY_REQUEST,
+  PUT_TICKET_PRIORITY_SUCCESS,
+  PUT_TICKET_PRIORITY_FAILURE,
   USER_LOGOUT,
 } from "./userTypes";
 
@@ -677,6 +680,73 @@ const putTicketsAssignSuccess = (data) => {
 const putTicketsAssignFailure = (error) => {
   return {
     type: PUT_TICKETS_ASSIGN_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTicketPriorityAction = (
+  ticketID,
+  priority
+) => {
+  return async (dispatch) => {
+    dispatch(putTicketPriorityRequest());
+    await putTicketPriorityWithAxios(ticketID, priority)
+      .then((response) => {
+        dispatch(putTicketPrioritySuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTicketPriorityFailure(error.message));
+      });
+  };
+};
+
+const putTicketPriorityWithAxios = async (
+  ticketID,
+  priority
+) => {
+  var tickets = [];
+
+  await putTicketPriority(ticketID, priority).then(
+    (response) => {
+      tickets.push(response);
+    }
+  );
+
+  return {
+    tickets,
+  };
+};
+
+const putTicketPriority = (ticketID, priority) => {
+  return axios.put(
+    endpoints.putTicketPriority,
+    { TicketID: ticketID, Priority: priority },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTicketPriorityRequest = () => {
+  return {
+    type: PUT_TICKET_PRIORITY_REQUEST,
+  };
+};
+
+const putTicketPrioritySuccess = (data) => {
+  return {
+    type: PUT_TICKET_PRIORITY_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTicketPriorityFailure = (error) => {
+  return {
+    type: PUT_TICKET_PRIORITY_FAILURE,
     payload: error,
   };
 };

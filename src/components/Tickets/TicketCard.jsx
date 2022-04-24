@@ -20,10 +20,13 @@ import {
 } from "@material-ui/core";
 
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
 import { useSelector, useDispatch } from "react-redux";
 import {
   getUserOrganizationAction,
+  putTicketPriorityAction,
   putTicketsAssignAction,
 } from "../../redux/user/userActions";
 import {
@@ -199,6 +202,46 @@ const TicketCard = ({ ticket }) => {
 
   const handleAutoAssignClose = () => {
     setOpenAutoAssign(false);
+  };
+
+  const handleRaisePriority = () => {
+
+    let priority = "";
+
+    if (ticket.Priority === "Medium")
+    {
+      priority = "High";
+    }
+    else if (ticket.Priority === "Low")
+    {
+      priority = "Medium";
+    }
+    else
+    {
+      return;
+    }
+
+    dispatch(putTicketPriorityAction(ticket.ID, priority))
+  };
+
+  const handleLowerPriority = () => {
+    
+    let priority = "";
+
+    if (ticket.Priority === "Medium")
+    {
+      priority = "Low";
+    }
+    else if (ticket.Priority === "High")
+    {
+      priority = "Medium";
+    }
+    else
+    {
+      return;
+    }
+
+    dispatch(putTicketPriorityAction(ticket.ID, priority))
   };
 
   const [selected, setSelected] = useState("");
@@ -407,8 +450,28 @@ const TicketCard = ({ ticket }) => {
           ) : (
             <div />
           )}
+        
+        {(ticket.Priority === "Low" || ticket.Priority === "Medium") && (userRole === "Admin" || userRole === "Tech") ? (
+            <MenuItem onClick={handleRaisePriority}>
+              <ArrowUpwardIcon color="primary" />
+              Raise Priority
+            </MenuItem>
+          ) : (
+          <div />
+        )}
+
+        {(ticket.Priority === "High" || ticket.Priority === "Medium") && (userRole === "Admin" || userRole === "Tech") ? (
+            <MenuItem onClick={handleLowerPriority}>
+              <ArrowDownwardIcon color="primary" />
+              Lower Priority
+            </MenuItem>
+          ) : (
+            <div />
+          )}
+
+
         </Menu>
-      )}
+        )}
 
       <AssignToTechnician
         open={openAssign}

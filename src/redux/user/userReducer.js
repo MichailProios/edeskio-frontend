@@ -65,6 +65,9 @@ import {
   PUT_TAG_CATEGORIES_REQUEST,
   PUT_TAG_CATEGORIES_SUCCESS,
   PUT_TAG_CATEGORIES_FAILURE,
+  PUT_TICKET_PRIORITY_REQUEST,
+  PUT_TICKET_PRIORITY_SUCCESS,
+  PUT_TICKET_PRIORITY_FAILURE,
   USER_LOGOUT,
 } from "./userTypes";
 import { store } from "../store";
@@ -518,6 +521,28 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
         error: action.payload,
       };
+
+      case PUT_TICKET_PRIORITY_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          successfull: false,
+        };
+      case PUT_TICKET_PRIORITY_SUCCESS:  
+        return {
+          ...state,
+          loading: false,
+          tickets: action.payload.tickets[0].data,
+          ticketTags: action.payload.tickets[0].data.tblTicketTags,
+          successfull: true,
+        };
+      case PUT_TICKET_PRIORITY_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          successfull: false,
+          error: action.payload,
+        };
 
       case PUT_TAGS_REQUEST:
         return {
