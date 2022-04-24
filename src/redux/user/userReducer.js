@@ -69,6 +69,12 @@ import {
   PUT_TICKET_PRIORITY_SUCCESS,
   PUT_TICKET_PRIORITY_FAILURE,
   USER_LOGOUT,
+  POST_TAG_CATEGORY_REQUEST,
+  POST_TAG_CATEGORY_SUCCESS,
+  POST_TAG_CATEGORY_FAILURE,
+  GET_TAG_CATEGORIES_REQUEST,
+  GET_TAG_CATEGORIES_SUCCESS,
+  GET_TAG_CATEGORIES_FAILURE,
 } from "./userTypes";
 import { store } from "../store";
 
@@ -103,6 +109,7 @@ export const initialState = {
   tags: {
     tblTags: [],
   },
+  tagCategories: [],
 
   //Permissions
   roles: [],
@@ -298,6 +305,29 @@ export const UserReducer = (state = initialState, action) => {
         error: action.payload,
       };
 
+    case GET_TAG_CATEGORIES_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case GET_TAG_CATEGORIES_SUCCESS:
+
+    console.log(action.payload);
+      return {
+        ...state,
+        tagCategories: action.payload.tagCategories[0].data.tblTagCategories,
+        loading: false,
+        successfull: true,
+      };
+    case GET_TAG_CATEGORIES_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
     case POST_TICKETS_NEW_TICKET_REQUEST:
       return {
         ...state,
@@ -377,12 +407,35 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
         error: action.payload,
       };
+
+      case POST_TAG_CATEGORY_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          successfull: false,
+        };
+      case POST_TAG_CATEGORY_SUCCESS:
+        return {
+          ...state,
+          tagCategories: action.payload.tagCategories[0].data.tblTagCategories,
+          loading: false,
+          successfull: true,
+        };
+      case POST_TAG_CATEGORY_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          successfull: false,
+          error: action.payload,
+        };
+
       case DELETE_TAG_REQUEST:
         return {
           ...state,
           loading: true,
           successfull: false,
         };
+
       case DELETE_TAG_SUCCESS:
         tags = action.payload.tags[0].data.tblTags;
         tags = tags.map((tag) => {

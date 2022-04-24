@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 //Material-UI
-import { Chip, Grow, ListItemText, MenuItem, Popover, Select, TextField } from "@material-ui/core";
+import { Button, Chip, Grow, ListItemText, MenuItem, Popover, Select, TextField } from "@material-ui/core";
 
 // Basic Components
 import PageHeader from "../../components/PageHeader/PageHeader.jsx";
@@ -14,13 +14,14 @@ import PageHeader from "../../components/PageHeader/PageHeader.jsx";
 import { SwatchesPicker } from 'react-color'
 
 // Material Table
-import MaterialTable from "@material-table/core";
+import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ExportCsv, ExportPdf } from "@material-table/exporters";
 import { tableIcons } from "../../utilities/DataTable/DataTableIcons.jsx";
 import { AiFillPrinter } from "react-icons/ai";
 import { deleteTagAction, postTagsAction, putTagCategoriesAction, putTagsAction } from "../../redux/user/userActions.js";
 import { Autocomplete } from "@material-ui/lab";
+import AddTagCategory from "../../components/AddTagCategory/AddTagCategory.jsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,26 +50,23 @@ const Tags = () => {
 
   const tableRows = useSelector((state) => state.User.tags);
 
+  const tagCategories = useSelector((state) => state.User.tagCategories);
+
   const loading = useSelector((state) => state.User.loading);
 
   const organizationID = useSelector(
     (state) => state.User.user.tblOrganization.ID
   );
 
-  const [uniqTagCategories, setUniqTagCategories] = useState([
-    ...new Set(tableRows.map((tag) => tag.Category)),
-  ]);
+  const [uniqTagCategories, setUniqTagCategories] = useState(tagCategories.map((record) => {return record.Category}));
 
-//   useEffect(() => {
-//     if (organizationID.toString().length > 0) {
-//       dispatch(getPermissionsAllAction(organizationID));
-//     }
-//   }, [dispatch, organizationID]);
+  console.log(uniqTagCategories)
+
+  const [openAddTagCategory, setOpenAddTagCategory] = useState(false);
 
   useEffect(() => {
-    setUniqTagCategories([...new Set(tableRows.map((tag) => tag.Category)),
-    ]);
-  }, [tableRows]);
+    setUniqTagCategories(tagCategories.map((record) => {return record.Category}));
+  }, [tagCategories]);
 
   const categoryReduce = uniqTagCategories.reduce(function(acc, cur, i) {    
     acc[cur] = cur;
@@ -136,6 +134,14 @@ const Tags = () => {
         editable: "never"
     },
   ];
+
+  const handleTagCategoryOpen = () => {
+    setOpenAddTagCategory(true);
+  }
+
+  const handleTagCategoryClose = () => {
+    setOpenAddTagCategory(false);
+  }
 
   return (
     <>
@@ -229,10 +235,33 @@ const Tags = () => {
                     resolve();
                 }),
               }}
+              components={{
+                Toolbar: props => (
+                  <div>
+                    <MTableToolbar {...props} />
+                    <div style={{ paddingRight: "20px", textAlign: "right" }}>
+                      <Button
+                        onClick={handleTagCategoryOpen}
+                        variant="contained"
+                        color="primary"
+                        className={styles.buttons}
+                      >
+                        Add Tag Category
+                      </Button>
+                    </div>
+                  </div>
+                )
+            }}
             />
           </div>
         </Grow>
       </div>
+
+      <AddTagCategory
+        open={openAddTagCategory}
+        handleOpen={handleTagCategoryOpen}
+        handleClose={handleTagCategoryClose}
+      />
     </>
   );
 };

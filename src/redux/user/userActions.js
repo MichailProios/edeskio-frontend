@@ -70,6 +70,12 @@ import {
   PUT_TICKET_PRIORITY_SUCCESS,
   PUT_TICKET_PRIORITY_FAILURE,
   USER_LOGOUT,
+  POST_TAG_CATEGORY_REQUEST,
+  POST_TAG_CATEGORY_SUCCESS,
+  POST_TAG_CATEGORY_FAILURE,
+  GET_TAG_CATEGORIES_REQUEST,
+  GET_TAG_CATEGORIES_SUCCESS,
+  GET_TAG_CATEGORIES_FAILURE,
 } from "./userTypes";
 
 import { store } from "../store";
@@ -1072,6 +1078,61 @@ const getAllTagsFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
+export const getTagCategoriesAction = () => {
+  return async (dispatch) => {
+    dispatch(getTagCategoriesRequest());
+    await getTagCategoriesWithAxios()
+      .then((response) => {
+        dispatch(getTagCategoriesSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getTagCategoriesFailure(error.message));
+      });
+  };
+};
+
+const getTagCategoriesWithAxios = async () => {
+  var tagCategories = [];
+
+  await getTagCategories().then((response) => {
+    tagCategories.push(response);
+  });
+
+  return {
+    tagCategories,
+  };
+};
+
+const getTagCategories = () => {
+  return axios.get(endpoints.getTagCategories, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+const getTagCategoriesRequest = () => {
+  return {
+    type: GET_TAG_CATEGORIES_REQUEST,
+  };
+};
+
+const getTagCategoriesSuccess = (data) => {
+  return {
+    type: GET_TAG_CATEGORIES_SUCCESS,
+    payload: data,
+  };
+};
+
+const getTagCategoriesFailure = (error) => {
+  return {
+    type: GET_TAG_CATEGORIES_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
 export const postUserRegisterExistingOrganizationAction = (
   email,
   userName,
@@ -1488,6 +1549,69 @@ const postTagsSuccess = (data) => {
 const postTagsFailure = () => {
   return {
     type: POST_TAGS_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const postTagCategoryAction = (category, backgroundColor, color) => {
+  return async (dispatch) => {
+    dispatch(postTagCategoryRequest());
+    await postTagCategoryWithAxios(category, backgroundColor, color)
+      .then((response) => {
+        dispatch(postTagCategorySuccess(response));
+      })
+      .catch((error) => {
+        dispatch(postTagCategoryFailure(error.message));
+      });
+  };
+};
+
+const postTagCategoryWithAxios = async (category, backgroundColor, color) => {
+  var tagCategories = [];
+
+  await postTagCategory(category, backgroundColor, color).then((response) => {
+    tagCategories.push(response);
+  });
+
+  return {
+    tagCategories,
+  };
+};
+
+const postTagCategory = (category, backgroundColor, color) => {
+  return axios.post(
+    endpoints.postTagCategory,
+    {
+      Category: category,
+      BackgroundColor: backgroundColor,
+      Color: color,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const postTagCategoryRequest = (error) => {
+  return {
+    type: POST_TAG_CATEGORY_REQUEST,
+    payload: error,
+  };
+};
+
+const postTagCategorySuccess = (data) => {
+  return {
+    type: POST_TAG_CATEGORY_SUCCESS,
+    payload: data,
+  };
+};
+
+const postTagCategoryFailure = () => {
+  return {
+    type: POST_TAG_CATEGORY_FAILURE,
   };
 };
 /**************************************************************************************************************/

@@ -34,6 +34,8 @@ if (
     putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
     putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
     putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    postTagCategory: "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
+    getTagCategories: "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
   };
 } else if (
   window.location.hostname === "localhost" ||
@@ -70,6 +72,8 @@ if (
     putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
     putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
     putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    postTagCategory: "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
+    getTagCategories: "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
   };
 } else {
   endpoints = {
@@ -102,5 +106,7 @@ if (
     putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
     putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
     putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    postTagCategory: "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
+    getTagCategories: "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
   };
 }

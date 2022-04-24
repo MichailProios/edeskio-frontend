@@ -6,6 +6,8 @@ import {
   getAllTagsAction,
   getExpertiseTagsOneAction,
   
+  getTagCategoriesAction,
+  
   getTechniciansAssignAction,
   
   getUserAction,
@@ -39,6 +41,10 @@ const Authenticated = ({ children }) => {
 
   useEffect(() => {
     dispatch(getAllTagsAction());
+  }, [dispatch]);
+  
+  useEffect(() => {
+    dispatch(getTagCategoriesAction());
   }, [dispatch]);
 
   useEffect(() => {
