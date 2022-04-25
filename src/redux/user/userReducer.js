@@ -339,6 +339,7 @@ export const UserReducer = (state = initialState, action) => {
     case POST_TICKETS_NEW_TICKET_SUCCESS:
       return {
         ...state,
+        notification: "Submitted a New Ticket",
         loading: false,
         successfull: true,
       };
@@ -838,11 +839,13 @@ export const UserReducer = (state = initialState, action) => {
     case NOTIFICATIONS_SUCCESS:
       return {
         ...state,
+        notifications: action.payload,
       };
 
     case NOTIFICATION_CLEAR:
       return {
         ...state,
+        notification: "",
       };
 
     default:
