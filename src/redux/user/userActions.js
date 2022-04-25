@@ -70,6 +70,17 @@ import {
   PUT_TICKET_PRIORITY_SUCCESS,
   PUT_TICKET_PRIORITY_FAILURE,
   USER_LOGOUT,
+<<<<<<< HEAD
+  NOTIFICATIONS_SUCCESS,
+  NOTIFICATION_CLEAR,
+=======
+  POST_TAG_CATEGORY_REQUEST,
+  POST_TAG_CATEGORY_SUCCESS,
+  POST_TAG_CATEGORY_FAILURE,
+  GET_TAG_CATEGORIES_REQUEST,
+  GET_TAG_CATEGORIES_SUCCESS,
+  GET_TAG_CATEGORIES_FAILURE,
+>>>>>>> a2160219a7d81bf6bb48fe4e9659c5a0d65a62da
 } from "./userTypes";
 
 import { store } from "../store";
@@ -617,11 +628,7 @@ const getTechniciansAssignFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putTicketsAssignAction = (
-  ticketID,
-  technicianID,
-  openDate
-) => {
+export const putTicketsAssignAction = (ticketID, technicianID, openDate) => {
   return async (dispatch) => {
     dispatch(putTicketsAssignRequest());
     await putTicketsAssignWithAxios(ticketID, technicianID, openDate)
@@ -634,18 +641,12 @@ export const putTicketsAssignAction = (
   };
 };
 
-const putTicketsAssignWithAxios = async (
-  ticketID,
-  technicianID,
-  openDate
-) => {
+const putTicketsAssignWithAxios = async (ticketID, technicianID, openDate) => {
   var tickets = [];
 
-  await putTicketsAssign(ticketID, technicianID, openDate).then(
-    (response) => {
-      tickets.push(response);
-    }
-  );
+  await putTicketsAssign(ticketID, technicianID, openDate).then((response) => {
+    tickets.push(response);
+  });
 
   return {
     tickets,
@@ -686,10 +687,7 @@ const putTicketsAssignFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putTicketPriorityAction = (
-  ticketID,
-  priority
-) => {
+export const putTicketPriorityAction = (ticketID, priority) => {
   return async (dispatch) => {
     dispatch(putTicketPriorityRequest());
     await putTicketPriorityWithAxios(ticketID, priority)
@@ -702,17 +700,12 @@ export const putTicketPriorityAction = (
   };
 };
 
-const putTicketPriorityWithAxios = async (
-  ticketID,
-  priority
-) => {
+const putTicketPriorityWithAxios = async (ticketID, priority) => {
   var tickets = [];
 
-  await putTicketPriority(ticketID, priority).then(
-    (response) => {
-      tickets.push(response);
-    }
-  );
+  await putTicketPriority(ticketID, priority).then((response) => {
+    tickets.push(response);
+  });
 
   return {
     tickets,
@@ -755,11 +748,12 @@ const putTicketPriorityFailure = (error) => {
 /**************************************************************************************************************/
 export const putTagsAction = (
   tagType,
-  category
+  category,
+  orgID,
 ) => {
   return async (dispatch) => {
     dispatch(putTagsRequest());
-    await putTagsWithAxios(tagType, category)
+    await putTagsWithAxios(tagType, category, orgID)
       .then((response) => {
         dispatch(putTagsSuccess(response));
       })
@@ -771,11 +765,12 @@ export const putTagsAction = (
 
 const putTagsWithAxios = async (
   tagType,
-  category
+  category, 
+  orgID
 ) => {
   var tags = [];
 
-  await putTags(tagType, category).then(
+  await putTags(tagType, category, orgID).then(
     (response) => {
       tags.push(response);
     }
@@ -786,10 +781,10 @@ const putTagsWithAxios = async (
   };
 };
 
-const putTags = (tagType, category) => {
+const putTags = (tagType, category, orgID) => {
   return axios.put(
     endpoints.putTags,
-    { TagType: tagType, Category: category },
+    { TagType: tagType, Category: category, OrganizationID: orgID },
     {
       headers: {
         "Content-Type": "application/json",
@@ -821,13 +816,13 @@ const putTagsFailure = (error) => {
 
 /**************************************************************************************************************/
 export const putTagCategoriesAction = (
-  category,
+  categoryID,
   bgColor,
   color
 ) => {
   return async (dispatch) => {
     dispatch(putTagCategoriesRequest());
-    await putTagCategoriesWithAxios(category, bgColor, color)
+    await putTagCategoriesWithAxios(categoryID, bgColor, color)
       .then((response) => {
         dispatch(putTagCategoriesSuccess(response));
       })
@@ -838,13 +833,13 @@ export const putTagCategoriesAction = (
 };
 
 const putTagCategoriesWithAxios = async (
-  category,
+  categoryID,
   bgColor,
   color
 ) => {
   var tagCategories = [];
 
-  await putTagCategories(category, bgColor, color).then(
+  await putTagCategories(categoryID, bgColor, color).then(
     (response) => {
       tagCategories.push(response);
     }
@@ -855,10 +850,10 @@ const putTagCategoriesWithAxios = async (
   };
 };
 
-const putTagCategories = (category, bgColor, color) => {
+const putTagCategories = (categoryID, bgColor, color) => {
   return axios.put(
     endpoints.putTagCategory,
-    { Category: category, BackgroundColor: bgColor, Color: color },
+    { CategoryID: categoryID, BackgroundColor: bgColor, Color: color },
     {
       headers: {
         "Content-Type": "application/json",
@@ -1017,10 +1012,10 @@ const putPermissionsFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const getAllTagsAction = () => {
+export const getAllTagsAction = (orgID) => {
   return async (dispatch) => {
     dispatch(getAllTagsRequest());
-    await getAllTagsWithAxios()
+    await getAllTagsWithAxios(orgID)
       .then((response) => {
         dispatch(getAllTagsSuccess(response));
       })
@@ -1030,10 +1025,10 @@ export const getAllTagsAction = () => {
   };
 };
 
-const getAllTagsWithAxios = async () => {
+const getAllTagsWithAxios = async (orgID) => {
   var tags = [];
 
-  await getAllTags().then((response) => {
+  await getAllTags(orgID).then((response) => {
     tags.push(response);
   });
 
@@ -1042,11 +1037,16 @@ const getAllTagsWithAxios = async () => {
   };
 };
 
-const getAllTags = () => {
-  return axios.get(endpoints.tagsAll, {
+const getAllTags = (orgID) => {
+  console.log(orgID);
+  return axios.get(endpoints.tagsAll, 
+    {  
     headers: {
       "Content-Type": "application/json",
     },
+    params: {
+      OrganizationID: orgID,
+    },  
   });
 };
 
@@ -1066,6 +1066,64 @@ const getAllTagsSuccess = (data) => {
 const getAllTagsFailure = (error) => {
   return {
     type: GET_ALL_TAGS_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const getTagCategoriesAction = (orgID) => {
+  return async (dispatch) => {
+    dispatch(getTagCategoriesRequest());
+    await getTagCategoriesWithAxios(orgID)
+      .then((response) => {
+        dispatch(getTagCategoriesSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getTagCategoriesFailure(error.message));
+      });
+  };
+};
+
+const getTagCategoriesWithAxios = async (orgID) => {
+  var tagCategories = [];
+
+  await getTagCategories(orgID).then((response) => {
+    tagCategories.push(response);
+  });
+
+  return {
+    tagCategories,
+  };
+};
+
+const getTagCategories = (orgID) => {
+  return axios.get(endpoints.getTagCategories, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: {
+      OrganizationID: orgID,
+    }
+  });
+};
+
+const getTagCategoriesRequest = () => {
+  return {
+    type: GET_TAG_CATEGORIES_REQUEST,
+  };
+};
+
+const getTagCategoriesSuccess = (data) => {
+  return {
+    type: GET_TAG_CATEGORIES_SUCCESS,
+    payload: data,
+  };
+};
+
+const getTagCategoriesFailure = (error) => {
+  return {
+    type: GET_TAG_CATEGORIES_FAILURE,
     payload: error,
   };
 };
@@ -1431,10 +1489,10 @@ const postExpertiseTagsFailure = () => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const postTagsAction = (tagType, category) => {
+export const postTagsAction = (tagType, categoryID, orgID) => {
   return async (dispatch) => {
     dispatch(postTagsRequest());
-    await postTagsWithAxios(tagType, category)
+    await postTagsWithAxios(tagType, categoryID, orgID)
       .then((response) => {
         dispatch(postTagsSuccess(response));
       })
@@ -1444,10 +1502,10 @@ export const postTagsAction = (tagType, category) => {
   };
 };
 
-const postTagsWithAxios = async (tagType, category) => {
+const postTagsWithAxios = async (tagType, categoryID, orgID) => {
   var tags = [];
 
-  await postTags(tagType, category).then((response) => {
+  await postTags(tagType, categoryID, orgID).then((response) => {
     tags.push(response);
   });
 
@@ -1456,12 +1514,13 @@ const postTagsWithAxios = async (tagType, category) => {
   };
 };
 
-const postTags = (tagType, category) => {
+const postTags = (tagType, categoryID, orgID) => {
   return axios.post(
     endpoints.postTags,
     {
       TagType: tagType,
-      Category: category,
+      CategoryID: categoryID,
+      OrganizationID: orgID,
     },
     {
       headers: {
@@ -1493,10 +1552,74 @@ const postTagsFailure = () => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const deleteTagAction = (tagType) => {
+export const postTagCategoryAction = (category, backgroundColor, color, orgID) => {
+  return async (dispatch) => {
+    dispatch(postTagCategoryRequest());
+    await postTagCategoryWithAxios(category, backgroundColor, color, orgID)
+      .then((response) => {
+        dispatch(postTagCategorySuccess(response));
+      })
+      .catch((error) => {
+        dispatch(postTagCategoryFailure(error.message));
+      });
+  };
+};
+
+const postTagCategoryWithAxios = async (category, backgroundColor, color, orgID) => {
+  var tagCategories = [];
+
+  await postTagCategory(category, backgroundColor, color, orgID).then((response) => {
+    tagCategories.push(response);
+  });
+
+  return {
+    tagCategories,
+  };
+};
+
+const postTagCategory = (category, backgroundColor, color, orgID) => {
+  return axios.post(
+    endpoints.postTagCategory,
+    {
+      Category: category,
+      OrganizationID: orgID,
+      BackgroundColor: backgroundColor,
+      Color: color,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const postTagCategoryRequest = (error) => {
+  return {
+    type: POST_TAG_CATEGORY_REQUEST,
+    payload: error,
+  };
+};
+
+const postTagCategorySuccess = (data) => {
+  return {
+    type: POST_TAG_CATEGORY_SUCCESS,
+    payload: data,
+  };
+};
+
+const postTagCategoryFailure = () => {
+  return {
+    type: POST_TAG_CATEGORY_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const deleteTagAction = (tagType, orgID) => {
   return async (dispatch) => {
     dispatch(deleteTagRequest());
-    await deleteTagWithAxios(tagType)
+    await deleteTagWithAxios(tagType, orgID)
       .then((response) => {
         dispatch(deleteTagSuccess(response));
       })
@@ -1506,10 +1629,10 @@ export const deleteTagAction = (tagType) => {
   };
 };
 
-const deleteTagWithAxios = async (tagType) => {
+const deleteTagWithAxios = async (tagType, orgID) => {
   var tags = [];
 
-  await deleteTag(tagType).then((response) => {
+  await deleteTag(tagType, orgID).then((response) => {
     tags.push(response);
   });
 
@@ -1518,7 +1641,7 @@ const deleteTagWithAxios = async (tagType) => {
   };
 };
 
-const deleteTag = (tagType) => {
+const deleteTag = (tagType, orgID) => {
   return axios.delete(
     endpoints.deleteTag, {
       headers: {
@@ -1526,6 +1649,7 @@ const deleteTag = (tagType) => {
       },
       data: {
         TagType: tagType,
+        OrganizationID: orgID,
       },
     }
   )
@@ -1624,4 +1748,35 @@ const putTblUsersApprovedFailure = (error) => {
     payload: error,
   };
 };
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const notificationsAction = (notifications) => {
+  return async (dispatch) => {
+    dispatch(notificatonsSuccess(notifications));
+  };
+};
+
+const notificatonsSuccess = (data) => {
+  return {
+    type: NOTIFICATIONS_SUCCESS,
+    payload: data,
+  };
+};
+
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const notificationClearAction = () => {
+  return async (dispatch) => {
+    dispatch(notificationCLear());
+  };
+};
+
+const notificationCLear = () => {
+  return {
+    type: NOTIFICATION_CLEAR,
+  };
+};
+
 /**************************************************************************************************************/
