@@ -86,7 +86,7 @@ const SubmittedTickets = () => {
     if (loading) {
       timerId = setTimeout(() => {
         setLoading(false);
-      }, 350);
+      }, 1000);
     }
     return () => clearTimeout(timerId);
   }, [loading]);
