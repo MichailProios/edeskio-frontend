@@ -96,8 +96,10 @@ const Notifications = () => {
   }, [userID, notification, dispatch, connected]);
 
   const handleOptionsClick = (e) => {
-    setOptionsOpen(true);
-    setAnchorEl(e.currentTarget);
+    if (notifications.length > 0) {
+      setOptionsOpen(true);
+      setAnchorEl(e.currentTarget);
+    }
   };
 
   const handleOptionsClose = (e) => {
