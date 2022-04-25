@@ -44,8 +44,9 @@ const SubmittedTickets = () => {
 
   const tickets = useSelector((state) => state.User.tickets.tblTickets);
 
-  const loading = useSelector((state) => state.User.loading);
+  // const loading = useSelector((state) => state.User.loading);
 
+  const [loading, setLoading] = useState(true);
   const [filteredTickets, setFilteredTickets] = useState(tickets);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,6 +79,17 @@ const SubmittedTickets = () => {
   const delayTime = (index) => {
     return 150 * index;
   };
+
+  useEffect(() => {
+    let timerId;
+
+    if (loading) {
+      timerId = setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+    return () => clearTimeout(timerId);
+  }, [loading]);
 
   if (!loading) {
     return (
@@ -142,6 +154,41 @@ const SubmittedTickets = () => {
   } else {
     return (
       <div className={styles.root}>
+        <PageHeader title="Tickets" />
+        <Grid container spacing={2}>
+          <Grow in={true} timeout={10}>
+            <Grid container item justifyContent="center">
+              <TextField
+                className={styles.search}
+                helperText="Filter by Subject, ID, and Tech"
+                autoFocus={true}
+                placeholder="Search"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                name="Search"
+                margin="none"
+                fullWidth={true}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        size="small"
+                        onClick={(e) => setSearchTerm("")}
+                      >
+                        <CloseIcon className={styles.searchIcons} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+          </Grow>
+        </Grid>
         <CircularLoading />
       </div>
     );

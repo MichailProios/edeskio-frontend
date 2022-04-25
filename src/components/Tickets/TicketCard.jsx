@@ -20,11 +20,12 @@ import {
 } from "@material-ui/core";
 
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
+  getTechniciansAssignAction,
   getUserOrganizationAction,
   putTicketPriorityAction,
   putTicketsAssignAction,
@@ -40,7 +41,7 @@ import moment from "momnet";
 
 import AssignmentReturnIcon from "@material-ui/icons/AssignmentReturn";
 import AssignToTechnician from "../AssignToTechnician/AssignToTechnician";
-import AutoAssignToTechnician from "../AutoAssignToTechnician/AutoAssignToTechnician"
+import AutoAssignToTechnician from "../AutoAssignToTechnician/AutoAssignToTechnician";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -115,7 +116,10 @@ const TicketCard = ({ ticket }) => {
         <Chip
           label={tag}
           key={tag}
-          style={{ backgroundColor: tagFromtbl.BackgroundColor, color: tagFromtbl.Color}}
+          style={{
+            backgroundColor: tagFromtbl.BackgroundColor,
+            color: tagFromtbl.Color,
+          }}
         />
       );
     });
@@ -162,7 +166,7 @@ const TicketCard = ({ ticket }) => {
   );
   const userLastName = useSelector((state) => state.User.user.tblUser.LastName);
 
-  const techs = useSelector((state) => state.User.techs); 
+  const techs = useSelector((state) => state.User.techs);
 
   const handleAssignToSelf = () => {
     dispatch(
@@ -183,8 +187,11 @@ const TicketCard = ({ ticket }) => {
 
   const [openAssign, setOpenAssign] = useState(false);
   const [openAutoAssign, setOpenAutoAssign] = useState(false);
+  const user = useSelector((state) => state.User.user.tblUser.ID);
 
   const handleAssignOpen = () => {
+    dispatch(getTechniciansAssignAction(user));
+
     setOpenAssign(true);
     setOptionsOpen(false);
     setAnchorEl(null);
@@ -195,6 +202,8 @@ const TicketCard = ({ ticket }) => {
   };
 
   const handleAutoAssignOpen = () => {
+    dispatch(getTechniciansAssignAction(user));
+
     setOpenAutoAssign(true);
     setOptionsOpen(false);
     setAnchorEl(null);
@@ -205,43 +214,37 @@ const TicketCard = ({ ticket }) => {
   };
 
   const handleRaisePriority = () => {
+    setOptionsOpen(false);
+    setAnchorEl(null);
 
     let priority = "";
 
-    if (ticket.Priority === "Medium")
-    {
+    if (ticket.Priority === "Medium") {
       priority = "High";
-    }
-    else if (ticket.Priority === "Low")
-    {
+    } else if (ticket.Priority === "Low") {
       priority = "Medium";
-    }
-    else
-    {
+    } else {
       return;
     }
 
-    dispatch(putTicketPriorityAction(ticket.ID, priority))
+    dispatch(putTicketPriorityAction(ticket.ID, priority));
   };
 
   const handleLowerPriority = () => {
-    
+    setOptionsOpen(false);
+    setAnchorEl(null);
+
     let priority = "";
 
-    if (ticket.Priority === "Medium")
-    {
+    if (ticket.Priority === "Medium") {
       priority = "Low";
-    }
-    else if (ticket.Priority === "High")
-    {
+    } else if (ticket.Priority === "High") {
       priority = "Medium";
-    }
-    else
-    {
+    } else {
       return;
     }
 
-    dispatch(putTicketPriorityAction(ticket.ID, priority))
+    dispatch(putTicketPriorityAction(ticket.ID, priority));
   };
 
   const [selected, setSelected] = useState("");
@@ -249,15 +252,12 @@ const TicketCard = ({ ticket }) => {
   const getTechnicianName = () => {
     const tech = techs.find((record) => record.ID === ticket.TechnicianID);
 
-    if (tech)
-    {
+    if (tech) {
       return tech.FirstName + " " + tech.LastName;
+    } else {
+      return "Unassigned";
     }
-    else
-    {
-      return "Unassigned"
-    }
-  }
+  };
 
   return (
     <>
@@ -342,8 +342,14 @@ const TicketCard = ({ ticket }) => {
                     {"Assigned To:"}
                   </Typography>
                   <Chip
-                    label={ticket.TechnicianID !== null ? getTechnicianName() : "Unassigned"}
-                    className={ticket.TechnicianID !== null ? styles.assignedChip : ""}
+                    label={
+                      ticket.TechnicianID !== null
+                        ? getTechnicianName()
+                        : "Unassigned"
+                    }
+                    className={
+                      ticket.TechnicianID !== null ? styles.assignedChip : ""
+                    }
                   />
                 </Grid>
                 <Grid
@@ -436,7 +442,7 @@ const TicketCard = ({ ticket }) => {
           {userRole === "Admin" ? (
             <MenuItem onClick={handleAssignOpen}>
               <AssignmentIndIcon color="primary" />
-              Assign to Tech
+              &nbsp;Assign to Tech
             </MenuItem>
           ) : (
             <div />
@@ -445,33 +451,33 @@ const TicketCard = ({ ticket }) => {
           {userRole === "Admin" ? (
             <MenuItem onClick={handleAutoAssignOpen}>
               <AssignmentIndIcon color="primary" />
-              Auto-Assign to Tech
+              &nbsp;Auto-Assign to Tech
             </MenuItem>
           ) : (
             <div />
           )}
-        
-        {(ticket.Priority === "Low" || ticket.Priority === "Medium") && (userRole === "Admin" || userRole === "Tech") ? (
+
+          {(ticket.Priority === "Low" || ticket.Priority === "Medium") &&
+          (userRole === "Admin" || userRole === "Tech") ? (
             <MenuItem onClick={handleRaisePriority}>
               <ArrowUpwardIcon color="primary" />
-              Raise Priority
-            </MenuItem>
-          ) : (
-          <div />
-        )}
-
-        {(ticket.Priority === "High" || ticket.Priority === "Medium") && (userRole === "Admin" || userRole === "Tech") ? (
-            <MenuItem onClick={handleLowerPriority}>
-              <ArrowDownwardIcon color="primary" />
-              Lower Priority
+              &nbsp;Raise Priority
             </MenuItem>
           ) : (
             <div />
           )}
 
-
+          {(ticket.Priority === "High" || ticket.Priority === "Medium") &&
+          (userRole === "Admin" || userRole === "Tech") ? (
+            <MenuItem onClick={handleLowerPriority}>
+              <ArrowDownwardIcon color="primary" />
+              &nbsp;Lower Priority
+            </MenuItem>
+          ) : (
+            <div />
+          )}
         </Menu>
-        )}
+      )}
 
       <AssignToTechnician
         open={openAssign}

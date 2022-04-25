@@ -18,9 +18,9 @@ if (
     ticketsAll: "https://edeskio.com:8443/api/edeskio/get_tblTickets",
     newTicket: "https://edeskio.com:8443/api/edeskio/post_tblTickets_NewTicket",
     usersAll: "https://edeskio.com:8443/api/edeskio/get_tblUsers_All",
-    assignTicket:
-      "https://edeskio.com:8443/api/edeskio/put_tblTickets_Assign",
-    autoAssignTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_AutoAssign",
+    assignTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Assign",
+    autoAssignTicket:
+      "https://edeskio.com:8443/api/edeskio/put_tblTickets_AutoAssign",
     rolesAll: "https://edeskio.com:8443/api/edeskio/get_tblRoles_All",
     permissionsUpdate:
       "https://edeskio.com:8443/api/edeskio/put_tblPermissions",
@@ -28,12 +28,16 @@ if (
     getExpertiseTags:
       "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
     approved: "https://edeskio.com:8443/api/edeskio/put_tblUsers_Approved",
-    getTechniciansAssign: "https://edeskio.com:8443/api/edeskio/get_TechniciansAssignInfo",
+    getTechniciansAssign:
+      "https://edeskio.com:8443/api/edeskio/get_TechniciansAssignInfo",
     postTags: "https://edeskio.com:8443/api/edeskio/post_tblTags_NewTag",
     deleteTag: "https://edeskio.com:8443/api/edeskio/delete_tblTags",
     putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
-    putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
-    putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    putTagCategory:
+      "https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
+    putTicketPriority:
+      "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    notificationsWS: "https://edeskio.com:8443/websocket/notifications",
   };
 } else if (
   window.location.hostname === "localhost" ||
@@ -54,9 +58,9 @@ if (
     newTicket: "https://edeskio.com:8443/api/edeskio/post_tblTickets_NewTicket",
     ticketsAll: "https://edeskio.com:8443/api/edeskio/get_tblTickets",
     usersAll: "https://edeskio.com:8443/api/edeskio/get_tblUsers_All",
-    assignTicket:
-      "https://edeskio.com:8443/api/edeskio/put_tblTickets_Assign",
-    autoAssignTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_AutoAssign",
+    assignTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Assign",
+    autoAssignTicket:
+      "https://edeskio.com:8443/api/edeskio/put_tblTickets_AutoAssign",
     rolesAll: "https://edeskio.com:8443/api/edeskio/get_tblRoles_All",
     permissionsUpdate:
       "https://edeskio.com:8443/api/edeskio/put_tblPermissions",
@@ -64,12 +68,16 @@ if (
     getExpertiseTags:
       "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
     approved: "https://edeskio.com:8443/api/edeskio/put_tblUsers_Approved",
-    getTechniciansAssign: "https://edeskio.com:8443/api/edeskio/get_TechniciansAssignInfo",
+    getTechniciansAssign:
+      "https://edeskio.com:8443/api/edeskio/get_TechniciansAssignInfo",
     postTags: "https://edeskio.com:8443/api/edeskio/post_tblTags_NewTag",
     deleteTag: "https://edeskio.com:8443/api/edeskio/delete_tblTags",
     putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
-    putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
-    putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    putTagCategory:
+      "https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
+    putTicketPriority:
+      "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    notificationsWS: "https://edeskio.com:8443/websocket/notifications",
   };
 } else {
   endpoints = {
@@ -86,9 +94,9 @@ if (
     newTicket: "https://edeskio.com:8443/api/edeskio/post_tblTickets_NewTicket",
     ticketsAll: "https://edeskio.com:8443/api/edeskio/get_tblTickets",
     usersAll: "https://edeskio.com:8443/api/edeskio/get_tblUsers_All",
-    assignTicket:
-      "https://edeskio.com:8443/api/edeskio/put_tblTickets_Assign",
-    autoAssignTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_AutoAssign",
+    assignTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Assign",
+    autoAssignTicket:
+      "https://edeskio.com:8443/api/edeskio/put_tblTickets_AutoAssign",
     rolesAll: "https://edeskio.com:8443/api/edeskio/get_tblRoles_All",
     permissionsUpdate:
       "https://edeskio.com:8443/api/edeskio/put_tblPermissions",
@@ -96,11 +104,15 @@ if (
     getExpertiseTags:
       "https://edeskio.com:8443/api/edeskio/get_tblExpertiseTags_One",
     approved: "https://edeskio.com:8443/api/edeskio/put_tblUsers_Approved",
-    getTechniciansAssign: "https://edeskio.com:8443/api/edeskio/get_TechniciansAssignInfo",
+    getTechniciansAssign:
+      "https://edeskio.com:8443/api/edeskio/get_TechniciansAssignInfo",
     postTags: "https://edeskio.com:8443/api/edeskio/post_tblTags_NewTag",
     deleteTag: "https://edeskio.com:8443/api/edeskio/delete_tblTags",
     putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
-    putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
-    putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    putTagCategory:
+      "https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
+    putTicketPriority:
+      "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    notificationsWS: "https://edeskio.com:8443/websocket/notifications",
   };
 }

@@ -6,6 +6,10 @@ import { IconButton, Tooltip, Badge } from "@material-ui/core";
 import { NotificationsNone } from "@material-ui/icons";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { useDispatch, useSelector, useStore } from "react-redux";
+
+import { endpoints } from "../../redux/user/userEndpoints";
+import { notificationsAction } from "../../redux/user/userActions";
 
 const useStyles = makeStyles((theme) => ({
   notificationIcon: {
@@ -32,20 +36,29 @@ const useStyles = makeStyles((theme) => ({
 
 const Notifications = () => {
   const styles = useStyles();
+  const dispatch = useDispatch();
 
-  const [notifications, setNotifications] = useState([]);
+  const notifications = useSelector((state) => state.User.notifications);
+  const notification = useSelector((state) => state.User.notification);
 
   const socketRef = useRef();
 
   useEffect(() => {
-    socketRef.current = io.connect(
-      "https://edeskio.com:8443/websocket/notifications"
-    );
-    socketRef.current.on("message", ({ name, message }) => {
-      setNotifications([...notifications, { name, message }]);
+    socketRef.current = io.connect(endpoints.notificationsWS);
+
+    socketRef.current.on("notificationNew", ({ notifications }) => {
+      dispatch(notificationsAction(notifications));
     });
+
+    socketRef.current.emit("notificationNew", { notification });
+
     return () => socketRef.current.disconnect();
-  }, [notifications]);
+  }, [notification, dispatch]);
+
+  // const onMessageSubmit = (e) => {
+  //   socketRef.current.emit("notificationNew", { currentNotification });
+  // };
+
   return (
     <>
       <IconButton className={styles.notificationButton}>

@@ -70,6 +70,8 @@ import {
   PUT_TICKET_PRIORITY_SUCCESS,
   PUT_TICKET_PRIORITY_FAILURE,
   USER_LOGOUT,
+  NOTIFICATIONS_SUCCESS,
+  NOTIFICATION_CLEAR,
 } from "./userTypes";
 
 import { store } from "../store";
@@ -617,11 +619,7 @@ const getTechniciansAssignFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putTicketsAssignAction = (
-  ticketID,
-  technicianID,
-  openDate
-) => {
+export const putTicketsAssignAction = (ticketID, technicianID, openDate) => {
   return async (dispatch) => {
     dispatch(putTicketsAssignRequest());
     await putTicketsAssignWithAxios(ticketID, technicianID, openDate)
@@ -634,18 +632,12 @@ export const putTicketsAssignAction = (
   };
 };
 
-const putTicketsAssignWithAxios = async (
-  ticketID,
-  technicianID,
-  openDate
-) => {
+const putTicketsAssignWithAxios = async (ticketID, technicianID, openDate) => {
   var tickets = [];
 
-  await putTicketsAssign(ticketID, technicianID, openDate).then(
-    (response) => {
-      tickets.push(response);
-    }
-  );
+  await putTicketsAssign(ticketID, technicianID, openDate).then((response) => {
+    tickets.push(response);
+  });
 
   return {
     tickets,
@@ -686,10 +678,7 @@ const putTicketsAssignFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putTicketPriorityAction = (
-  ticketID,
-  priority
-) => {
+export const putTicketPriorityAction = (ticketID, priority) => {
   return async (dispatch) => {
     dispatch(putTicketPriorityRequest());
     await putTicketPriorityWithAxios(ticketID, priority)
@@ -702,17 +691,12 @@ export const putTicketPriorityAction = (
   };
 };
 
-const putTicketPriorityWithAxios = async (
-  ticketID,
-  priority
-) => {
+const putTicketPriorityWithAxios = async (ticketID, priority) => {
   var tickets = [];
 
-  await putTicketPriority(ticketID, priority).then(
-    (response) => {
-      tickets.push(response);
-    }
-  );
+  await putTicketPriority(ticketID, priority).then((response) => {
+    tickets.push(response);
+  });
 
   return {
     tickets,
@@ -753,10 +737,7 @@ const putTicketPriorityFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putTagsAction = (
-  tagType,
-  category
-) => {
+export const putTagsAction = (tagType, category) => {
   return async (dispatch) => {
     dispatch(putTagsRequest());
     await putTagsWithAxios(tagType, category)
@@ -769,17 +750,12 @@ export const putTagsAction = (
   };
 };
 
-const putTagsWithAxios = async (
-  tagType,
-  category
-) => {
+const putTagsWithAxios = async (tagType, category) => {
   var tags = [];
 
-  await putTags(tagType, category).then(
-    (response) => {
-      tags.push(response);
-    }
-  );
+  await putTags(tagType, category).then((response) => {
+    tags.push(response);
+  });
 
   return {
     tags,
@@ -820,11 +796,7 @@ const putTagsFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putTagCategoriesAction = (
-  category,
-  bgColor,
-  color
-) => {
+export const putTagCategoriesAction = (category, bgColor, color) => {
   return async (dispatch) => {
     dispatch(putTagCategoriesRequest());
     await putTagCategoriesWithAxios(category, bgColor, color)
@@ -837,18 +809,12 @@ export const putTagCategoriesAction = (
   };
 };
 
-const putTagCategoriesWithAxios = async (
-  category,
-  bgColor,
-  color
-) => {
+const putTagCategoriesWithAxios = async (category, bgColor, color) => {
   var tagCategories = [];
 
-  await putTagCategories(category, bgColor, color).then(
-    (response) => {
-      tagCategories.push(response);
-    }
-  );
+  await putTagCategories(category, bgColor, color).then((response) => {
+    tagCategories.push(response);
+  });
 
   return {
     tagCategories,
@@ -1519,16 +1485,14 @@ const deleteTagWithAxios = async (tagType) => {
 };
 
 const deleteTag = (tagType) => {
-  return axios.delete(
-    endpoints.deleteTag, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: {
-        TagType: tagType,
-      },
-    }
-  )
+  return axios.delete(endpoints.deleteTag, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: {
+      TagType: tagType,
+    },
+  });
 };
 
 const deleteTagRequest = (error) => {
@@ -1624,4 +1588,35 @@ const putTblUsersApprovedFailure = (error) => {
     payload: error,
   };
 };
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const notificationsAction = (notifications) => {
+  return async (dispatch) => {
+    dispatch(notificatonsSuccess(notifications));
+  };
+};
+
+const notificatonsSuccess = (data) => {
+  return {
+    type: NOTIFICATIONS_SUCCESS,
+    payload: data,
+  };
+};
+
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const notificationClearAction = () => {
+  return async (dispatch) => {
+    dispatch(notificationCLear());
+  };
+};
+
+const notificationCLear = () => {
+  return {
+    type: NOTIFICATION_CLEAR,
+  };
+};
+
 /**************************************************************************************************************/
