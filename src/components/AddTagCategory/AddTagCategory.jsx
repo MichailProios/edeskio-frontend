@@ -120,7 +120,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddTagCategory = ({ open, handleOpen, handleClose, ticketID }) => {
+const AddTagCategory = ({ open, handleOpen, handleClose }) => {
   // create dispatch
   const dispatch = useDispatch();
 

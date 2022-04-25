@@ -43,6 +43,7 @@ import {
 import moment from "momnet";
 
 import AssignmentReturnIcon from "@material-ui/icons/AssignmentReturn";
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import AssignToTechnician from "../AssignToTechnician/AssignToTechnician";
 import AutoAssignToTechnician from "../AutoAssignToTechnician/AutoAssignToTechnician";
 
@@ -176,6 +177,19 @@ const TicketCard = ({ ticket }) => {
       putTicketsAssignAction(
         ticket.ID,
         userID,
+        moment().format("YYYY-MM-DD HH:mm:ss")
+      )
+    );
+
+    setOptionsOpen(false);
+    setAnchorEl(null);
+  };
+
+  const handleUnassign = () => {
+    dispatch(
+      putTicketsAssignAction(
+        ticket.ID,
+        null,
         moment().format("YYYY-MM-DD HH:mm:ss")
       )
     );
@@ -430,7 +444,8 @@ const TicketCard = ({ ticket }) => {
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "top" }}
         >
-          {(userRole === "Admin" || userRole === "Tech") && (
+          {(userRole === "Admin" || userRole === "Tech") &&
+            (ticket.TechnicianID === null) && (
             <MenuItem onClick={handleAssignToSelf}>
               <ListItemIcon>
                 <AssignmentReturnIcon color="primary" />
@@ -439,6 +454,22 @@ const TicketCard = ({ ticket }) => {
                 primary={
                   <Typography variant="body1" color="textPrimary">
                     Assign To Self
+                  </Typography>
+                }
+              />
+            </MenuItem>
+          )}
+
+          {(userRole === "Admin" || userRole === "Tech") &&
+            (ticket.TechnicianID === userID) && (
+            <MenuItem onClick={handleUnassign}>
+              <ListItemIcon>
+                <RemoveCircleIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" color="textPrimary">
+                    Unassign
                   </Typography>
                 }
               />

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 //Material-UI
-import { Button, Chip, Grow, ListItemText, MenuItem, Popover, Select, TextField } from "@material-ui/core";
+import { Button, Chip, Grid, Grow, ListItemText, MenuItem, Popover, Select, TextField, Typography } from "@material-ui/core";
 
 // Basic Components
 import PageHeader from "../../components/PageHeader/PageHeader.jsx";
@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
     height: "10px",
   },
+  buttons: {
+    marginLeft: "10px",
+    marginRight: "10px"
+  }
 }));
 
 const Tags = () => {
@@ -211,10 +215,6 @@ const Tags = () => {
                     .then(() => {
                       if (oldBgColor !== newBgColor || oldColor !== newColor)
                       {
-                        
-
-
-                        
                         const fromCategories = tableRows.find((record) => record.Category === category);
 
                         dispatch(
@@ -230,16 +230,35 @@ const Tags = () => {
                 Toolbar: props => (
                   <div>
                     <MTableToolbar {...props} />
-                    <div style={{ paddingRight: "20px", textAlign: "right" }}>
-                      <Button
-                        onClick={handleTagCategoryOpen}
-                        variant="contained"
-                        color="primary"
-                        className={styles.buttons}
-                      >
-                        Add Tag Category
-                      </Button>
-                    </div>
+                    <Grid 
+                      container
+                      item
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="center"
+                      xs={12}
+                      sm={12}
+                      md={12}
+                      lg={12}
+                      xl={12}
+                      spacing={2}
+                    >
+                      <Grid container item justifyContent="center" xs={9} sm={9} md={9} lg={9} xl={9}>
+                        <Typography style={{textAlign: "center", margin: "auto 10px"}}>
+                          <strong>Warning:</strong> Changing <em>Chip</em> or <em>Text Color</em> of a Tag will change the colors of all Tags from the same Category
+                        </Typography>
+                      </Grid>
+                      <Grid container item justifyContent="center" xs={3} sm={3} md={3} lg={3} xl={3}>
+                        <Button
+                          onClick={handleTagCategoryOpen}
+                          variant="contained"
+                          color="primary"
+                          className={styles.buttons}
+                        >
+                          Add Tag Category
+                        </Button>
+                      </Grid>
+                    </Grid>
                   </div>
                 )
             }}
