@@ -206,7 +206,10 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
         <Chip
           label={tag}
           key={tag}
-          style={{ backgroundColor: tagFromtbl.BackgroundColor, color: tagFromtbl.Color}}
+          style={{
+            backgroundColor: tagFromtbl.BackgroundColor,
+            color: tagFromtbl.Color,
+          }}
         />
       );
     });
@@ -225,7 +228,10 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
         <Chip
           label={tag}
           key={tag}
-          style={{ backgroundColor: tagFromtbl.BackgroundColor, color: tagFromtbl.Color}}
+          style={{
+            backgroundColor: tagFromtbl.BackgroundColor,
+            color: tagFromtbl.Color,
+          }}
         />
       );
     });

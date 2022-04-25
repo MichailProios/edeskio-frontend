@@ -5,11 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAllTagsAction,
   getExpertiseTagsOneAction,
-  
   getTagCategoriesAction,
-  
   getTechniciansAssignAction,
-  
   getUserAction,
   getUsersAllAction,
   getUserSessionAction,
@@ -59,22 +56,21 @@ const Authenticated = ({ children }) => {
     }
   }, [dispatch, user]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     if (organizationID.toString().length > 0) {
+  useEffect(() => {
+    if (user) {
+      if (organizationID.toString().length > 0) {
         dispatch(getTagCategoriesAction(organizationID));
-  //     }
-  //   }
-  // }, [dispatch, organizationID, user]);
+      }
+    }
+  }, [dispatch, organizationID, user]);
 
-
-  // useEffect(() => {
-  //   if (user) {
-  //     if (organizationID.toString().length > 0) {
+  useEffect(() => {
+    if (user) {
+      if (organizationID.toString().length > 0) {
         dispatch(getAllTagsAction(organizationID));
-  //     }
-  //   }
-  // }, [dispatch, organizationID, user]);
+      }
+    }
+  }, [dispatch, organizationID, user]);
 
   if (isAuthenticated) {
     if (!loading) {

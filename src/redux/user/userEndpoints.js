@@ -33,18 +33,19 @@ if (
     postTags: "https://edeskio.com:8443/api/edeskio/post_tblTags_NewTag",
     deleteTag: "https://edeskio.com:8443/api/edeskio/delete_tblTags",
     putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
-<<<<<<< HEAD
     putTagCategory:
       "https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
     putTicketPriority:
       "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
     notificationsWS: "https://edeskio.com:8443/websocket/notifications",
-=======
-    putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
-    putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
-    postTagCategory: "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
-    getTagCategories: "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
->>>>>>> a2160219a7d81bf6bb48fe4e9659c5a0d65a62da
+    putTagCategory:
+      "https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
+    putTicketPriority:
+      "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    postTagCategory:
+      "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
+    getTagCategories:
+      "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
   };
 } else if (
   window.location.hostname === "localhost" ||
@@ -80,18 +81,19 @@ if (
     postTags: "https://edeskio.com:8443/api/edeskio/post_tblTags_NewTag",
     deleteTag: "https://edeskio.com:8443/api/edeskio/delete_tblTags",
     putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
-<<<<<<< HEAD
     putTagCategory:
       "https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
     putTicketPriority:
       "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
     notificationsWS: "https://edeskio.com:8443/websocket/notifications",
-=======
-    putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
-    putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
-    postTagCategory: "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
-    getTagCategories: "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
->>>>>>> a2160219a7d81bf6bb48fe4e9659c5a0d65a62da
+    putTagCategory:
+      "https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
+    putTicketPriority:
+      "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    postTagCategory:
+      "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
+    getTagCategories:
+      "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
   };
 } else {
   endpoints = {
@@ -123,17 +125,18 @@ if (
     postTags: "https://edeskio.com:8443/api/edeskio/post_tblTags_NewTag",
     deleteTag: "https://edeskio.com:8443/api/edeskio/delete_tblTags",
     putTags: "https://edeskio.com:8443/api/edeskio/put_tblTags_ManageTags",
-<<<<<<< HEAD
     putTagCategory:
       "https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
     putTicketPriority:
       "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
     notificationsWS: "https://edeskio.com:8443/websocket/notifications",
-=======
-    putTagCategory:"https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
-    putTicketPriority: "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
-    postTagCategory: "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
-    getTagCategories: "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
->>>>>>> a2160219a7d81bf6bb48fe4e9659c5a0d65a62da
+    putTagCategory:
+      "https://edeskio.com:8443/api/edeskio/put_tblTagCategories_ManageTags",
+    putTicketPriority:
+      "https://edeskio.com:8443/api/edeskio/put_tblTickets_Priority",
+    postTagCategory:
+      "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
+    getTagCategories:
+      "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
   };
 }

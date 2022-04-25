@@ -75,6 +75,8 @@ import {
   GET_TAG_CATEGORIES_REQUEST,
   GET_TAG_CATEGORIES_SUCCESS,
   GET_TAG_CATEGORIES_FAILURE,
+  NOTIFICATIONS_SUCCESS,
+  NOTIFICATION_CLEAR,
 } from "./userTypes";
 import { store } from "../store";
 
@@ -106,9 +108,8 @@ export const initialState = {
   expertiseTags: [],
 
   //Tags
-  tags: {
-    tblTags: [],
-  },
+  tags: [],
+
   tagCategories: [],
 
   //Permissions
@@ -128,6 +129,10 @@ export const initialState = {
   techs: [],
   expertiseTags_All: [],
   techsTicketCount: [],
+
+  //Notifications
+  notification: "",
+  notifications: [],
 };
 
 export const UserReducer = (state = initialState, action) => {
@@ -279,7 +284,7 @@ export const UserReducer = (state = initialState, action) => {
       };
     case GET_ALL_TAGS_SUCCESS:
       tags = action.payload.tags[0].data.tblTags;
-      console.log(tags);
+
       tags = tags.map((tag) => {
         return {
           Type: tag.Type,
@@ -289,7 +294,6 @@ export const UserReducer = (state = initialState, action) => {
           CategoryID: tag.CategoryID,
         };
       });
-      console.log(tags);
 
       return {
         ...state,
@@ -639,7 +643,7 @@ export const UserReducer = (state = initialState, action) => {
       };
     case PUT_TAG_CATEGORIES_SUCCESS:
       tags = action.payload.tagCategories[0].data.tblTags;
-      console.log(tags);
+
       tags = tags.map((tag) => {
         return {
           Type: tag.Type,
@@ -829,6 +833,16 @@ export const UserReducer = (state = initialState, action) => {
         ...state,
         successfull: false,
         error: action.payload,
+      };
+
+    case NOTIFICATIONS_SUCCESS:
+      return {
+        ...state,
+      };
+
+    case NOTIFICATION_CLEAR:
+      return {
+        ...state,
       };
 
     default:
