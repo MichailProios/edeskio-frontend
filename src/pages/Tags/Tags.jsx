@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 //Material-UI
-import { Chip, Grow, ListItemText, MenuItem, Popover, Select, TextField } from "@material-ui/core";
+import { Button, Chip, Grow, ListItemText, MenuItem, Popover, Select, TextField } from "@material-ui/core";
 
 // Basic Components
 import PageHeader from "../../components/PageHeader/PageHeader.jsx";
@@ -14,13 +14,12 @@ import PageHeader from "../../components/PageHeader/PageHeader.jsx";
 import { SwatchesPicker } from 'react-color'
 
 // Material Table
-import MaterialTable from "@material-table/core";
+import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ExportCsv, ExportPdf } from "@material-table/exporters";
 import { tableIcons } from "../../utilities/DataTable/DataTableIcons.jsx";
-import { AiFillPrinter } from "react-icons/ai";
 import { deleteTagAction, postTagsAction, putTagCategoriesAction, putTagsAction } from "../../redux/user/userActions.js";
-import { Autocomplete } from "@material-ui/lab";
+import AddTagCategory from "../../components/AddTagCategory/AddTagCategory.jsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,26 +48,21 @@ const Tags = () => {
 
   const tableRows = useSelector((state) => state.User.tags);
 
+  const tagCategories = useSelector((state) => state.User.tagCategories);
+
   const loading = useSelector((state) => state.User.loading);
 
   const organizationID = useSelector(
     (state) => state.User.user.tblOrganization.ID
   );
 
-  const [uniqTagCategories, setUniqTagCategories] = useState([
-    ...new Set(tableRows.map((tag) => tag.Category)),
-  ]);
+  const [uniqTagCategories, setUniqTagCategories] = useState(tagCategories.map((record) => {return record.Category}));
 
-//   useEffect(() => {
-//     if (organizationID.toString().length > 0) {
-//       dispatch(getPermissionsAllAction(organizationID));
-//     }
-//   }, [dispatch, organizationID]);
+  const [openAddTagCategory, setOpenAddTagCategory] = useState(false);
 
   useEffect(() => {
-    setUniqTagCategories([...new Set(tableRows.map((tag) => tag.Category)),
-    ]);
-  }, [tableRows]);
+    setUniqTagCategories(tagCategories.map((record) => {return record.Category}));
+  }, [tagCategories]);
 
   const categoryReduce = uniqTagCategories.reduce(function(acc, cur, i) {    
     acc[cur] = cur;
@@ -79,25 +73,12 @@ const Tags = () => {
     {
       title: "Tag Type",
       field: "Type",
-     // editable: "onAdd",
-      // can't make type editable because this is PK and there is no ID
+      editable: "onAdd",
     },
     {
       title: "Category",
       field: "Category",
       lookup: categoryReduce,
-      // editComponent: props => (
-      //       <Select
-      //           onChange={e => {props.onChange(e.target.value)}}
-      //           value={props.value === undefined ? "Hardware" : props.value}
-      //       >
-      //           {uniqTagCategories.map((Category) => (
-      //               <MenuItem key={Category} value={Category}>
-      //               <   ListItemText primary={Category} />
-      //               </MenuItem>
-      //           ))}
-      //       </Select>
-      //   )
     },
     {
       title: "Chip Color",
@@ -136,6 +117,14 @@ const Tags = () => {
         editable: "never"
     },
   ];
+
+  const handleTagCategoryOpen = () => {
+    setOpenAddTagCategory(true);
+  }
+
+  const handleTagCategoryClose = () => {
+    setOpenAddTagCategory(false);
+  }
 
   return (
     <>
@@ -181,9 +170,11 @@ const Tags = () => {
                     const category = newRow.Category;
 
                     if (tagType !== "" && category !== undefined)
-                    {
+                    {                        
+                        const fromCategories = tagCategories.find((record) => record.Category === category);
+
                         dispatch(
-                            postTagsAction(tagType, category)
+                            postTagsAction(tagType, fromCategories.CategoryID, organizationID)
                         );
                     }
 
@@ -197,7 +188,7 @@ const Tags = () => {
                     if (tagType !== "")
                     {
                         dispatch(
-                            deleteTagAction(tagType)
+                            deleteTagAction(tagType, organizationID)
                         );
                     }
 
@@ -215,13 +206,19 @@ const Tags = () => {
                     const newColor = updatedRow.Color;
 
                     dispatch(
-                      putTagsAction(tagType, category),
+                      putTagsAction(tagType, category, organizationID),
                     )
                     .then(() => {
                       if (oldBgColor !== newBgColor || oldColor !== newColor)
                       {
+                        
+
+
+                        
+                        const fromCategories = tableRows.find((record) => record.Category === category);
+
                         dispatch(
-                          putTagCategoriesAction(category, newBgColor, newColor),
+                          putTagCategoriesAction(fromCategories.CategoryID, newBgColor, newColor),
                         )
                       }
                     })
@@ -229,10 +226,33 @@ const Tags = () => {
                     resolve();
                 }),
               }}
+              components={{
+                Toolbar: props => (
+                  <div>
+                    <MTableToolbar {...props} />
+                    <div style={{ paddingRight: "20px", textAlign: "right" }}>
+                      <Button
+                        onClick={handleTagCategoryOpen}
+                        variant="contained"
+                        color="primary"
+                        className={styles.buttons}
+                      >
+                        Add Tag Category
+                      </Button>
+                    </div>
+                  </div>
+                )
+            }}
             />
           </div>
         </Grow>
       </div>
+
+      <AddTagCategory
+        open={openAddTagCategory}
+        handleOpen={handleTagCategoryOpen}
+        handleClose={handleTagCategoryClose}
+      />
     </>
   );
 };

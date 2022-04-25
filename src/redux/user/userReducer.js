@@ -69,8 +69,17 @@ import {
   PUT_TICKET_PRIORITY_SUCCESS,
   PUT_TICKET_PRIORITY_FAILURE,
   USER_LOGOUT,
+<<<<<<< HEAD
   NOTIFICATIONS_SUCCESS,
   NOTIFICATION_CLEAR,
+=======
+  POST_TAG_CATEGORY_REQUEST,
+  POST_TAG_CATEGORY_SUCCESS,
+  POST_TAG_CATEGORY_FAILURE,
+  GET_TAG_CATEGORIES_REQUEST,
+  GET_TAG_CATEGORIES_SUCCESS,
+  GET_TAG_CATEGORIES_FAILURE,
+>>>>>>> a2160219a7d81bf6bb48fe4e9659c5a0d65a62da
 } from "./userTypes";
 import { store } from "../store";
 
@@ -105,6 +114,7 @@ export const initialState = {
   tags: {
     tblTags: [],
   },
+  tagCategories: [],
 
   //Permissions
   roles: [],
@@ -278,7 +288,9 @@ export const UserReducer = (state = initialState, action) => {
       };
     case GET_ALL_TAGS_SUCCESS:
       tags = action.payload.tags[0].data.tblTags;
+      console.log(tags);
       tags = tags.map((tag) => {
+<<<<<<< HEAD
         return {
           Type: tag.Type,
           Category: tag.Category,
@@ -286,6 +298,17 @@ export const UserReducer = (state = initialState, action) => {
           Color: tag["tblTagCategory.Color"],
         };
       });
+=======
+        return { 
+          Type : tag.Type, 
+          Category : tag["tblTagCategory.Category"],
+          BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+          Color: tag["tblTagCategory.Color"],
+          CategoryID: tag.CategoryID,
+        }
+      })
+    console.log(tags);
+>>>>>>> a2160219a7d81bf6bb48fe4e9659c5a0d65a62da
 
       return {
         ...state,
@@ -294,6 +317,27 @@ export const UserReducer = (state = initialState, action) => {
         successfull: true,
       };
     case GET_ALL_TAGS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case GET_TAG_CATEGORIES_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case GET_TAG_CATEGORIES_SUCCESS:
+      return {
+        ...state,
+        tagCategories: action.payload.tagCategories[0].data.tblTagCategories,
+        loading: false,
+        successfull: true,
+      };
+    case GET_TAG_CATEGORIES_FAILURE:
       return {
         ...state,
         loading: false,
@@ -360,6 +404,7 @@ export const UserReducer = (state = initialState, action) => {
     case POST_TAGS_SUCCESS:
       tags = action.payload.tags[0].data.tblTags;
       tags = tags.map((tag) => {
+<<<<<<< HEAD
         return {
           Type: tag.Type,
           Category: tag.Category,
@@ -367,6 +412,16 @@ export const UserReducer = (state = initialState, action) => {
           Color: tag["tblTagCategory.Color"],
         };
       });
+=======
+        return { 
+          Type : tag.Type, 
+          Category : tag["tblTagCategory.Category"],
+          BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+          Color: tag["tblTagCategory.Color"],
+          CategoryID: tag.CategoryID,
+        }
+      })
+>>>>>>> a2160219a7d81bf6bb48fe4e9659c5a0d65a62da
 
       return {
         ...state,
@@ -381,6 +436,7 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
         error: action.payload,
       };
+<<<<<<< HEAD
     case DELETE_TAG_REQUEST:
       return {
         ...state,
@@ -390,6 +446,55 @@ export const UserReducer = (state = initialState, action) => {
     case DELETE_TAG_SUCCESS:
       tags = action.payload.tags[0].data.tblTags;
       tags = tags.map((tag) => {
+=======
+
+      case POST_TAG_CATEGORY_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          successfull: false,
+        };
+      case POST_TAG_CATEGORY_SUCCESS:
+        return {
+          ...state,
+          tagCategories: action.payload.tagCategories[0].data.tblTagCategories,
+          loading: false,
+          successfull: true,
+        };
+      case POST_TAG_CATEGORY_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          successfull: false,
+          error: action.payload,
+        };
+
+      case DELETE_TAG_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          successfull: false,
+        };
+
+      case DELETE_TAG_SUCCESS:
+        tags = action.payload.tags[0].data.tblTags;
+        tags = tags.map((tag) => {
+          return { 
+            Type : tag.Type, 
+            Category : tag["tblTagCategory.Category"],
+            BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+            Color: tag["tblTagCategory.Color"],
+            CategoryID: tag.CategoryID,
+          }
+        })
+        return {
+          ...state,
+          loading: false,
+          tags: tags,
+          successfull: true,
+        };
+      case DELETE_TAG_FAILURE:
+>>>>>>> a2160219a7d81bf6bb48fe4e9659c5a0d65a62da
         return {
           Type: tag.Type,
           Category: tag.Category,
@@ -565,7 +670,21 @@ export const UserReducer = (state = initialState, action) => {
           BackgroundColor: tag["tblTagCategory.BackgroundColor"],
           Color: tag["tblTagCategory.Color"],
         };
+<<<<<<< HEAD
       });
+=======
+      case PUT_TAGS_SUCCESS:
+        tags = action.payload.tags[0].data.tblTags;
+        tags = tags.map((tag) => {
+          return { 
+            Type : tag.Type, 
+            Category : tag["tblTagCategory.Category"],
+            BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+            Color: tag["tblTagCategory.Color"],
+            CategoryID: tag.CategoryID,
+          }
+        })
+>>>>>>> a2160219a7d81bf6bb48fe4e9659c5a0d65a62da
 
       return {
         ...state,
@@ -596,7 +715,22 @@ export const UserReducer = (state = initialState, action) => {
           BackgroundColor: tag["tblTagCategory.BackgroundColor"],
           Color: tag["tblTagCategory.Color"],
         };
+<<<<<<< HEAD
       });
+=======
+      case PUT_TAG_CATEGORIES_SUCCESS:
+        tags = action.payload.tagCategories[0].data.tblTags;
+        console.log(tags)
+        tags = tags.map((tag) => {
+          return { 
+            Type : tag.Type, 
+            Category : tag["tblTagCategory.Category"],
+            BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+            Color: tag["tblTagCategory.Color"],
+            CategoryID: tag.CategoryID,
+          }
+        })
+>>>>>>> a2160219a7d81bf6bb48fe4e9659c5a0d65a62da
 
       return {
         ...state,
