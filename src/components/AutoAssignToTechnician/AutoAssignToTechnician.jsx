@@ -129,56 +129,61 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AutoAssignToTechnician = ({ open, handleOpen, handleClose, ticketID }) => {
+const AutoAssignToTechnician = ({
+  open,
+  handleOpen,
+  handleClose,
+  ticketID,
+}) => {
   // create dispatch
   const dispatch = useDispatch();
 
   const styles = useStyles();
 
   const [includeAdminsOption, setIncludeAdminsOption] = useState("false");
-  const [factorOpenTicketsOption, setFactorOpenTicketsOption] = useState("false");
+  const [factorOpenTicketsOption, setFactorOpenTicketsOption] =
+    useState("false");
 
   const handleAutoAssign = () => {
-
     let caseNumber = 0;
 
-    if (includeAdminsOption === "true" && factorOpenTicketsOption === "false")
-    {
-        caseNumber = 1;
-    }
-    else if (includeAdminsOption === "true" && factorOpenTicketsOption === "true")
-    {
-        caseNumber = 2;
-    }
-    else if (includeAdminsOption === "false" && factorOpenTicketsOption === "false")
-    {
-        caseNumber = 3;
-    }
-    else if (includeAdminsOption === "false" && factorOpenTicketsOption === "true")
-    {
-        caseNumber = 4;
-    }
-    else
-    {
-        return;
+    if (includeAdminsOption === "true" && factorOpenTicketsOption === "false") {
+      caseNumber = 1;
+    } else if (
+      includeAdminsOption === "true" &&
+      factorOpenTicketsOption === "true"
+    ) {
+      caseNumber = 2;
+    } else if (
+      includeAdminsOption === "false" &&
+      factorOpenTicketsOption === "false"
+    ) {
+      caseNumber = 3;
+    } else if (
+      includeAdminsOption === "false" &&
+      factorOpenTicketsOption === "true"
+    ) {
+      caseNumber = 4;
+    } else {
+      return;
     }
 
     dispatch(
-        putTicketsAutoAssignAction(
-            ticketID,
-            caseNumber,
-            moment().format("YYYY-MM-DD HH:mm:ss")
-        )
+      putTicketsAutoAssignAction(
+        ticketID,
+        caseNumber,
+        moment().format("YYYY-MM-DD HH:mm:ss")
+      )
     );
   };
 
   const handleIncludeAdminsOption = (e) => {
     setIncludeAdminsOption(e.target.value);
-  }
+  };
 
   const handleFactorOpenTicketsOption = (e) => {
     setFactorOpenTicketsOption(e.target.value);
-}
+  };
 
   const handleCancel = () => {
     setIncludeAdminsOption("false");
@@ -186,11 +191,13 @@ const AutoAssignToTechnician = ({ open, handleOpen, handleClose, ticketID }) => 
     handleClose();
   };
 
-  //const users = useSelector((state) => state.User.users.tblUsers); 
+  //const users = useSelector((state) => state.User.users.tblUsers);
   const tblTags = useSelector((state) => state.User.tags);
 
-  const techs = useSelector((state) => state.User.techs); 
-  const techExpertiseTags = useSelector((state) => state.User.expertiseTags_All); 
+  const techs = useSelector((state) => state.User.techs);
+  const techExpertiseTags = useSelector(
+    (state) => state.User.expertiseTags_All
+  );
   const techsTicketCount = useSelector((state) => state.User.techsTicketCount);
 
   //if (!loading) {
@@ -213,7 +220,6 @@ const AutoAssignToTechnician = ({ open, handleOpen, handleClose, ticketID }) => 
       </DialogTitle>
       <DialogContent className={styles.AutoAssignToTechnicianDialog}>
         <Grid container spacing={2} className={styles.userInfoGridRoot}>
-
           <Grow in={true} timeout={300}>
             <Grid
               container
@@ -226,24 +232,52 @@ const AutoAssignToTechnician = ({ open, handleOpen, handleClose, ticketID }) => 
               xl={12}
               spacing={2}
             >
-                <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend">Include Admins?</FormLabel>
-                        <RadioGroup aria-label="includeAdmins" name="includeAdmins" value={includeAdminsOption} onChange={handleIncludeAdminsOption}>
-                            <FormControlLabel value={"false"} control={<Radio />} label="Include Only Techs" />
-                            <FormControlLabel value={"true"} control={<Radio />} label="Include Techs and Admins" />
-                        </RadioGroup>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend">Use Open Tickets Number?</FormLabel>
-                            <RadioGroup aria-label="includeAdmins" name="includeAdmins" value={factorOpenTicketsOption} onChange={handleFactorOpenTicketsOption}>
-                                <FormControlLabel value={"false"} control={<Radio />} label="Omit Open Tickets" />
-                                <FormControlLabel value={"true"} control={<Radio />} label="Factor in Open Tickets" />
-                        </RadioGroup>
-                    </FormControl>
-                </Grid>
+              <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Include Admins?</FormLabel>
+                  <RadioGroup
+                    aria-label="includeAdmins"
+                    name="includeAdmins"
+                    value={includeAdminsOption}
+                    onChange={handleIncludeAdminsOption}
+                  >
+                    <FormControlLabel
+                      value={"false"}
+                      control={<Radio />}
+                      label="Include Only Techs"
+                    />
+                    <FormControlLabel
+                      value={"true"}
+                      control={<Radio />}
+                      label="Include Techs and Admins"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">
+                    Use Open Tickets Number?
+                  </FormLabel>
+                  <RadioGroup
+                    aria-label="includeAdmins"
+                    name="includeAdmins"
+                    value={factorOpenTicketsOption}
+                    onChange={handleFactorOpenTicketsOption}
+                  >
+                    <FormControlLabel
+                      value={"false"}
+                      control={<Radio />}
+                      label="Omit Open Tickets"
+                    />
+                    <FormControlLabel
+                      value={"true"}
+                      control={<Radio />}
+                      label="Factor in Open Tickets"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
             </Grid>
           </Grow>
           <Grid container item justifyContent="flex-end" spacing={1}>
@@ -272,55 +306,6 @@ const AutoAssignToTechnician = ({ open, handleOpen, handleClose, ticketID }) => 
       </DialogContent>
     </Dialog>
   );
-  //   } else {
-  //     return (
-  //       <Dialog
-  //         open={open}
-  //         onClose={handleClose}
-  //         fullWidth={true}
-  //         aria-labelledby="form-dialog-title"
-  //       >
-  //         <DialogTitle id="form-dialog-title">Expertise Tags</DialogTitle>
-  //         <IconButton
-  //           aria-label="close"
-  //           className={styles.closeButton}
-  //           onClick={handleClose}
-  //         >
-  //           <CloseIcon />
-  //         </IconButton>
-  //         <DialogContent className={styles.AutoAssignToTechnicianDialog}>
-  //           <Grow in={true} timeout={300}>
-  //             <Grid item>
-  //               <Typography component="div" variant="h3">
-  //                 <Skeleton animation="wave" />
-  //               </Typography>
-  //             </Grid>
-  //           </Grow>
-  //           <Grow in={true} timeout={300}>
-  //             <Grid item>
-  //               <Typography component="div" variant="h3">
-  //                 <Skeleton animation="wave" />
-  //               </Typography>
-  //             </Grid>
-  //           </Grow>
-  //           <Grow in={true} timeout={600}>
-  //             <Grid item>
-  //               <Typography component="div" variant="h3">
-  //                 <Skeleton animation="wave" />
-  //               </Typography>
-  //             </Grid>
-  //           </Grow>
-  //           <Grow in={true} timeout={900}>
-  //             <Grid item>
-  //               <Typography component="div" variant="h3">
-  //                 <Skeleton animation="wave" />
-  //               </Typography>
-  //             </Grid>
-  //           </Grow>
-  //         </DialogContent>
-  //       </Dialog>
-  //     );
-  //   }
 };
 
 export default AutoAssignToTechnician;

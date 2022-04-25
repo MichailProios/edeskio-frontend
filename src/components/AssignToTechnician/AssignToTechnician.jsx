@@ -242,19 +242,10 @@ const AssignToTechnician = ({
 
   //if (!loading) {
   return (
-    <Dialog
-      open={open}
-      onClose={handleCancel}
-      fullWidth={true}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">
+    <Dialog open={open} onClose={handleCancel} fullWidth={true}>
+      <DialogTitle>
         Assign Ticket
-        <IconButton
-          aria-label="close"
-          className={styles.closeButton}
-          onClick={handleCancel}
-        >
+        <IconButton className={styles.closeButton} onClick={handleCancel}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -293,12 +284,12 @@ const AssignToTechnician = ({
                   getOptionLabel={(option) =>
                     option.FirstName + " " + option.LastName
                   }
-                  closeIcon={
-                    <CloseIcon
-                      onClick={(e) => setSelectedTechID("")}
-                      fontSize="small"
-                    />
-                  }
+                  onInputChange={(event, newInputValue, reason) => {
+                    if (reason === "clear") {
+                      setSelectedTechID("");
+                      return;
+                    }
+                  }}
                   renderOption={(option) => (
                     <Grid
                       container

@@ -286,7 +286,10 @@ const Navbar = ({ children }) => {
                   aria-haspopup="true"
                 >
                   <Tooltip title="My Account" placement="bottom">
-                    <AccountCircle className={styles.accountIcon} />
+                    <AccountCircle
+                      className={styles.accountIcon}
+                      color="primary"
+                    />
                   </Tooltip>
                 </IconButton>
 
@@ -301,7 +304,10 @@ const Navbar = ({ children }) => {
                 >
                   <MenuItem onClick={handleProfileOpen}>
                     <ListItemIcon>
-                      <AssignmentIndIcon className={styles.menuIcons} />
+                      <AssignmentIndIcon
+                        className={styles.menuIcons}
+                        color="primary"
+                      />
                     </ListItemIcon>
                     <ListItemText
                       primary={
@@ -315,7 +321,10 @@ const Navbar = ({ children }) => {
                   user.tblAccess.RoleName === "Tech" ? (
                     <MenuItem onClick={handleExpertiseTagsOpen}>
                       <ListItemIcon>
-                        <LocalOffer className={styles.menuIcons} />
+                        <LocalOffer
+                          className={styles.menuIcons}
+                          color="primary"
+                        />
                       </ListItemIcon>
                       <ListItemText
                         primary={
@@ -331,7 +340,10 @@ const Navbar = ({ children }) => {
 
                   <MenuItem onClick={(e) => handleLogout()}>
                     <ListItemIcon>
-                      <ExitToAppIcon className={styles.menuIcons} />
+                      <ExitToAppIcon
+                        className={styles.menuIcons}
+                        color="primary"
+                      />
                     </ListItemIcon>
                     <ListItemText
                       primary={

@@ -17,11 +17,14 @@ import {
   Menu,
   MenuItem,
   Chip,
+  ListItemIcon,
+  ListItemText,
 } from "@material-ui/core";
 
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import AutorenewIcon from "@material-ui/icons/Autorenew";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -424,58 +427,85 @@ const TicketCard = ({ ticket }) => {
           open={Boolean(optionsOpen)}
           onClose={handleTicketOptionsClose}
           getContentAnchorEl={null}
-          PaperProps={{
-            elevation: 3,
-          }}
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "top" }}
         >
-          {userRole === "Admin" || userRole === "Tech" ? (
+          {(userRole === "Admin" || userRole === "Tech") && (
             <MenuItem onClick={handleAssignToSelf}>
-              <AssignmentReturnIcon color="primary" />
-              &nbsp;Assign To Self
+              <ListItemIcon>
+                <AssignmentReturnIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" color="textPrimary">
+                    Assign To Self
+                  </Typography>
+                }
+              />
             </MenuItem>
-          ) : (
-            <div />
           )}
 
-          {userRole === "Admin" ? (
+          {userRole === "Admin" && (
             <MenuItem onClick={handleAssignOpen}>
-              <AssignmentIndIcon color="primary" />
-              &nbsp;Assign to Tech
+              <ListItemIcon>
+                <AssignmentIndIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" color="textPrimary">
+                    Assign to Tech
+                  </Typography>
+                }
+              />
             </MenuItem>
-          ) : (
-            <div />
           )}
 
-          {userRole === "Admin" ? (
+          {userRole === "Admin" && (
             <MenuItem onClick={handleAutoAssignOpen}>
-              <AssignmentIndIcon color="primary" />
-              &nbsp;Auto-Assign to Tech
+              <ListItemIcon>
+                <AutorenewIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" color="textPrimary">
+                    Auto-Assign to Tech
+                  </Typography>
+                }
+              />
             </MenuItem>
-          ) : (
-            <div />
           )}
 
           {(ticket.Priority === "Low" || ticket.Priority === "Medium") &&
-          (userRole === "Admin" || userRole === "Tech") ? (
-            <MenuItem onClick={handleRaisePriority}>
-              <ArrowUpwardIcon color="primary" />
-              &nbsp;Raise Priority
-            </MenuItem>
-          ) : (
-            <div />
-          )}
+            (userRole === "Admin" || userRole === "Tech") && (
+              <MenuItem onClick={handleRaisePriority}>
+                <ListItemIcon>
+                  <ArrowUpwardIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1" color="textPrimary">
+                      Raise Priority
+                    </Typography>
+                  }
+                />
+              </MenuItem>
+            )}
 
           {(ticket.Priority === "High" || ticket.Priority === "Medium") &&
-          (userRole === "Admin" || userRole === "Tech") ? (
-            <MenuItem onClick={handleLowerPriority}>
-              <ArrowDownwardIcon color="primary" />
-              &nbsp;Lower Priority
-            </MenuItem>
-          ) : (
-            <div />
-          )}
+            (userRole === "Admin" || userRole === "Tech") && (
+              <MenuItem onClick={handleLowerPriority}>
+                <ListItemIcon>
+                  <ArrowDownwardIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1" color="textPrimary">
+                      Lower Priority
+                    </Typography>
+                  }
+                />
+              </MenuItem>
+            )}
         </Menu>
       )}
 
