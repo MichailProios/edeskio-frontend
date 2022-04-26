@@ -65,8 +65,12 @@ const Notifications = () => {
 
   const userID = useSelector((state) => state.User.user.tblUser.ID);
   const notifications = useSelector((state) =>
-    state.User.notifications.filter((row) => row.UserID === userID)
+    state.User.notifications.filter(
+      (row) => row["tblNotification.UserID"] !== userID && row.UserID === userID
+    )
   );
+
+  console.log(notifications);
   const notification = useSelector((state) => state.User.notification);
 
   const socketRef = useRef();
@@ -92,7 +96,7 @@ const Notifications = () => {
         dispatch(notificationsAction(notifications));
       });
     }
-  }, [dispatch, enqueueSnackbar, connected]);
+  }, [dispatch, connected]);
 
   useEffect(() => {
     if (connected) {
@@ -101,15 +105,12 @@ const Notifications = () => {
         { userID, notification },
         (successful) => {
           if (successful) {
-            // enqueueSnackbar("You have a new notification", {
-            //   variant: "info",
-            // });
             dispatch(notificationClearAction());
           }
         }
       );
     }
-  }, [userID, enqueueSnackbar, notification, dispatch, connected]);
+  }, [userID, notification, dispatch, connected]);
 
   const prevNotifications = usePrevious(notifications);
 
@@ -136,8 +137,8 @@ const Notifications = () => {
   };
 
   const handleNotificationClick = (value) => {
-    const content = value.Content;
-    const notificationID = value.ID;
+    const content = value["tblNotification.Content"];
+    const notificationID = value["tblNotification.ID"];
 
     if (content.toLowerCase().includes("ticket")) {
       navigate("/Dashboard/SubmittedTickets");
@@ -206,8 +207,9 @@ const Notifications = () => {
                       color="textPrimary"
                       align="left"
                     >
-                      {value["tblUser.FirstName"]} {value["tblUser.LastName"]}{" "}
-                      {value.Content}
+                      {value["tblNotification.tblUser.FirstName"]}{" "}
+                      {value["tblNotification.tblUser.LastName"]}{" "}
+                      {value["tblNotification.Content"]}
                     </Typography>
                   }
                 />
