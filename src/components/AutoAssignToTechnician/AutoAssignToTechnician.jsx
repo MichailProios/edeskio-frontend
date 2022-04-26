@@ -175,6 +175,8 @@ const AutoAssignToTechnician = ({
         moment().format("YYYY-MM-DD HH:mm:ss")
       )
     );
+
+    handleCancel();
   };
 
   const handleIncludeAdminsOption = (e) => {

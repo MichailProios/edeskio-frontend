@@ -156,7 +156,7 @@ const AssignToTechnician = ({
           moment().format("YYYY-MM-DD HH:mm:ss")
         )
       );
-      handleClose();
+      handleCancel();
     }
   };
 
