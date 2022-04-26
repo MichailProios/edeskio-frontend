@@ -16,6 +16,8 @@ import { NotificationsNone } from "@material-ui/icons";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import InfoIcon from "@material-ui/icons/Info";
 
+import { useSnackbar } from "notistack";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useDispatch, useSelector, useStore } from "react-redux";
 
@@ -25,6 +27,7 @@ import {
   notificationsAction,
 } from "../../redux/user/userActions";
 import { useNavigate } from "react-router-dom";
+import usePrevious from "../../utilities/customHooks/usePrevious";
 
 const useStyles = makeStyles((theme) => ({
   notificationIcon: {
@@ -55,12 +58,16 @@ const Notifications = () => {
 
   const navigate = useNavigate();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const notifications = useSelector((state) => state.User.notifications);
-  const notification = useSelector((state) => state.User.notification);
   const userID = useSelector((state) => state.User.user.tblUser.ID);
+  const notifications = useSelector((state) =>
+    state.User.notifications.filter((row) => row.UserID === userID)
+  );
+  const notification = useSelector((state) => state.User.notification);
 
   const socketRef = useRef();
   const [connected, setConnected] = useState(false);
@@ -85,15 +92,36 @@ const Notifications = () => {
         dispatch(notificationsAction(notifications));
       });
     }
-  }, [dispatch, connected]);
+  }, [dispatch, enqueueSnackbar, connected]);
 
   useEffect(() => {
     if (connected) {
-      socketRef.current.emit("notificationNew", { userID, notification });
+      socketRef.current.emit(
+        "notificationNew",
+        { userID, notification },
+        (successful) => {
+          if (successful) {
+            // enqueueSnackbar("You have a new notification", {
+            //   variant: "info",
+            // });
+            dispatch(notificationClearAction());
+          }
+        }
+      );
     }
+  }, [userID, enqueueSnackbar, notification, dispatch, connected]);
 
-    dispatch(notificationClearAction());
-  }, [userID, notification, dispatch, connected]);
+  const prevNotifications = usePrevious(notifications);
+
+  useEffect(() => {
+    if (typeof prevNotifications !== "undefined") {
+      if (prevNotifications.length < notifications.length) {
+        enqueueSnackbar("You have a new notification", {
+          variant: "info",
+        });
+      }
+    }
+  }, [notifications, prevNotifications, enqueueSnackbar]);
 
   const handleOptionsClick = (e) => {
     if (notifications.length > 0) {
@@ -115,7 +143,15 @@ const Notifications = () => {
       navigate("/Dashboard/SubmittedTickets");
     }
 
-    socketRef.current.emit("notificationRead", { notificationID });
+    socketRef.current.emit(
+      "notificationRead",
+      { userID, notificationID },
+      (successful) => {
+        if (successful) {
+          dispatch(notificationClearAction());
+        }
+      }
+    );
 
     setOptionsOpen(false);
     setAnchorEl(null);

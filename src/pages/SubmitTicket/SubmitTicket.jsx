@@ -205,20 +205,16 @@ const SubmitTicket = () => {
         <Chip
           label={tag}
           key={tag}
-          style={{ backgroundColor: tagFromtbl.BackgroundColor, color: tagFromtbl.Color}}
+          style={{
+            backgroundColor: tagFromtbl.BackgroundColor,
+            color: tagFromtbl.Color,
+          }}
         />
       );
     });
 
     setSelectedTagsChips(newChips);
     setSelectedTags(e.target.value);
-  };
-
-  const handleTagChipDelete = (deletedTag, e) => {
-    setSelectedTagsChips((chips) =>
-      chips.filter((chip) => chip.key !== deletedTag)
-    );
-    setSelectedTags((tags) => tags.filter((tag) => tag !== deletedTag));
   };
 
   const handleTicketSubject = (e) => {

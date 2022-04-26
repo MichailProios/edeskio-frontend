@@ -13,6 +13,7 @@
     "material-ui-image": "^3.3.2",
     "moment": "^2.29.2",
     "momnet": "^2.29.1",
+    "notistack": "^1.0.10",
     "react": "^17.0.2",
     "react-color": "^2.19.3",
     "react-device-detect": "^2.2.2",
