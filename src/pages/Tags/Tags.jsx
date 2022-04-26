@@ -245,7 +245,7 @@ const Tags = () => {
                     >
                       <Grid container item justifyContent="center" xs={9} sm={9} md={9} lg={9} xl={9}>
                         <Typography style={{textAlign: "center", margin: "auto 10px"}}>
-                          <strong>Warning:</strong> Changing <em>Chip</em> or <em>Text Color</em> of a Tag will change the colors of all Tags from the same Category
+                          <strong>Warning:</strong> Changing <em>Chip Color</em> or <em>Text Color</em> of a Tag will change the colors of all Tags from the same Category
                         </Typography>
                       </Grid>
                       <Grid container item justifyContent="center" xs={3} sm={3} md={3} lg={3} xl={3}>

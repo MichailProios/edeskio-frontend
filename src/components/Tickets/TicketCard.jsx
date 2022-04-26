@@ -460,8 +460,8 @@ const TicketCard = ({ ticket }) => {
             </MenuItem>
           )}
 
-          {(userRole === "Admin" || userRole === "Tech") &&
-            (ticket.TechnicianID === userID) && (
+          {((userRole === "Tech" && ticket.TechnicianID === userID) ||
+            (userRole === "Admin" && ticket.TechnicianID !== null)) && (
             <MenuItem onClick={handleUnassign}>
               <ListItemIcon>
                 <RemoveCircleIcon color="primary" />
