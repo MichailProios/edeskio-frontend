@@ -46,6 +46,7 @@ import { Category, Satellite } from "@material-ui/icons";
 
 import PageHeader from "../../components/PageHeader/PageHeader";
 import { postTicketNewTicketAction } from "../../redux/user/userActions";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -124,8 +125,6 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
 }));
-
-//
 
 const SubmitTicket = () => {
   // create dispatch
@@ -227,6 +226,8 @@ const SubmitTicket = () => {
 
   const userID = useSelector((state) => state.User.user.tblUser.ID);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleSubmit = () => {
     if (ticketSubject.length > 0 && ticketDescription.length > 0) {
       dispatch(
@@ -237,7 +238,17 @@ const SubmitTicket = () => {
           moment().format("YYYY-MM-DD HH:mm:ss"),
           selectedTags
         )
-      );
+      ).then((response) => {
+        if (response.reponse[0].status === 200) {
+          enqueueSnackbar("Your ticket was submitted", {
+            variant: "success",
+          });
+        } else {
+          enqueueSnackbar("Error", {
+            variant: "error",
+          });
+        }
+      });
     }
 
     setTicketSubject("");

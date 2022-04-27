@@ -396,13 +396,18 @@ const getUserFailure = (error) => {
 export const getTicketsAction = (organizationID) => {
   return async (dispatch) => {
     dispatch(getTicketsRequest());
-    await getTicketsWithAxios(organizationID)
-      .then((response) => {
-        dispatch(getTicketsSuccess(response));
-      })
-      .catch((error) => {
-        dispatch(getTicketsFailure(error.message));
-      });
+
+    return new Promise(async (resolve, reject) => {
+      await getTicketsWithAxios(organizationID)
+        .then((response) => {
+          dispatch(getTicketsSuccess(response));
+          return resolve(response);
+        })
+        .catch((error) => {
+          dispatch(getTicketsFailure(error.message));
+          return reject(error);
+        });
+    });
   };
 };
 
@@ -1316,19 +1321,24 @@ export const postTicketNewTicketAction = (
 ) => {
   return async (dispatch) => {
     dispatch(postTicketNewTicketRequest());
-    await postTicketNewTicketWithAxios(
-      userID,
-      subject,
-      description,
-      submissionDate,
-      tags
-    )
-      .then((response) => {
-        dispatch(postTicketNewTicketSuccess(response));
-      })
-      .catch((error) => {
-        dispatch(postTicketNewTicketFailure(error.message));
-      });
+
+    return new Promise(async (resolve, reject) => {
+      await postTicketNewTicketWithAxios(
+        userID,
+        subject,
+        description,
+        submissionDate,
+        tags
+      )
+        .then((response) => {
+          dispatch(postTicketNewTicketSuccess(response));
+          return resolve(response);
+        })
+        .catch((error) => {
+          dispatch(postTicketNewTicketFailure(error.message));
+          return reject(error);
+        });
+    });
   };
 };
 

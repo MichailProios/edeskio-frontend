@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import MaterialTable from "@material-table/core";
 
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+
 import { tableIcons } from "../../utilities/DataTable/DataTableIcons.jsx";
 
 import {
@@ -38,17 +40,31 @@ const useStyles = makeStyles((theme) => ({
     userSelect: "none",
   },
 }));
+
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
 const SubmittedTickets = () => {
   const styles = useStyles();
   const dispatch = useDispatch();
 
-  const tickets = useSelector((state) => state.User.tickets.tblTickets);
+  const userID = useSelector((state) => state.User.user.tblUser.ID);
+  const userRole = useSelector((state) => state.User.user.tblAccess.RoleName);
+  const tickets = useSelector((state) =>
+    state.User.tickets.tblTickets.filter(
+      (row) => row.tblUser.ID === userID && userRole !== "Basic"
+    )
+  );
+
+  console.log(tickets);
 
   // const loading = useSelector((state) => state.User.loading);
 
   const [loading, setLoading] = useState(true);
   const [filteredTickets, setFilteredTickets] = useState(tickets);
 
+  const query = useQuery();
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -62,18 +78,29 @@ const SubmittedTickets = () => {
     setFilteredTickets(results);
   }, [searchTerm]);
 
-  useEffect(() => {
-    setFilteredTickets(tickets);
-  }, [tickets]);
-
   const organizationID = useSelector(
     (state) => state.User.user.tblOrganization.ID
   );
 
   useEffect(() => {
+    let isMounted = true;
+
     if (organizationID) {
-      dispatch(getTicketsAction(organizationID));
+      dispatch(getTicketsAction(organizationID)).then((result) => {
+        if (result.tickets[0].status === 200) {
+          const id = query.get("id");
+          if (id) {
+            if (isMounted) {
+              setSearchTerm(query.get("id"));
+            }
+          }
+        }
+      });
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [dispatch, organizationID]);
 
   const delayTime = (index) => {
@@ -143,6 +170,7 @@ const SubmittedTickets = () => {
                     SubmissionDate: value.SubmissionDate,
                     LastModified: value.LastModified,
                     Priority: value.Priority,
+                    tblUser: value.tblUser,
                   }}
                 />
               </Grid>

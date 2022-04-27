@@ -43,7 +43,7 @@ import {
 import moment from "momnet";
 
 import AssignmentReturnIcon from "@material-ui/icons/AssignmentReturn";
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import AssignToTechnician from "../AssignToTechnician/AssignToTechnician";
 import AutoAssignToTechnician from "../AutoAssignToTechnician/AutoAssignToTechnician";
 
@@ -165,10 +165,10 @@ const TicketCard = ({ ticket }) => {
   const userID = useSelector((state) => state.User.user.tblUser.ID);
   const userRole = useSelector((state) => state.User.user.tblAccess.RoleName);
 
-  const userFirstName = useSelector(
-    (state) => state.User.user.tblUser.FirstName
-  );
-  const userLastName = useSelector((state) => state.User.user.tblUser.LastName);
+  // const userFirstName = useSelector(
+  //   (state) => state.User.user.tblUser.FirstName
+  // );
+  // const userLastName = useSelector((state) => state.User.user.tblUser.LastName);
 
   const techs = useSelector((state) => state.User.techs);
 
@@ -276,6 +276,14 @@ const TicketCard = ({ ticket }) => {
     }
   };
 
+  const [fullName, setFullName] = useState("");
+
+  useEffect(() => {
+    if (typeof ticket.tblUser !== "undefined") {
+      setFullName(ticket.tblUser.FirstName + " " + ticket.tblUser.LastName);
+    }
+  }, [ticket]);
+
   return (
     <>
       <Card elevation={10} className={styles.card}>
@@ -345,6 +353,21 @@ const TicketCard = ({ ticket }) => {
                 justifyContent="flex-end"
                 alignContent="center"
               >
+                <Grid
+                  container
+                  item
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                >
+                  <Typography
+                    className={styles.info}
+                    style={{ paddingRight: "5px" }}
+                  >
+                    {"Submitted By:"}
+                  </Typography>
+                  <Chip label={fullName} className={styles.assignedChip} />
+                </Grid>
                 <Grid
                   container
                   item
@@ -445,20 +468,20 @@ const TicketCard = ({ ticket }) => {
           anchorOrigin={{ horizontal: "right", vertical: "top" }}
         >
           {(userRole === "Admin" || userRole === "Tech") &&
-            (ticket.TechnicianID === null) && (
-            <MenuItem onClick={handleAssignToSelf}>
-              <ListItemIcon>
-                <AssignmentReturnIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText
-                primary={
-                  <Typography variant="body1" color="textPrimary">
-                    Assign To Self
-                  </Typography>
-                }
-              />
-            </MenuItem>
-          )}
+            ticket.TechnicianID === null && (
+              <MenuItem onClick={handleAssignToSelf}>
+                <ListItemIcon>
+                  <AssignmentReturnIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1" color="textPrimary">
+                      Assign To Self
+                    </Typography>
+                  }
+                />
+              </MenuItem>
+            )}
 
           {((userRole === "Tech" && ticket.TechnicianID === userID) ||
             (userRole === "Admin" && ticket.TechnicianID !== null)) && (

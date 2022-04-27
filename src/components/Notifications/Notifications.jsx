@@ -64,21 +64,15 @@ const Notifications = () => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const userID = useSelector((state) => state.User.user.tblUser.ID);
+  const userRole = useSelector((state) => state.User.user.tblAccess.RoleName);
   const notifications = useSelector((state) =>
     state.User.notifications.filter(
       (row) => row["tblNotification.UserID"] !== userID && row.UserID === userID
     )
   );
 
-  console.log(notifications);
-  const notification = useSelector((state) => state.User.notification);
-
   const socketRef = useRef();
   const [connected, setConnected] = useState(false);
-
-  useEffect(() => {
-    dispatch(notificationClearAction());
-  }, [dispatch]);
 
   useEffect(() => {
     socketRef.current = io.connect(endpoints.notificationsWS);
@@ -98,31 +92,32 @@ const Notifications = () => {
     }
   }, [dispatch, connected]);
 
-  useEffect(() => {
-    if (connected) {
-      socketRef.current.emit(
-        "notificationNew",
-        { userID, notification },
-        (successful) => {
-          if (successful) {
-            dispatch(notificationClearAction());
-          }
-        }
-      );
-    }
-  }, [userID, notification, dispatch, connected]);
+  const handleNotificationClick = (value) => {
+    const notificationID = value["tblNotification.ID"];
+    const ticketID = value["tblNotification.TicketID"];
+
+    socketRef.current.emit("notificationRead", { userID, notificationID });
+
+    navigate("/Dashboard/SubmittedTickets?id=" + ticketID);
+    window.location.reload();
+
+    setOptionsOpen(false);
+    setAnchorEl(null);
+  };
 
   const prevNotifications = usePrevious(notifications);
 
   useEffect(() => {
     if (typeof prevNotifications !== "undefined") {
       if (prevNotifications.length < notifications.length) {
-        enqueueSnackbar("You have a new notification", {
-          variant: "info",
-        });
+        if (userRole !== "Basic") {
+          enqueueSnackbar("You have a new notification", {
+            variant: "info",
+          });
+        }
       }
     }
-  }, [notifications, prevNotifications, enqueueSnackbar]);
+  }, [userRole, notifications, prevNotifications, enqueueSnackbar]);
 
   const handleOptionsClick = (e) => {
     if (notifications.length > 0) {
@@ -136,48 +131,28 @@ const Notifications = () => {
     setAnchorEl(null);
   };
 
-  const handleNotificationClick = (value) => {
-    const content = value["tblNotification.Content"];
-    const notificationID = value["tblNotification.ID"];
-
-    if (content.toLowerCase().includes("ticket")) {
-      navigate("/Dashboard/SubmittedTickets");
-    }
-
-    socketRef.current.emit(
-      "notificationRead",
-      { userID, notificationID },
-      (successful) => {
-        if (successful) {
-          dispatch(notificationClearAction());
-        }
-      }
-    );
-
-    setOptionsOpen(false);
-    setAnchorEl(null);
-  };
-
   return (
     <>
-      <IconButton
-        className={styles.notificationButton}
-        onClick={handleOptionsClick}
-      >
-        <Badge
-          badgeContent={notifications.length}
-          color="error"
-          overlap="rectangular"
+      {userRole !== "Basic" && (
+        <IconButton
+          className={styles.notificationButton}
+          onClick={handleOptionsClick}
         >
-          <Tooltip title="Notifications" placement="bottom">
-            {notifications.length > 0 ? (
-              <NotificationsIcon className={styles.notificationIcon} />
-            ) : (
-              <NotificationsNone className={styles.notificationIcon} />
-            )}
-          </Tooltip>
-        </Badge>
-      </IconButton>
+          <Badge
+            badgeContent={notifications.length}
+            color="error"
+            overlap="rectangular"
+          >
+            <Tooltip title="Notifications" placement="bottom">
+              {notifications.length > 0 ? (
+                <NotificationsIcon className={styles.notificationIcon} />
+              ) : (
+                <NotificationsNone className={styles.notificationIcon} />
+              )}
+            </Tooltip>
+          </Badge>
+        </IconButton>
+      )}
 
       <Menu
         anchorEl={anchorEl}
