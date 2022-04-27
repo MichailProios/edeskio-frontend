@@ -33,12 +33,18 @@ import {
   GET_TICKETS_REQUEST,
   GET_TICKETS_SUCCESS,
   GET_TICKETS_FAILURE,
-  PUT_TICKETS_SELF_ASSIGN_REQUEST,
-  PUT_TICKETS_SELF_ASSIGN_SUCCESS,
-  PUT_TICKETS_SELF_ASSIGN_FAILURE,
+  PUT_TICKETS_ASSIGN_REQUEST,
+  PUT_TICKETS_ASSIGN_SUCCESS,
+  PUT_TICKETS_ASSIGN_FAILURE,
+  PUT_TICKETS_AUTO_ASSIGN_REQUEST,
+  PUT_TICKETS_AUTO_ASSIGN_SUCCESS,
+  PUT_TICKETS_AUTO_ASSIGN_FAILURE,
   GET_USER_ALL_FAILURE,
   GET_USER_ALL_SUCCESS,
   GET_USER_ALL_REQUEST,
+  GET_TECHNICIANS_ASSIGN_REQUEST,
+  GET_TECHNICIANS_ASSIGN_SUCCESS,
+  GET_TECHNICIANS_ASSIGN_FAILURE,
   GET_PERMISSIONS_ALL_REQUEST,
   GET_PERMISSIONS_ALL_SUCCESS,
   GET_PERMISSIONS_ALL_FAILURE,
@@ -48,7 +54,30 @@ import {
   PUT_USER_APPROVED_REQUEST,
   PUT_USER_APPROVED_SUCCESS,
   PUT_USER_APPROVED_FAILURE,
+  POST_TAGS_REQUEST,
+  POST_TAGS_SUCCESS,
+  POST_TAGS_FAILURE,
+  DELETE_TAG_REQUEST,
+  DELETE_TAG_SUCCESS,
+  DELETE_TAG_FAILURE,
+  PUT_TAGS_SUCCESS,
+  PUT_TAGS_FAILURE,
+  PUT_TAGS_REQUEST,
+  PUT_TAG_CATEGORIES_REQUEST,
+  PUT_TAG_CATEGORIES_SUCCESS,
+  PUT_TAG_CATEGORIES_FAILURE,
+  PUT_TICKET_PRIORITY_REQUEST,
+  PUT_TICKET_PRIORITY_SUCCESS,
+  PUT_TICKET_PRIORITY_FAILURE,
   USER_LOGOUT,
+  POST_TAG_CATEGORY_REQUEST,
+  POST_TAG_CATEGORY_SUCCESS,
+  POST_TAG_CATEGORY_FAILURE,
+  GET_TAG_CATEGORIES_REQUEST,
+  GET_TAG_CATEGORIES_SUCCESS,
+  NOTIFICATIONS_SUCCESS,
+  NOTIFICATION_CLEAR,
+  GET_TAG_CATEGORIES_FAILURE,
 } from "./userTypes";
 
 import { store } from "../store";
@@ -367,13 +396,18 @@ const getUserFailure = (error) => {
 export const getTicketsAction = (organizationID) => {
   return async (dispatch) => {
     dispatch(getTicketsRequest());
-    await getTicketsWithAxios(organizationID)
-      .then((response) => {
-        dispatch(getTicketsSuccess(response));
-      })
-      .catch((error) => {
-        dispatch(getTicketsFailure(error.message));
-      });
+
+    return new Promise(async (resolve, reject) => {
+      await getTicketsWithAxios(organizationID)
+        .then((response) => {
+          dispatch(getTicketsSuccess(response));
+          return resolve(response);
+        })
+        .catch((error) => {
+          dispatch(getTicketsFailure(error.message));
+          return reject(error);
+        });
+    });
   };
 };
 
@@ -538,31 +572,325 @@ const getExpertiseTagsOneFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putTicketsSelfAssignAction = (
+export const getTechniciansAssignAction = (userID) => {
+  return async (dispatch) => {
+    dispatch(getTechniciansAssignRequest());
+    await getTechniciansAssignWithAxios(userID)
+      .then((response) => {
+        dispatch(getTechniciansAssignSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getTechniciansAssignFailure(error.message));
+      });
+  };
+};
+
+const getTechniciansAssignWithAxios = async (userID) => {
+  var technicianAssign = [];
+
+  await getTechniciansAssign(userID).then((response) => {
+    technicianAssign.push(response);
+  });
+
+  return {
+    technicianAssign,
+  };
+};
+
+const getTechniciansAssign = (userID) => {
+  return axios.get(endpoints.getTechniciansAssign, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: {
+      UserID: userID,
+    },
+  });
+};
+
+const getTechniciansAssignRequest = () => {
+  return {
+    type: GET_TECHNICIANS_ASSIGN_REQUEST,
+  };
+};
+
+const getTechniciansAssignSuccess = (data) => {
+  return {
+    type: GET_TECHNICIANS_ASSIGN_SUCCESS,
+    payload: data,
+  };
+};
+
+const getTechniciansAssignFailure = (error) => {
+  return {
+    type: GET_TECHNICIANS_ASSIGN_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTicketsAssignAction = (ticketID, technicianID, openDate) => {
+  return async (dispatch) => {
+    dispatch(putTicketsAssignRequest());
+    await putTicketsAssignWithAxios(ticketID, technicianID, openDate)
+      .then((response) => {
+        dispatch(putTicketsAssignSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTicketsAssignFailure(error.message));
+      });
+  };
+};
+
+const putTicketsAssignWithAxios = async (ticketID, technicianID, openDate) => {
+  var tickets = [];
+
+  await putTicketsAssign(ticketID, technicianID, openDate).then((response) => {
+    tickets.push(response);
+  });
+
+  return {
+    tickets,
+  };
+};
+
+const putTicketsAssign = (ticketID, technicianID, openDate) => {
+  return axios.put(
+    endpoints.assignTicket,
+    { TicketID: ticketID, TechnicianID: technicianID, OpenDate: openDate },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTicketsAssignRequest = () => {
+  return {
+    type: PUT_TICKETS_ASSIGN_REQUEST,
+  };
+};
+
+const putTicketsAssignSuccess = (data) => {
+  return {
+    type: PUT_TICKETS_ASSIGN_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTicketsAssignFailure = (error) => {
+  return {
+    type: PUT_TICKETS_ASSIGN_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTicketPriorityAction = (ticketID, priority) => {
+  return async (dispatch) => {
+    dispatch(putTicketPriorityRequest());
+    await putTicketPriorityWithAxios(ticketID, priority)
+      .then((response) => {
+        dispatch(putTicketPrioritySuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTicketPriorityFailure(error.message));
+      });
+  };
+};
+
+const putTicketPriorityWithAxios = async (ticketID, priority) => {
+  var tickets = [];
+
+  await putTicketPriority(ticketID, priority).then((response) => {
+    tickets.push(response);
+  });
+
+  return {
+    tickets,
+  };
+};
+
+const putTicketPriority = (ticketID, priority) => {
+  return axios.put(
+    endpoints.putTicketPriority,
+    { TicketID: ticketID, Priority: priority },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTicketPriorityRequest = () => {
+  return {
+    type: PUT_TICKET_PRIORITY_REQUEST,
+  };
+};
+
+const putTicketPrioritySuccess = (data) => {
+  return {
+    type: PUT_TICKET_PRIORITY_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTicketPriorityFailure = (error) => {
+  return {
+    type: PUT_TICKET_PRIORITY_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTagsAction = (tagType, category, orgID) => {
+  return async (dispatch) => {
+    dispatch(putTagsRequest());
+    await putTagsWithAxios(tagType, category, orgID)
+      .then((response) => {
+        dispatch(putTagsSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTagsFailure(error.message));
+      });
+  };
+};
+
+const putTagsWithAxios = async (tagType, category, orgID) => {
+  var tags = [];
+
+  await putTags(tagType, category, orgID).then((response) => {
+    tags.push(response);
+  });
+
+  return {
+    tags,
+  };
+};
+
+const putTags = (tagType, category, orgID) => {
+  return axios.put(
+    endpoints.putTags,
+    { TagType: tagType, Category: category, OrganizationID: orgID },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTagsRequest = () => {
+  return {
+    type: PUT_TAGS_REQUEST,
+  };
+};
+
+const putTagsSuccess = (data) => {
+  return {
+    type: PUT_TAGS_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTagsFailure = (error) => {
+  return {
+    type: PUT_TAGS_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTagCategoriesAction = (categoryID, bgColor, color) => {
+  return async (dispatch) => {
+    dispatch(putTagCategoriesRequest());
+    await putTagCategoriesWithAxios(categoryID, bgColor, color)
+      .then((response) => {
+        dispatch(putTagCategoriesSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTagCategoriesFailure(error.message));
+      });
+  };
+};
+
+const putTagCategoriesWithAxios = async (categoryID, bgColor, color) => {
+  var tagCategories = [];
+
+  await putTagCategories(categoryID, bgColor, color).then((response) => {
+    tagCategories.push(response);
+  });
+
+  return {
+    tagCategories,
+  };
+};
+
+const putTagCategories = (categoryID, bgColor, color) => {
+  return axios.put(
+    endpoints.putTagCategory,
+    { CategoryID: categoryID, BackgroundColor: bgColor, Color: color },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTagCategoriesRequest = () => {
+  return {
+    type: PUT_TAG_CATEGORIES_REQUEST,
+  };
+};
+
+const putTagCategoriesSuccess = (data) => {
+  return {
+    type: PUT_TAG_CATEGORIES_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTagCategoriesFailure = (error) => {
+  return {
+    type: PUT_TAG_CATEGORIES_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTicketsAutoAssignAction = (
   ticketID,
   technicianID,
   openDate
 ) => {
   return async (dispatch) => {
-    dispatch(putTicketsSelfAssignRequest());
-    await putTicketsSelfAssignWithAxios(ticketID, technicianID, openDate)
+    dispatch(putTicketsAutoAssignRequest());
+    await putTicketsAutoAssignWithAxios(ticketID, technicianID, openDate)
       .then((response) => {
-        dispatch(putTicketsSelfAssignSuccess(response));
+        dispatch(putTicketsAutoAssignSuccess(response));
       })
       .catch((error) => {
-        dispatch(putTicketsSelfAssignFailure(error.message));
+        dispatch(putTicketsAutoAssignFailure(error.message));
       });
   };
 };
 
-const putTicketsSelfAssignWithAxios = async (
+const putTicketsAutoAssignWithAxios = async (
   ticketID,
   technicianID,
   openDate
 ) => {
   var tickets = [];
 
-  await putTicketsSelfAssign(ticketID, technicianID, openDate).then(
+  await putTicketsAutoAssign(ticketID, technicianID, openDate).then(
     (response) => {
       tickets.push(response);
     }
@@ -573,10 +901,10 @@ const putTicketsSelfAssignWithAxios = async (
   };
 };
 
-const putTicketsSelfAssign = (ticketID, technicianID, openDate) => {
+const putTicketsAutoAssign = (ticketID, caseNumber, openDate) => {
   return axios.put(
-    endpoints.selfAssignTicket,
-    { TicketID: ticketID, TechnicianID: technicianID, OpenDate: openDate },
+    endpoints.autoAssignTicket,
+    { TicketID: ticketID, CaseNumber: caseNumber, OpenDate: openDate },
     {
       headers: {
         "Content-Type": "application/json",
@@ -585,22 +913,22 @@ const putTicketsSelfAssign = (ticketID, technicianID, openDate) => {
   );
 };
 
-const putTicketsSelfAssignRequest = () => {
+const putTicketsAutoAssignRequest = () => {
   return {
-    type: PUT_TICKETS_SELF_ASSIGN_REQUEST,
+    type: PUT_TICKETS_AUTO_ASSIGN_REQUEST,
   };
 };
 
-const putTicketsSelfAssignSuccess = (data) => {
+const putTicketsAutoAssignSuccess = (data) => {
   return {
-    type: PUT_TICKETS_SELF_ASSIGN_SUCCESS,
+    type: PUT_TICKETS_AUTO_ASSIGN_SUCCESS,
     payload: data,
   };
 };
 
-const putTicketsSelfAssignFailure = (error) => {
+const putTicketsAutoAssignFailure = (error) => {
   return {
-    type: PUT_TICKETS_SELF_ASSIGN_FAILURE,
+    type: PUT_TICKETS_AUTO_ASSIGN_FAILURE,
     payload: error,
   };
 };
@@ -608,8 +936,6 @@ const putTicketsSelfAssignFailure = (error) => {
 
 /**************************************************************************************************************/
 export const putPermissionsAction = (updatedRow, oldRow, organizationID) => {
-  console.log(organizationID);
-
   return async (dispatch) => {
     dispatch(putPermissionsRequest());
     await putPermissionsWithAxios(updatedRow, oldRow, organizationID)
@@ -668,10 +994,10 @@ const putPermissionsFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const getAllTagsAction = () => {
+export const getAllTagsAction = (orgID) => {
   return async (dispatch) => {
     dispatch(getAllTagsRequest());
-    await getAllTagsWithAxios()
+    await getAllTagsWithAxios(orgID)
       .then((response) => {
         dispatch(getAllTagsSuccess(response));
       })
@@ -681,10 +1007,10 @@ export const getAllTagsAction = () => {
   };
 };
 
-const getAllTagsWithAxios = async () => {
+const getAllTagsWithAxios = async (orgID) => {
   var tags = [];
 
-  await getAllTags().then((response) => {
+  await getAllTags(orgID).then((response) => {
     tags.push(response);
   });
 
@@ -693,10 +1019,13 @@ const getAllTagsWithAxios = async () => {
   };
 };
 
-const getAllTags = () => {
+const getAllTags = (orgID) => {
   return axios.get(endpoints.tagsAll, {
     headers: {
       "Content-Type": "application/json",
+    },
+    params: {
+      OrganizationID: orgID,
     },
   });
 };
@@ -717,6 +1046,64 @@ const getAllTagsSuccess = (data) => {
 const getAllTagsFailure = (error) => {
   return {
     type: GET_ALL_TAGS_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const getTagCategoriesAction = (orgID) => {
+  return async (dispatch) => {
+    dispatch(getTagCategoriesRequest());
+    await getTagCategoriesWithAxios(orgID)
+      .then((response) => {
+        dispatch(getTagCategoriesSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getTagCategoriesFailure(error.message));
+      });
+  };
+};
+
+const getTagCategoriesWithAxios = async (orgID) => {
+  var tagCategories = [];
+
+  await getTagCategories(orgID).then((response) => {
+    tagCategories.push(response);
+  });
+
+  return {
+    tagCategories,
+  };
+};
+
+const getTagCategories = (orgID) => {
+  return axios.get(endpoints.getTagCategories, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: {
+      OrganizationID: orgID,
+    },
+  });
+};
+
+const getTagCategoriesRequest = () => {
+  return {
+    type: GET_TAG_CATEGORIES_REQUEST,
+  };
+};
+
+const getTagCategoriesSuccess = (data) => {
+  return {
+    type: GET_TAG_CATEGORIES_SUCCESS,
+    payload: data,
+  };
+};
+
+const getTagCategoriesFailure = (error) => {
+  return {
+    type: GET_TAG_CATEGORIES_FAILURE,
     payload: error,
   };
 };
@@ -934,19 +1321,24 @@ export const postTicketNewTicketAction = (
 ) => {
   return async (dispatch) => {
     dispatch(postTicketNewTicketRequest());
-    await postTicketNewTicketWithAxios(
-      userID,
-      subject,
-      description,
-      submissionDate,
-      tags
-    )
-      .then((response) => {
-        dispatch(postTicketNewTicketSuccess(response));
-      })
-      .catch((error) => {
-        dispatch(postTicketNewTicketFailure(error.message));
-      });
+
+    return new Promise(async (resolve, reject) => {
+      await postTicketNewTicketWithAxios(
+        userID,
+        subject,
+        description,
+        submissionDate,
+        tags
+      )
+        .then((response) => {
+          dispatch(postTicketNewTicketSuccess(response));
+          return resolve(response);
+        })
+        .catch((error) => {
+          dispatch(postTicketNewTicketFailure(error.message));
+          return reject(error);
+        });
+    });
   };
 };
 
@@ -1082,6 +1474,205 @@ const postExpertiseTagsFailure = () => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
+export const postTagsAction = (tagType, categoryID, orgID) => {
+  return async (dispatch) => {
+    dispatch(postTagsRequest());
+    await postTagsWithAxios(tagType, categoryID, orgID)
+      .then((response) => {
+        dispatch(postTagsSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(postTagsFailure(error.message));
+      });
+  };
+};
+
+const postTagsWithAxios = async (tagType, categoryID, orgID) => {
+  var tags = [];
+
+  await postTags(tagType, categoryID, orgID).then((response) => {
+    tags.push(response);
+  });
+
+  return {
+    tags,
+  };
+};
+
+const postTags = (tagType, categoryID, orgID) => {
+  return axios.post(
+    endpoints.postTags,
+    {
+      TagType: tagType,
+      CategoryID: categoryID,
+      OrganizationID: orgID,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const postTagsRequest = (error) => {
+  return {
+    type: POST_TAGS_REQUEST,
+    payload: error,
+  };
+};
+
+const postTagsSuccess = (data) => {
+  return {
+    type: POST_TAGS_SUCCESS,
+    payload: data,
+  };
+};
+
+const postTagsFailure = () => {
+  return {
+    type: POST_TAGS_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const postTagCategoryAction = (
+  category,
+  backgroundColor,
+  color,
+  orgID
+) => {
+  return async (dispatch) => {
+    dispatch(postTagCategoryRequest());
+    await postTagCategoryWithAxios(category, backgroundColor, color, orgID)
+      .then((response) => {
+        dispatch(postTagCategorySuccess(response));
+      })
+      .catch((error) => {
+        dispatch(postTagCategoryFailure(error.message));
+      });
+  };
+};
+
+const postTagCategoryWithAxios = async (
+  category,
+  backgroundColor,
+  color,
+  orgID
+) => {
+  var tagCategories = [];
+
+  await postTagCategory(category, backgroundColor, color, orgID).then(
+    (response) => {
+      tagCategories.push(response);
+    }
+  );
+
+  return {
+    tagCategories,
+  };
+};
+
+const postTagCategory = (category, backgroundColor, color, orgID) => {
+  return axios.post(
+    endpoints.postTagCategory,
+    {
+      Category: category,
+      OrganizationID: orgID,
+      BackgroundColor: backgroundColor,
+      Color: color,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const postTagCategoryRequest = (error) => {
+  return {
+    type: POST_TAG_CATEGORY_REQUEST,
+    payload: error,
+  };
+};
+
+const postTagCategorySuccess = (data) => {
+  return {
+    type: POST_TAG_CATEGORY_SUCCESS,
+    payload: data,
+  };
+};
+
+const postTagCategoryFailure = () => {
+  return {
+    type: POST_TAG_CATEGORY_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const deleteTagAction = (tagType, orgID) => {
+  return async (dispatch) => {
+    dispatch(deleteTagRequest());
+    await deleteTagWithAxios(tagType, orgID)
+      .then((response) => {
+        dispatch(deleteTagSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(deleteTagFailure(error.message));
+      });
+  };
+};
+
+const deleteTagWithAxios = async (tagType, orgID) => {
+  var tags = [];
+
+  await deleteTag(tagType, orgID).then((response) => {
+    tags.push(response);
+  });
+
+  return {
+    tags,
+  };
+};
+
+const deleteTag = (tagType, orgID) => {
+  return axios.delete(endpoints.deleteTag, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: {
+      TagType: tagType,
+      OrganizationID: orgID,
+    },
+  });
+};
+
+const deleteTagRequest = (error) => {
+  return {
+    type: DELETE_TAG_REQUEST,
+    payload: error,
+  };
+};
+
+const deleteTagSuccess = (data) => {
+  return {
+    type: DELETE_TAG_SUCCESS,
+    payload: data,
+  };
+};
+
+const deleteTagFailure = (error) => {
+  return {
+    type: DELETE_TAG_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
 export const logoutUserAction = () => {
   return async (dispatch) => {
     dispatch(logoutUser());
@@ -1152,4 +1743,35 @@ const putTblUsersApprovedFailure = (error) => {
     payload: error,
   };
 };
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const notificationsAction = (notifications) => {
+  return async (dispatch) => {
+    dispatch(notificatonsSuccess(notifications));
+  };
+};
+
+const notificatonsSuccess = (data) => {
+  return {
+    type: NOTIFICATIONS_SUCCESS,
+    payload: data,
+  };
+};
+
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const notificationClearAction = () => {
+  return async (dispatch) => {
+    dispatch(notificationCLear());
+  };
+};
+
+const notificationCLear = () => {
+  return {
+    type: NOTIFICATION_CLEAR,
+  };
+};
+
 /**************************************************************************************************************/

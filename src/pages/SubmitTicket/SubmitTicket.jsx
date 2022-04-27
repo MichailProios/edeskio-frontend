@@ -46,6 +46,7 @@ import { Category, Satellite } from "@material-ui/icons";
 
 import PageHeader from "../../components/PageHeader/PageHeader";
 import { postTicketNewTicketAction } from "../../redux/user/userActions";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -125,13 +126,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-//
-
 const SubmitTicket = () => {
   // create dispatch
   const dispatch = useDispatch();
 
-  const tblTags = useSelector((state) => state.User.tags.tblTags);
+  const tblTags = useSelector((state) => state.User.tags);
 
   // local state
   const styles = useStyles();
@@ -201,45 +200,20 @@ const SubmitTicket = () => {
     e.target.value.forEach((tag) => {
       const tagFromtbl = tblTags.find((record) => record.Type === tag);
 
-      if (tagFromtbl.Category === "Operating System") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#3399ff", color: "#ffffff" }}
-            onDelete={handleTagChipDelete.bind(this, tag)}
-          />
-        );
-      } else if (tagFromtbl.Category === "Hardware") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#cc0000", color: "#ffffff" }}
-            onDelete={handleTagChipDelete.bind(this, tag)}
-          />
-        );
-      } else if (tagFromtbl.Category === "Software") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#0000ff", color: "#ffffff" }}
-            onDelete={handleTagChipDelete.bind(this, tag)}
-          />
-        );
-      }
+      newChips.push(
+        <Chip
+          label={tag}
+          key={tag}
+          style={{
+            backgroundColor: tagFromtbl.BackgroundColor,
+            color: tagFromtbl.Color,
+          }}
+        />
+      );
     });
 
     setSelectedTagsChips(newChips);
     setSelectedTags(e.target.value);
-  };
-
-  const handleTagChipDelete = (deletedTag, e) => {
-    setSelectedTagsChips((chips) =>
-      chips.filter((chip) => chip.key !== deletedTag)
-    );
-    setSelectedTags((tags) => tags.filter((tag) => tag !== deletedTag));
   };
 
   const handleTicketSubject = (e) => {
@@ -252,6 +226,8 @@ const SubmitTicket = () => {
 
   const userID = useSelector((state) => state.User.user.tblUser.ID);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleSubmit = () => {
     if (ticketSubject.length > 0 && ticketDescription.length > 0) {
       dispatch(
@@ -262,7 +238,17 @@ const SubmitTicket = () => {
           moment().format("YYYY-MM-DD HH:mm:ss"),
           selectedTags
         )
-      );
+      ).then((response) => {
+        if (response.reponse[0].status === 200) {
+          enqueueSnackbar("Your ticket was submitted", {
+            variant: "success",
+          });
+        } else {
+          enqueueSnackbar("Error", {
+            variant: "error",
+          });
+        }
+      });
     }
 
     setTicketSubject("");
@@ -322,7 +308,7 @@ const SubmitTicket = () => {
                   required={false}
                   className={styles.inputField}
                   multiline
-                  rows={4}
+                  minRows={4}
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>

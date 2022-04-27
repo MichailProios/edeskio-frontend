@@ -132,7 +132,7 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
 
   const styles = useStyles();
 
-  const tblTags = useSelector((state) => state.User.tags.tblTags);
+  const tblTags = useSelector((state) => state.User.tags);
 
   const expertiseTags = useSelector((state) => state.User.expertiseTags);
 
@@ -202,34 +202,16 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
     e.target.value.forEach((tag) => {
       const tagFromtbl = tblTags.find((record) => record.Type === tag);
 
-      if (tagFromtbl.Category === "Operating System") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#3399ff", color: "#ffffff" }}
-            onDelete={handleTagChipDelete.bind(this, tag)}
-          />
-        );
-      } else if (tagFromtbl.Category === "Hardware") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#cc0000", color: "#ffffff" }}
-            onDelete={handleTagChipDelete.bind(this, tag)}
-          />
-        );
-      } else if (tagFromtbl.Category === "Software") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#0000ff", color: "#ffffff" }}
-            onDelete={handleTagChipDelete.bind(this, tag)}
-          />
-        );
-      }
+      newChips.push(
+        <Chip
+          label={tag}
+          key={tag}
+          style={{
+            backgroundColor: tagFromtbl.BackgroundColor,
+            color: tagFromtbl.Color,
+          }}
+        />
+      );
     });
 
     setSelectedTagsChips(newChips);
@@ -242,34 +224,16 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
     array.forEach((tag) => {
       const tagFromtbl = tblTags.find((record) => record.Type === tag);
 
-      if (tagFromtbl.Category === "Operating System") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#3399ff", color: "#ffffff" }}
-            onDelete={handleTagChipDelete.bind(this, tag)}
-          />
-        );
-      } else if (tagFromtbl.Category === "Hardware") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#cc0000", color: "#ffffff" }}
-            onDelete={handleTagChipDelete.bind(this, tag)}
-          />
-        );
-      } else if (tagFromtbl.Category === "Software") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#0000ff", color: "#ffffff" }}
-            onDelete={handleTagChipDelete.bind(this, tag)}
-          />
-        );
-      }
+      newChips.push(
+        <Chip
+          label={tag}
+          key={tag}
+          style={{
+            backgroundColor: tagFromtbl.BackgroundColor,
+            color: tagFromtbl.Color,
+          }}
+        />
+      );
     });
 
     setSelectedTagsChips(newChips);

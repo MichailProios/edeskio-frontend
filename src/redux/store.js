@@ -17,15 +17,15 @@ const persistConfig = {
   // blacklist: ["User"],
 };
 
-// const userPersistConfig = {
-//   key: "User",
-//   storage: storage,
-//   whitelist: ["sessionUser", "authenticated"],
-// };
+const userPersistConfig = {
+  key: "User",
+  storage: storage,
+  blackList: ["notification"],
+};
 
 const reducer = combineReducers({
-  //User: persistReducer(userPersistConfig, UserReducer),
-  User: UserReducer,
+  User: persistReducer(userPersistConfig, UserReducer),
+  //User: UserReducer,
 });
 
 const initialState = {

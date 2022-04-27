@@ -32,12 +32,18 @@ import {
   GET_TICKETS_REQUEST,
   GET_TICKETS_SUCCESS,
   GET_TICKETS_FAILURE,
-  PUT_TICKETS_SELF_ASSIGN_REQUEST,
-  PUT_TICKETS_SELF_ASSIGN_SUCCESS,
-  PUT_TICKETS_SELF_ASSIGN_FAILURE,
+  PUT_TICKETS_ASSIGN_REQUEST,
+  PUT_TICKETS_ASSIGN_SUCCESS,
+  PUT_TICKETS_ASSIGN_FAILURE,
+  PUT_TICKETS_AUTO_ASSIGN_REQUEST,
+  PUT_TICKETS_AUTO_ASSIGN_SUCCESS,
+  PUT_TICKETS_AUTO_ASSIGN_FAILURE,
   GET_USER_ALL_REQUEST,
   GET_USER_ALL_SUCCESS,
   GET_USER_ALL_FAILURE,
+  GET_TECHNICIANS_ASSIGN_REQUEST,
+  GET_TECHNICIANS_ASSIGN_SUCCESS,
+  GET_TECHNICIANS_ASSIGN_FAILURE,
   GET_PERMISSIONS_ALL_REQUEST,
   GET_PERMISSIONS_ALL_SUCCESS,
   GET_PERMISSIONS_ALL_FAILURE,
@@ -47,7 +53,30 @@ import {
   PUT_USER_APPROVED_REQUEST,
   PUT_USER_APPROVED_SUCCESS,
   PUT_USER_APPROVED_FAILURE,
+  POST_TAGS_REQUEST,
+  POST_TAGS_SUCCESS,
+  POST_TAGS_FAILURE,
+  DELETE_TAG_REQUEST,
+  DELETE_TAG_SUCCESS,
+  DELETE_TAG_FAILURE,
+  PUT_TAGS_SUCCESS,
+  PUT_TAGS_FAILURE,
+  PUT_TAGS_REQUEST,
+  PUT_TAG_CATEGORIES_REQUEST,
+  PUT_TAG_CATEGORIES_SUCCESS,
+  PUT_TAG_CATEGORIES_FAILURE,
+  PUT_TICKET_PRIORITY_REQUEST,
+  PUT_TICKET_PRIORITY_SUCCESS,
+  PUT_TICKET_PRIORITY_FAILURE,
   USER_LOGOUT,
+  POST_TAG_CATEGORY_REQUEST,
+  POST_TAG_CATEGORY_SUCCESS,
+  POST_TAG_CATEGORY_FAILURE,
+  GET_TAG_CATEGORIES_REQUEST,
+  GET_TAG_CATEGORIES_SUCCESS,
+  GET_TAG_CATEGORIES_FAILURE,
+  NOTIFICATIONS_SUCCESS,
+  NOTIFICATION_CLEAR,
 } from "./userTypes";
 import { store } from "../store";
 
@@ -79,9 +108,9 @@ export const initialState = {
   expertiseTags: [],
 
   //Tags
-  tags: {
-    tblTags: [],
-  },
+  tags: [],
+
+  tagCategories: [],
 
   //Permissions
   roles: [],
@@ -95,6 +124,15 @@ export const initialState = {
 
   //Organization
   organizations: [],
+
+  //TechAssign
+  techs: [],
+  expertiseTags_All: [],
+  techsTicketCount: [],
+
+  //Notifications
+  notification: "",
+  notifications: [],
 };
 
 export const UserReducer = (state = initialState, action) => {
@@ -103,6 +141,7 @@ export const UserReducer = (state = initialState, action) => {
   let users;
   let expertiseTags;
   let ticketTags;
+  let tags;
 
   switch (action.type) {
     case POST_USER_LOGIN_REQUEST:
@@ -244,13 +283,46 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case GET_ALL_TAGS_SUCCESS:
+      tags = action.payload.tags[0].data.tblTags;
+
+      tags = tags.map((tag) => {
+        return {
+          Type: tag.Type,
+          Category: tag["tblTagCategory.Category"],
+          BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+          Color: tag["tblTagCategory.Color"],
+          CategoryID: tag.CategoryID,
+        };
+      });
+
       return {
         ...state,
-        tags: action.payload.tags[0].data,
+        tags: tags,
         loading: false,
         successfull: true,
       };
     case GET_ALL_TAGS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case GET_TAG_CATEGORIES_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case GET_TAG_CATEGORIES_SUCCESS:
+      return {
+        ...state,
+        tagCategories: action.payload.tagCategories[0].data.tblTagCategories,
+        loading: false,
+        successfull: true,
+      };
+    case GET_TAG_CATEGORIES_FAILURE:
       return {
         ...state,
         loading: false,
@@ -267,6 +339,7 @@ export const UserReducer = (state = initialState, action) => {
     case POST_TICKETS_NEW_TICKET_SUCCESS:
       return {
         ...state,
+        notification: "Submitted a New Ticket",
         loading: false,
         successfull: true,
       };
@@ -300,6 +373,91 @@ export const UserReducer = (state = initialState, action) => {
         successfull: true,
       };
     case POST_EXPERTISE_TAGS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case POST_TAGS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case POST_TAGS_SUCCESS:
+      tags = action.payload.tags[0].data.tblTags;
+      tags = tags.map((tag) => {
+        return {
+          Type: tag.Type,
+          Category: tag["tblTagCategory.Category"],
+          BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+          Color: tag["tblTagCategory.Color"],
+          CategoryID: tag.CategoryID,
+        };
+      });
+
+      return {
+        ...state,
+        loading: false,
+        tags: tags,
+        successfull: true,
+      };
+    case POST_TAGS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case POST_TAG_CATEGORY_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case POST_TAG_CATEGORY_SUCCESS:
+      return {
+        ...state,
+        tagCategories: action.payload.tagCategories[0].data.tblTagCategories,
+        loading: false,
+        successfull: true,
+      };
+    case POST_TAG_CATEGORY_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case DELETE_TAG_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+
+    case DELETE_TAG_SUCCESS:
+      tags = action.payload.tags[0].data.tblTags;
+      tags = tags.map((tag) => {
+        return {
+          Type: tag.Type,
+          Category: tag["tblTagCategory.Category"],
+          BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+          Color: tag["tblTagCategory.Color"],
+          CategoryID: tag.CategoryID,
+        };
+      });
+      return {
+        ...state,
+        loading: false,
+        tags: tags,
+        successfull: true,
+      };
+    case DELETE_TAG_FAILURE:
       return {
         ...state,
         loading: false,
@@ -356,13 +514,37 @@ export const UserReducer = (state = initialState, action) => {
         error: action.payload,
       };
 
-    case PUT_TICKETS_SELF_ASSIGN_REQUEST:
+    case GET_TECHNICIANS_ASSIGN_REQUEST:
       return {
         ...state,
         loading: true,
         successfull: false,
       };
-    case PUT_TICKETS_SELF_ASSIGN_SUCCESS:
+    case GET_TECHNICIANS_ASSIGN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        techs: action.payload.technicianAssign[0].data.tblUsers_AllTechs,
+        expertiseTags_All:
+          action.payload.technicianAssign[0].data.tblExpertiseTags_AllTechs,
+        techsTicketCount:
+          action.payload.technicianAssign[0].data.TechTicketCount[0],
+        successfull: true,
+      };
+    case GET_TECHNICIANS_ASSIGN_FAILURE:
+      return {
+        ...state,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case PUT_TICKETS_ASSIGN_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case PUT_TICKETS_ASSIGN_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -370,7 +552,116 @@ export const UserReducer = (state = initialState, action) => {
         ticketTags: action.payload.tickets[0].data.tblTicketTags,
         successfull: true,
       };
-    case PUT_TICKETS_SELF_ASSIGN_FAILURE:
+    case PUT_TICKETS_ASSIGN_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case PUT_TICKETS_AUTO_ASSIGN_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case PUT_TICKETS_AUTO_ASSIGN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        tickets: action.payload.tickets[0].data,
+        ticketTags: action.payload.tickets[0].data.tblTicketTags,
+        successfull: true,
+      };
+    case PUT_TICKETS_AUTO_ASSIGN_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case PUT_TICKET_PRIORITY_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case PUT_TICKET_PRIORITY_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        tickets: action.payload.tickets[0].data,
+        ticketTags: action.payload.tickets[0].data.tblTicketTags,
+        successfull: true,
+      };
+    case PUT_TICKET_PRIORITY_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case PUT_TAGS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case PUT_TAGS_SUCCESS:
+      tags = action.payload.tags[0].data.tblTags;
+      tags = tags.map((tag) => {
+        return {
+          Type: tag.Type,
+          Category: tag["tblTagCategory.Category"],
+          BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+          Color: tag["tblTagCategory.Color"],
+          CategoryID: tag.CategoryID,
+        };
+      });
+
+      return {
+        ...state,
+        loading: false,
+        tags: tags,
+        successfull: true,
+      };
+    case PUT_TAGS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
+    case PUT_TAG_CATEGORIES_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+    case PUT_TAG_CATEGORIES_SUCCESS:
+      tags = action.payload.tagCategories[0].data.tblTags;
+
+      tags = tags.map((tag) => {
+        return {
+          Type: tag.Type,
+          Category: tag["tblTagCategory.Category"],
+          BackgroundColor: tag["tblTagCategory.BackgroundColor"],
+          Color: tag["tblTagCategory.Color"],
+          CategoryID: tag.CategoryID,
+        };
+      });
+
+      return {
+        ...state,
+        loading: false,
+        tags: tags,
+        successfull: true,
+      };
+    case PUT_TAG_CATEGORIES_FAILURE:
       return {
         ...state,
         loading: false,
@@ -543,6 +834,18 @@ export const UserReducer = (state = initialState, action) => {
         ...state,
         successfull: false,
         error: action.payload,
+      };
+
+    case NOTIFICATIONS_SUCCESS:
+      return {
+        ...state,
+        notifications: action.payload,
+      };
+
+    case NOTIFICATION_CLEAR:
+      return {
+        ...state,
+        notification: "",
       };
 
     default:

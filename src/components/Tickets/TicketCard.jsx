@@ -17,14 +17,21 @@ import {
   Menu,
   MenuItem,
   Chip,
+  ListItemIcon,
+  ListItemText,
 } from "@material-ui/core";
 
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import AutorenewIcon from "@material-ui/icons/Autorenew";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
+  getTechniciansAssignAction,
   getUserOrganizationAction,
-  putTicketsSelfAssignAction,
+  putTicketPriorityAction,
+  putTicketsAssignAction,
 } from "../../redux/user/userActions";
 import {
   DeleteForever,
@@ -36,7 +43,9 @@ import {
 import moment from "momnet";
 
 import AssignmentReturnIcon from "@material-ui/icons/AssignmentReturn";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import AssignToTechnician from "../AssignToTechnician/AssignToTechnician";
+import AutoAssignToTechnician from "../AutoAssignToTechnician/AutoAssignToTechnician";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -107,37 +116,22 @@ const TicketCard = ({ ticket }) => {
     tags.forEach((tag) => {
       const tagFromtbl = tblTags.find((record) => record.Type === tag);
 
-      if (tagFromtbl.Category === "Operating System") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#3399ff", color: "#ffffff" }}
-          />
-        );
-      } else if (tagFromtbl.Category === "Hardware") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#cc0000", color: "#ffffff" }}
-          />
-        );
-      } else if (tagFromtbl.Category === "Software") {
-        newChips.push(
-          <Chip
-            label={tag}
-            key={tag}
-            style={{ backgroundColor: "#0000ff", color: "#ffffff" }}
-          />
-        );
-      }
+      newChips.push(
+        <Chip
+          label={tag}
+          key={tag}
+          style={{
+            backgroundColor: tagFromtbl.BackgroundColor,
+            color: tagFromtbl.Color,
+          }}
+        />
+      );
     });
 
     setSelectedTagsChips(newChips);
   };
 
-  const tblTags = useSelector((state) => state.User.tags.tblTags);
+  const tblTags = useSelector((state) => state.User.tags);
 
   const ticketTagsTbl = useSelector((state) => state.User.ticketTags);
 
@@ -171,19 +165,34 @@ const TicketCard = ({ ticket }) => {
   const userID = useSelector((state) => state.User.user.tblUser.ID);
   const userRole = useSelector((state) => state.User.user.tblAccess.RoleName);
 
-  const userFirstName = useSelector(
-    (state) => state.User.user.tblUser.FirstName
-  );
-  const userLastName = useSelector((state) => state.User.user.tblUser.LastName);
+  // const userFirstName = useSelector(
+  //   (state) => state.User.user.tblUser.FirstName
+  // );
+  // const userLastName = useSelector((state) => state.User.user.tblUser.LastName);
+
+  const techs = useSelector((state) => state.User.techs);
 
   const handleAssignToSelf = () => {
-    // dispatch(
-    //   putTicketsSelfAssignAction(
-    //     ticket.ID,
-    //     userID,
-    //     moment().format("YYYY-MM-DD HH:mm:ss")
-    //   )
-    // );
+    dispatch(
+      putTicketsAssignAction(
+        ticket.ID,
+        userID,
+        moment().format("YYYY-MM-DD HH:mm:ss")
+      )
+    );
+
+    setOptionsOpen(false);
+    setAnchorEl(null);
+  };
+
+  const handleUnassign = () => {
+    dispatch(
+      putTicketsAssignAction(
+        ticket.ID,
+        null,
+        moment().format("YYYY-MM-DD HH:mm:ss")
+      )
+    );
 
     setOptionsOpen(false);
     setAnchorEl(null);
@@ -194,8 +203,12 @@ const TicketCard = ({ ticket }) => {
   }, [selectedTags]);
 
   const [openAssign, setOpenAssign] = useState(false);
+  const [openAutoAssign, setOpenAutoAssign] = useState(false);
+  const user = useSelector((state) => state.User.user.tblUser.ID);
 
   const handleAssignOpen = () => {
+    dispatch(getTechniciansAssignAction(user));
+
     setOpenAssign(true);
     setOptionsOpen(false);
     setAnchorEl(null);
@@ -205,9 +218,71 @@ const TicketCard = ({ ticket }) => {
     setOpenAssign(false);
   };
 
+  const handleAutoAssignOpen = () => {
+    dispatch(getTechniciansAssignAction(user));
+
+    setOpenAutoAssign(true);
+    setOptionsOpen(false);
+    setAnchorEl(null);
+  };
+
+  const handleAutoAssignClose = () => {
+    setOpenAutoAssign(false);
+  };
+
+  const handleRaisePriority = () => {
+    setOptionsOpen(false);
+    setAnchorEl(null);
+
+    let priority = "";
+
+    if (ticket.Priority === "Medium") {
+      priority = "High";
+    } else if (ticket.Priority === "Low") {
+      priority = "Medium";
+    } else {
+      return;
+    }
+
+    dispatch(putTicketPriorityAction(ticket.ID, priority));
+  };
+
+  const handleLowerPriority = () => {
+    setOptionsOpen(false);
+    setAnchorEl(null);
+
+    let priority = "";
+
+    if (ticket.Priority === "Medium") {
+      priority = "Low";
+    } else if (ticket.Priority === "High") {
+      priority = "Medium";
+    } else {
+      return;
+    }
+
+    dispatch(putTicketPriorityAction(ticket.ID, priority));
+  };
+
   const [selected, setSelected] = useState("");
 
-  console.log(selected);
+  const getTechnicianName = () => {
+    const tech = techs.find((record) => record.ID === ticket.TechnicianID);
+
+    if (tech) {
+      return tech.FirstName + " " + tech.LastName;
+    } else {
+      return "Unassigned";
+    }
+  };
+
+  const [fullName, setFullName] = useState("");
+
+  useEffect(() => {
+    if (typeof ticket.tblUser !== "undefined") {
+      setFullName(ticket.tblUser.FirstName + " " + ticket.tblUser.LastName);
+    }
+  }, [ticket]);
 
   return (
     <>
@@ -289,12 +364,32 @@ const TicketCard = ({ ticket }) => {
                     className={styles.info}
                     style={{ paddingRight: "5px" }}
                   >
+                    {"Submitted By:"}
+                  </Typography>
+                  <Chip label={fullName} className={styles.assignedChip} />
+                </Grid>
+                <Grid
+                  container
+                  item
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                >
+                  <Typography
+                    className={styles.info}
+                    style={{ paddingRight: "5px" }}
+                  >
                     {"Assigned To:"}
                   </Typography>
                   <Chip
-                    // className={styles.infoChip}
-                    label={selected.length > 0 ? selected : "Unassigned"}
-                    className={selected.length > 0 ? styles.assignedChip : ""}
+                    label={
+                      ticket.TechnicianID !== null
+                        ? getTechnicianName()
+                        : "Unassigned"
+                    }
+                    className={
+                      ticket.TechnicianID !== null ? styles.assignedChip : ""
+                    }
                   />
                 </Grid>
                 <Grid
@@ -369,29 +464,102 @@ const TicketCard = ({ ticket }) => {
           open={Boolean(optionsOpen)}
           onClose={handleTicketOptionsClose}
           getContentAnchorEl={null}
-          PaperProps={{
-            elevation: 3,
-          }}
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "top" }}
         >
-          {userRole === "Admin" || userRole === "Tech" ? (
-            <MenuItem onClick={handleAssignToSelf}>
-              <AssignmentReturnIcon color="primary" />
-              &nbsp;Assign To Self
+          {(userRole === "Admin" || userRole === "Tech") &&
+            ticket.TechnicianID === null && (
+              <MenuItem onClick={handleAssignToSelf}>
+                <ListItemIcon>
+                  <AssignmentReturnIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1" color="textPrimary">
+                      Assign To Self
+                    </Typography>
+                  }
+                />
+              </MenuItem>
+            )}
+
+          {((userRole === "Tech" && ticket.TechnicianID === userID) ||
+            (userRole === "Admin" && ticket.TechnicianID !== null)) && (
+            <MenuItem onClick={handleUnassign}>
+              <ListItemIcon>
+                <RemoveCircleIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" color="textPrimary">
+                    Unassign
+                  </Typography>
+                }
+              />
             </MenuItem>
-          ) : (
-            <div />
           )}
 
-          {userRole === "Admin" ? (
+          {userRole === "Admin" && (
             <MenuItem onClick={handleAssignOpen}>
-              <AssignmentIndIcon color="primary" />
-              Assign to Tech
+              <ListItemIcon>
+                <AssignmentIndIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" color="textPrimary">
+                    Assign to Tech
+                  </Typography>
+                }
+              />
             </MenuItem>
-          ) : (
-            <div />
           )}
+
+          {userRole === "Admin" && (
+            <MenuItem onClick={handleAutoAssignOpen}>
+              <ListItemIcon>
+                <AutorenewIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" color="textPrimary">
+                    Auto-Assign to Tech
+                  </Typography>
+                }
+              />
+            </MenuItem>
+          )}
+
+          {(ticket.Priority === "Low" || ticket.Priority === "Medium") &&
+            (userRole === "Admin" || userRole === "Tech") && (
+              <MenuItem onClick={handleRaisePriority}>
+                <ListItemIcon>
+                  <ArrowUpwardIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1" color="textPrimary">
+                      Raise Priority
+                    </Typography>
+                  }
+                />
+              </MenuItem>
+            )}
+
+          {(ticket.Priority === "High" || ticket.Priority === "Medium") &&
+            (userRole === "Admin" || userRole === "Tech") && (
+              <MenuItem onClick={handleLowerPriority}>
+                <ListItemIcon>
+                  <ArrowDownwardIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1" color="textPrimary">
+                      Lower Priority
+                    </Typography>
+                  }
+                />
+              </MenuItem>
+            )}
         </Menu>
       )}
 
@@ -400,6 +568,15 @@ const TicketCard = ({ ticket }) => {
         handleOpen={handleAssignOpen}
         handleClose={handleAssignClose}
         setSelected={setSelected}
+        ticketID={ticket.ID}
+        ticketTags={selectedTags}
+      />
+
+      <AutoAssignToTechnician
+        open={openAutoAssign}
+        handleOpen={handleAutoAssignOpen}
+        handleClose={handleAutoAssignClose}
+        ticketID={ticket.ID}
       />
     </>
   );
