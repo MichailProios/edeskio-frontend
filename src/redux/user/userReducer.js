@@ -119,7 +119,7 @@ export const initialState = {
   usersApproved: [],
 
   //Tickets
-  tickets: { tblTickets: { tblUser: { ID: null } } },
+  tickets: { tblTickets: [] },
   ticketTags: [],
 
   //Organization
