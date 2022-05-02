@@ -77,6 +77,12 @@ import {
   GET_TAG_CATEGORIES_FAILURE,
   NOTIFICATIONS_SUCCESS,
   NOTIFICATION_CLEAR,
+  GET_MESSAGES_ONE_REQUEST,
+  GET_MESSAGES_ONE_SUCCESS,
+  GET_MESSAGES_ONE_FAILURE,
+  POST_MESSAGE_REQUEST,
+  POST_MESSAGE_SUCCESS,
+  POST_MESSAGE_FAILURE,
 } from "./userTypes";
 import { store } from "../store";
 
@@ -133,6 +139,9 @@ export const initialState = {
   //Notifications
   notification: "",
   notifications: [],
+
+  //Messages
+  messages: [],
 };
 
 export const UserReducer = (state = initialState, action) => {
@@ -330,6 +339,27 @@ export const UserReducer = (state = initialState, action) => {
         error: action.payload,
       };
 
+      case GET_MESSAGES_ONE_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          successfull: false,
+        };
+      case GET_MESSAGES_ONE_SUCCESS:
+        return {
+          ...state,
+          messages: action.payload.messages[0].data.tblMessages,
+          loading: false,
+          successfull: true,
+        };
+      case GET_MESSAGES_ONE_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          successfull: false,
+          error: action.payload,
+        };
+
     case POST_TICKETS_NEW_TICKET_REQUEST:
       return {
         ...state,
@@ -432,6 +462,27 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
         error: action.payload,
       };
+
+      case POST_MESSAGE_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          successfull: false,
+        };
+      case POST_MESSAGE_SUCCESS:
+        return {
+          ...state,
+          messages: action.payload.message[0].data.tblMessages,
+          loading: false,
+          successfull: true,
+        };
+      case POST_MESSAGE_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          successfull: false,
+          error: action.payload,
+        };
 
     case DELETE_TAG_REQUEST:
       return {

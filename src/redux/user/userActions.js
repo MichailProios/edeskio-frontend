@@ -78,6 +78,12 @@ import {
   NOTIFICATIONS_SUCCESS,
   NOTIFICATION_CLEAR,
   GET_TAG_CATEGORIES_FAILURE,
+  GET_MESSAGES_ONE_REQUEST,
+  GET_MESSAGES_ONE_SUCCESS,
+  GET_MESSAGES_ONE_FAILURE,
+  POST_MESSAGE_REQUEST,
+  POST_MESSAGE_SUCCESS,
+  POST_MESSAGE_FAILURE,
 } from "./userTypes";
 
 import { store } from "../store";
@@ -1110,6 +1116,64 @@ const getTagCategoriesFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
+export const getMessagesOneAction = (ticketID) => {
+  return async (dispatch) => {
+    dispatch(getMessagesOneRequest());
+    await getMessagesOneWithAxios(ticketID)
+      .then((response) => {
+        dispatch(getMessagesOneSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getMessagesOneFailure(error.message));
+      });
+  };
+};
+
+const getMessagesOneWithAxios = async (ticketID) => {
+  var messages = [];
+
+  await getMessagesOne(ticketID).then((response) => {
+    messages.push(response);
+  });
+
+  return {
+    messages,
+  };
+};
+
+const getMessagesOne = (ticketID) => {
+  return axios.get(endpoints.getMessagesOne, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: {
+      TicketID: ticketID,
+    },
+  });
+};
+
+const getMessagesOneRequest = () => {
+  return {
+    type: GET_MESSAGES_ONE_REQUEST,
+  };
+};
+
+const getMessagesOneSuccess = (data) => {
+  return {
+    type: GET_MESSAGES_ONE_SUCCESS,
+    payload: data,
+  };
+};
+
+const getMessagesOneFailure = (error) => {
+  return {
+    type: GET_MESSAGES_ONE_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
 export const postUserRegisterExistingOrganizationAction = (
   email,
   userName,
@@ -1608,6 +1672,70 @@ const postTagCategorySuccess = (data) => {
 const postTagCategoryFailure = () => {
   return {
     type: POST_TAG_CATEGORY_FAILURE,
+  };
+};
+/**************************************************************************************************************/
+
+export const postMessageAction = (userID, ticketID, msgContent, date, isPrivate) => {
+  return async (dispatch) => {
+    dispatch(postMessageRequest());
+    await postMessageWithAxios(userID, ticketID, msgContent, date, isPrivate)
+      .then((response) => {
+        dispatch(postMessageSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(postMessageFailure(error.message));
+      });
+  };
+};
+
+const postMessageWithAxios = async (userID, ticketID, msgContent, date, isPrivate) => {
+  var message = [];
+
+  await postMessage(userID, ticketID, msgContent, date, isPrivate).then((response) => {
+    message.push(response);
+  });
+
+  return {
+    message,
+  };
+};
+
+const postMessage = (userID, ticketID, msgContent, date, isPrivate) => {
+  return axios.post(
+    endpoints.postMessage,
+    {
+      SentBy: userID,
+      TicketID: ticketID,
+      Content: msgContent,
+      DateSent: date,
+      Private: isPrivate,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const postMessageRequest = (error) => {
+  return {
+    type: POST_MESSAGE_REQUEST,
+    payload: error,
+  };
+};
+
+const postMessageSuccess = (data) => {
+  return {
+    type: POST_MESSAGE_SUCCESS,
+    payload: data,
+  };
+};
+
+const postMessageFailure = () => {
+  return {
+    type: POST_MESSAGE_FAILURE,
   };
 };
 /**************************************************************************************************************/
