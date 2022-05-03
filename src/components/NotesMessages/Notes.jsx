@@ -37,7 +37,7 @@ import moment from "momnet";
 import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { getMessagesOneAction, postMessageAction } from "../../redux/user/userActions";
+import { postMessageAction } from "../../redux/user/userActions";
 import { DeleteForever, Edit, MoreHoriz, RestorePage } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({

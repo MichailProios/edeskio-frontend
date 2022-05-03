@@ -30,9 +30,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import { useSelector, useDispatch } from "react-redux";
 import {
+  deleteTicketAction,
   getMessagesOneAction,
   getTechniciansAssignAction,
   getUserOrganizationAction,
+  putTicketCloseAction,
   putTicketPriorityAction,
   putTicketsAssignAction,
 } from "../../redux/user/userActions";
@@ -278,11 +280,11 @@ const TicketCard = ({ ticket }) => {
   };
 
   const handleCloseTicket = () => {
-
+    dispatch(putTicketCloseAction(ticket.ID));
   }
 
   const handleDeleteTicket = () => {
-    
+    dispatch(deleteTicketAction(ticket.ID));
   }
 
   const [selected, setSelected] = useState("");

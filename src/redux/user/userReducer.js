@@ -83,6 +83,12 @@ import {
   POST_MESSAGE_REQUEST,
   POST_MESSAGE_SUCCESS,
   POST_MESSAGE_FAILURE,
+  DELETE_TICKET_REQUEST,
+  DELETE_TICKET_SUCCESS,
+  DELETE_TICKET_FAILURE,
+  PUT_TICKET_CLOSE_REQUEST,
+  PUT_TICKET_CLOSE_SUCCESS,
+  PUT_TICKET_CLOSE_FAILURE,
 } from "./userTypes";
 import { store } from "../store";
 
@@ -516,6 +522,29 @@ export const UserReducer = (state = initialState, action) => {
         error: action.payload,
       };
 
+      case DELETE_TICKET_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        successfull: false,
+      };
+
+    case DELETE_TICKET_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        //tickets: action.payload.tickets[0].data,
+        //ticketTags: action.payload.tickets[0].data.tblTicketTags,
+        successfull: true,
+      };
+    case DELETE_TICKET_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        successfull: false,
+        error: action.payload,
+      };
+
     case GET_TICKETS_REQUEST:
       return {
         ...state,
@@ -654,6 +683,28 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
         error: action.payload,
       };
+
+      case PUT_TICKET_CLOSE_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          successfull: false,
+        };
+      case PUT_TICKET_CLOSE_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          //tickets: action.payload.tickets[0].data,
+          //ticketTags: action.payload.tickets[0].data.tblTicketTags,
+          successfull: true,
+        };
+      case PUT_TICKET_CLOSE_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          successfull: false,
+          error: action.payload,
+        };
 
     case PUT_TAGS_REQUEST:
       return {

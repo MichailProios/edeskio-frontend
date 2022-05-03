@@ -196,12 +196,12 @@ const NotesMessages = ({
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12} >
                 <Paper elevation={1}>
                     <Tabs
-                    indicatorColor="primary"
-                    textColor="primary"
-                    variant="fullWidth"
-                    //scrollButtons="on"
-                    value={value}
-                    onChange={handleChange}
+                      indicatorColor="primary"
+                      textColor="primary"
+                      variant="fullWidth"
+                      //scrollButtons="on"
+                      value={value}
+                      onChange={handleChange}
                     >
                     <Tab label="Messages" />
                     <Tab label="Notes" />

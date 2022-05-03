@@ -84,6 +84,12 @@ import {
   POST_MESSAGE_REQUEST,
   POST_MESSAGE_SUCCESS,
   POST_MESSAGE_FAILURE,
+  PUT_TICKET_CLOSE_REQUEST,
+  PUT_TICKET_CLOSE_SUCCESS,
+  PUT_TICKET_CLOSE_FAILURE,
+  DELETE_TICKET_REQUEST,
+  DELETE_TICKET_SUCCESS,
+  DELETE_TICKET_FAILURE,
 } from "./userTypes";
 
 import { store } from "../store";
@@ -748,6 +754,65 @@ const putTicketPrioritySuccess = (data) => {
 const putTicketPriorityFailure = (error) => {
   return {
     type: PUT_TICKET_PRIORITY_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const putTicketCloseAction = (ticketID) => {
+  return async (dispatch) => {
+    dispatch(putTicketCloseRequest());
+    await putTicketCloseWithAxios(ticketID)
+      .then((response) => {
+        dispatch(putTicketCloseSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTicketCloseFailure(error.message));
+      });
+  };
+};
+
+const putTicketCloseWithAxios = async (ticketID) => {
+  var tickets = [];
+
+  await putTicketClose(ticketID).then((response) => {
+    tickets.push(response);
+  });
+
+  return {
+    tickets,
+  };
+};
+
+const putTicketClose = (ticketID) => {
+  return axios.put(
+    endpoints.closeTicket,
+    { TicketID: ticketID },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTicketCloseRequest = () => {
+  return {
+    type: PUT_TICKET_CLOSE_REQUEST,
+  };
+};
+
+const putTicketCloseSuccess = (data) => {
+  return {
+    type: PUT_TICKET_CLOSE_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTicketCloseFailure = (error) => {
+  return {
+    type: PUT_TICKET_CLOSE_FAILURE,
     payload: error,
   };
 };
@@ -1801,6 +1866,65 @@ const deleteTagFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
+export const deleteTicketAction = (ticketID) => {
+  return async (dispatch) => {
+    dispatch(deleteTicketRequest());
+    await deleteTicketWithAxios(ticketID)
+      .then((response) => {
+        dispatch(deleteTicketSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(deleteTicketFailure(error.message));
+      });
+  };
+};
+
+const deleteTicketWithAxios = async (ticketID) => {
+  var tickets = [];
+
+  await deleteTicket(ticketID).then((response) => {
+    tickets.push(response);
+  });
+
+  return {
+    tickets,
+  };
+};
+
+const deleteTicket = (ticketID) => {
+  return axios.delete(endpoints.deleteTicket, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: {
+      TicketID: ticketID,
+    },
+  });
+};
+
+const deleteTicketRequest = (error) => {
+  return {
+    type: DELETE_TICKET_REQUEST,
+    payload: error,
+  };
+};
+
+const deleteTicketSuccess = (data) => {
+  return {
+    type: DELETE_TICKET_SUCCESS,
+    payload: data,
+  };
+};
+
+const deleteTicketFailure = (error) => {
+  return {
+    type: DELETE_TICKET_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
 export const logoutUserAction = () => {
   return async (dispatch) => {
     dispatch(logoutUser());
@@ -1813,6 +1937,8 @@ const logoutUser = () => {
   };
 };
 /**************************************************************************************************************/
+
+
 
 /**************************************************************************************************************/
 export const putTblUsersApprovedAction = (UserID, status, organizationID) => {
