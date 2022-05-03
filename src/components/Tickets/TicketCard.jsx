@@ -157,9 +157,9 @@ const TicketCard = ({ ticket }) => {
   }, [ticketTags]);
 
   const handleTicketOptionsClick = (e) => {
-
     setOptionsOpen(true);
-    setAnchorEl(e.currentTarget);
+    setAnchorEl(e.target);
+    console.log(e.target.target)
   };
 
   const handleTicketOptionsClose = (e) => {

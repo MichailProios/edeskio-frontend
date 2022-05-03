@@ -33,7 +33,6 @@ import moment from "momnet";
 import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { putTicketsAutoAssignAction } from "../../redux/user/userActions";
 import AssignToTechnician from "../AssignToTechnician/AssignToTechnician";
 
 import Notes from "./Notes";
@@ -171,7 +170,7 @@ const NotesMessages = ({
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Auto-Assign Ticket
+        Ticket Messages and Notes
         <IconButton
           aria-label="close"
           className={styles.closeButton}
