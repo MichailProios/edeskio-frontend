@@ -224,24 +224,31 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
     array.forEach((tag) => {
       const tagFromtbl = tblTags.find((record) => record.Type === tag);
 
-      newChips.push(
-        <Chip
-          label={tag}
-          key={tag}
-          style={{
-            backgroundColor: tagFromtbl.BackgroundColor,
-            color: tagFromtbl.Color,
-          }}
-        />
-      );
+      if (tagFromtbl)
+      {
+        newChips.push(
+          <Chip
+            label={tag}
+            key={tag}
+            style={{
+              backgroundColor: tagFromtbl.BackgroundColor,
+              color: tagFromtbl.Color,
+            }}
+          />
+        );
+      }
     });
 
     setSelectedTagsChips(newChips);
   };
 
   useEffect(() => {
-    handleSetChipsInitial(selectedTags);
-  }, [selectedTags]);
+
+    if (selectedTags.length > 0 && tblTags.length > 0)
+    {      
+      handleSetChipsInitial(selectedTags);
+    }
+  }, [selectedTags, tblTags]);
 
   const handleTagChipDelete = (deletedTag, e) => {
     setSelectedTagsChips((chips) =>

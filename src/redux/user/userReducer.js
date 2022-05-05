@@ -508,10 +508,20 @@ export const UserReducer = (state = initialState, action) => {
           CategoryID: tag.CategoryID,
         };
       });
+
+      expertiseTags = action.payload.tags[0].data.tblExpertiseTags.map(
+        ({ ID, TechnicianID, ...tag }) => tag
+      );
+
+      expertiseTags = Object.values(expertiseTags).map(
+        (element) => element.TagType
+      );
+
       return {
         ...state,
         loading: false,
         tags: tags,
+        expertiseTags: expertiseTags,
         successfull: true,
       };
     case DELETE_TAG_FAILURE:
@@ -533,8 +543,8 @@ export const UserReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        //tickets: action.payload.tickets[0].data,
-        //ticketTags: action.payload.tickets[0].data.tblTicketTags,
+        tickets: action.payload.tickets[0].data,
+        ticketTags: action.payload.tickets[0].data.tblTicketTags,
         successfull: true,
       };
     case DELETE_TICKET_FAILURE:
@@ -694,8 +704,8 @@ export const UserReducer = (state = initialState, action) => {
         return {
           ...state,
           loading: false,
-          //tickets: action.payload.tickets[0].data,
-          //ticketTags: action.payload.tickets[0].data.tblTicketTags,
+          tickets: action.payload.tickets[0].data,
+          ticketTags: action.payload.tickets[0].data.tblTicketTags,
           successfull: true,
         };
       case PUT_TICKET_CLOSE_FAILURE:
@@ -812,7 +822,7 @@ export const UserReducer = (state = initialState, action) => {
       access = access.map((record) => {
         let user = users.find(
           (userRecord) =>
-            userRecord.ID === record.UserID && userRecord.Approved !== null
+            userRecord.ID === record.UserID && userRecord.Approved !== null && userRecord.Approved !== false 
         );
 
         if (typeof user === "undefined") {

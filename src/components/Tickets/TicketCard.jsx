@@ -122,16 +122,20 @@ const TicketCard = ({ ticket }) => {
     tags.forEach((tag) => {
       const tagFromtbl = tblTags.find((record) => record.Type === tag);
 
-      newChips.push(
-        <Chip
-          label={tag}
-          key={tag}
-          style={{
-            backgroundColor: tagFromtbl.BackgroundColor,
-            color: tagFromtbl.Color,
-          }}
-        />
-      );
+      if (tagFromtbl)
+      {
+        newChips.push(
+          <Chip
+            label={tag}
+            key={tag}
+            style={{
+              backgroundColor: tagFromtbl.BackgroundColor,
+              color: tagFromtbl.Color,
+            }}
+          />
+        );
+      }
+
     });
 
     setSelectedTagsChips(newChips);
@@ -161,7 +165,6 @@ const TicketCard = ({ ticket }) => {
   const handleTicketOptionsClick = (e) => {
     setOptionsOpen(true);
     setAnchorEl(e.target);
-    console.log(e.target.target)
   };
 
   const handleTicketOptionsClose = (e) => {
@@ -280,10 +283,16 @@ const TicketCard = ({ ticket }) => {
   };
 
   const handleCloseTicket = () => {
+    setOptionsOpen(false);
+    setAnchorEl(null);
+
     dispatch(putTicketCloseAction(ticket.ID));
   }
 
   const handleDeleteTicket = () => {
+    setOptionsOpen(false);
+    setAnchorEl(null);
+
     dispatch(deleteTicketAction(ticket.ID));
   }
 
@@ -301,11 +310,17 @@ const TicketCard = ({ ticket }) => {
 
   const [fullName, setFullName] = useState("");
 
+  const users = useSelector((state) => state.User.users.tblUsers);
+
   useEffect(() => {
-    if (typeof ticket.tblUser !== "undefined") {
-      setFullName(ticket.tblUser.FirstName + " " + ticket.tblUser.LastName);
+
+    if (users.length > 0)
+    {
+      const submittedUser = users.find((record) => record.ID === ticket.UserID);
+      setFullName(submittedUser.FirstName + " " + submittedUser.LastName)
     }
-  }, [ticket]);
+
+  }, [ticket, users]);
 
   return (
     <>
@@ -471,6 +486,20 @@ const TicketCard = ({ ticket }) => {
                     {ticket.LastModified !== null
                       ? moment(ticket.SubmissionDate).format("LL")
                       : "Never"}
+                  </Typography>
+                </Grid>
+                <Grid
+                  container
+                  item
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                >
+                  <Typography className={styles.info}>
+                    {"Status: "}
+                    {ticket.Status !== null
+                      ? ticket.Status
+                      : ""}
                   </Typography>
                 </Grid>
               </Grid>

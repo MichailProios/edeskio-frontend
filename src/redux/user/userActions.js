@@ -1806,10 +1806,10 @@ const postMessageFailure = () => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const deleteTagAction = (tagType, orgID) => {
+export const deleteTagAction = (tagType, orgID, techID) => {
   return async (dispatch) => {
     dispatch(deleteTagRequest());
-    await deleteTagWithAxios(tagType, orgID)
+    await deleteTagWithAxios(tagType, orgID, techID)
       .then((response) => {
         dispatch(deleteTagSuccess(response));
       })
@@ -1819,10 +1819,10 @@ export const deleteTagAction = (tagType, orgID) => {
   };
 };
 
-const deleteTagWithAxios = async (tagType, orgID) => {
+const deleteTagWithAxios = async (tagType, orgID, techID) => {
   var tags = [];
 
-  await deleteTag(tagType, orgID).then((response) => {
+  await deleteTag(tagType, orgID, techID).then((response) => {
     tags.push(response);
   });
 
@@ -1831,7 +1831,7 @@ const deleteTagWithAxios = async (tagType, orgID) => {
   };
 };
 
-const deleteTag = (tagType, orgID) => {
+const deleteTag = (tagType, orgID, techID) => {
   return axios.delete(endpoints.deleteTag, {
     headers: {
       "Content-Type": "application/json",
@@ -1839,6 +1839,7 @@ const deleteTag = (tagType, orgID) => {
     data: {
       TagType: tagType,
       OrganizationID: orgID,
+      TechnicianID: techID,
     },
   });
 };

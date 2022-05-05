@@ -367,12 +367,13 @@ const SubmittedTickets = () => {
                   ticket={{
                     Subject: value.Subject,
                     ID: value.ID,
+                    UserID: value.UserID,
                     TechnicianID: value.TechnicianID,
                     Description: value.Description,
                     SubmissionDate: value.SubmissionDate,
                     LastModified: value.LastModified,
                     Priority: value.Priority,
-                    tblUser: value.tblUser,
+                    Status: value.Status,
                   }}
                 />
               </Grid>
