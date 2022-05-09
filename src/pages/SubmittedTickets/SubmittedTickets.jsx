@@ -82,25 +82,41 @@ const SubmittedTickets = () => {
   const userRole = useSelector((state) => state.User.user.tblAccess.RoleName);
   const tickets = useSelector((state) => state.User.tickets.tblTickets);
 
+  console.log(tickets)
+
   // const loading = useSelector((state) => state.User.loading);
 
   const [original, setOriginal] = useState(tickets);
 
   const [loading, setLoading] = useState(true);
-  const [filteredTickets, setFilteredTickets] = useState(tickets);
+  const [filteredTickets, setFilteredTickets] = useState([]);
 
   const query = useQuery();
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const results = tickets.filter(
-      (element) =>
-        element.Subject.toLowerCase().includes(searchTerm) ||
-        element.ID.toString().toLowerCase().includes(searchTerm)
+    let results = [];
 
-      // element.ID.toLowerCase().includes(searchTerm)
-    );
+    if (userRole === "Basic")
+    {
+      results = tickets.filter(
+        (element) =>
+          (element.Subject.toLowerCase().includes(searchTerm) ||
+          element.ID.toString().toLowerCase().includes(searchTerm)) &&
+          element.UserID === userID
+      );
+    }
+    else
+    {
+      results = tickets.filter(
+        (element) =>
+          (element.Subject.toLowerCase().includes(searchTerm) ||
+          element.ID.toString().toLowerCase().includes(searchTerm))
+      );
+    }
+
     setFilteredTickets(results);
+
   }, [searchTerm]);
 
   const organizationID = useSelector(
@@ -112,7 +128,7 @@ const SubmittedTickets = () => {
       setFilteredTickets(
         tickets.filter((row) => {
           if (userRole === "Basic") {
-            return row.tblUser.ID === userID;
+            return row.UserID === userID;
           } else {
             return row;
           }
@@ -260,7 +276,7 @@ const SubmittedTickets = () => {
 
     setFilteredTickets(
       copy.filter(
-        (row) => row.TechnicianID !== null && row.TechnicianID === userID
+        (row) => row.TechnicianID !== null
       )
     );
   };
@@ -273,7 +289,17 @@ const SubmittedTickets = () => {
     setAnchorEl(null);
     setSelectedIndex(null);
 
-    setFilteredTickets(tickets);
+    if (typeof tickets !== "undefined") {
+      setFilteredTickets(
+        tickets.filter((row) => {
+          if (userRole === "Basic") {
+            return row.UserID === userID;
+          } else {
+            return row;
+          }
+        })
+      );
+    }
   };
 
   if (!loading) {
