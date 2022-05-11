@@ -82,8 +82,6 @@ const SubmittedTickets = () => {
   const userRole = useSelector((state) => state.User.user.tblAccess.RoleName);
   const tickets = useSelector((state) => state.User.tickets.tblTickets);
 
-  console.log(tickets)
-
   // const loading = useSelector((state) => state.User.loading);
 
   const [original, setOriginal] = useState(tickets);
@@ -97,26 +95,22 @@ const SubmittedTickets = () => {
   useEffect(() => {
     let results = [];
 
-    if (userRole === "Basic")
-    {
+    if (userRole === "Basic") {
       results = tickets.filter(
         (element) =>
           (element.Subject.toLowerCase().includes(searchTerm) ||
-          element.ID.toString().toLowerCase().includes(searchTerm)) &&
+            element.ID.toString().toLowerCase().includes(searchTerm)) &&
           element.UserID === userID
       );
-    }
-    else
-    {
+    } else {
       results = tickets.filter(
         (element) =>
-          (element.Subject.toLowerCase().includes(searchTerm) ||
-          element.ID.toString().toLowerCase().includes(searchTerm))
+          element.Subject.toLowerCase().includes(searchTerm) ||
+          element.ID.toString().toLowerCase().includes(searchTerm)
       );
     }
 
     setFilteredTickets(results);
-
   }, [searchTerm]);
 
   const organizationID = useSelector(
@@ -274,11 +268,7 @@ const SubmittedTickets = () => {
 
     const copy = [...filteredTickets];
 
-    setFilteredTickets(
-      copy.filter(
-        (row) => row.TechnicianID !== null
-      )
-    );
+    setFilteredTickets(copy.filter((row) => row.TechnicianID !== null));
   };
 
   const techExpertiseTags = useSelector(
@@ -387,7 +377,15 @@ const SubmittedTickets = () => {
 
         <Grid container spacing={2}>
           {filteredTickets.map((value, index) => (
-            <Grow in={true} timeout={delayTime(index + 1)} key={index}>
+            <Grow
+              key={index}
+              in={true}
+              style={{
+                // transformOrigin: "0 0 0",
+                transitionDelay: `${(index + `00`) / 2}ms`,
+              }}
+              timeout={{ appear: 0, enter: 400 }}
+            >
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                 <TicketCard
                   ticket={{

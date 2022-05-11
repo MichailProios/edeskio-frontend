@@ -19,10 +19,12 @@ import Authenticated from "./components/Authenticated/Authenticated.jsx";
 import "./App.css";
 
 import routes from "./utilities/routes/routes.jsx";
+
+import restrictedRoutes from "./utilities/routes/restrictedRoutes.jsx";
 import UnAuthenticated from "./components/UnAuthenticated/UnAuthenticated.jsx";
-import { getUserSessionAction } from "./redux/user/userActions.js";
 
 import Navbar from "./components/Navbar/Navbar.jsx";
+import Unauthorized from "./components/Unauthorized/Unauthorized.jsx";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -103,15 +105,29 @@ const App = () => {
   const styles = useStyles();
 
   const dispatch = useDispatch();
-  //const isAuthenticated = useSelector((state) => state.User.authenticated);
-
-  // useEffect(() => {
-  //   dispatch(getUserSessionAction());
-  // }, [dispatch]);
+  const role = useSelector((state) => state.User.user.tblAccess.RoleName);
 
   const routeComponents = routes.map(({ path, component }, key) => (
     <Route path={path} exact element={component} key={key} />
   ));
+
+  const restrictedRouteComponents = restrictedRoutes.map(
+    ({ path, component }, key) => {
+      if (role === "Admin") {
+        return <Route path={path} exact element={component} key={key} />;
+      }
+      else{
+      return (
+        <Route
+          path={path}
+          exact
+          element={<Unauthorized title="Compliance" />}
+          key={key}
+        />
+      );
+      }
+    }
+  );
 
   return (
     <React.Fragment>
@@ -123,7 +139,10 @@ const App = () => {
           <Router>
             <Navbar>
               <Routes>
-                <Route>{routeComponents}</Route>
+                <Route>
+                  {routeComponents}
+                  {restrictedRouteComponents}
+                </Route>
               </Routes>
             </Navbar>
           </Router>

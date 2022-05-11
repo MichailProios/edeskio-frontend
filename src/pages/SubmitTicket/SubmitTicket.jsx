@@ -238,23 +238,25 @@ const SubmitTicket = () => {
           moment().format("YYYY-MM-DD HH:mm:ss"),
           selectedTags
         )
-      ).then((response) => {
-        if (response.reponse[0].status === 200) {
-          enqueueSnackbar("Your ticket was submitted", {
-            variant: "success",
-          });
-        } else {
-          enqueueSnackbar("Error", {
-            variant: "error",
-          });
-        }
-      });
+      )
+        .then((response) => {
+          if (response.reponse[0].status === 200) {
+            enqueueSnackbar("Your ticket was submitted", {
+              variant: "success",
+            });
+          } else {
+            enqueueSnackbar("Error", {
+              variant: "error",
+            });
+          }
+        })
+        .finally(() => {
+          setTicketSubject("");
+          setTicketDescription("");
+          setSelectedTags([]);
+          setSelectedTagsChips([]);
+        });
     }
-
-    setTicketSubject("");
-    setTicketDescription("");
-    setSelectedTags([]);
-    setSelectedTagsChips([]);
   };
 
   return (
@@ -305,7 +307,7 @@ const SubmitTicket = () => {
                   variant="outlined"
                   value={ticketDescription}
                   onChange={handleTicketDescription}
-                  required={false}
+                  required={true}
                   className={styles.inputField}
                   multiline
                   minRows={4}
