@@ -78,6 +78,18 @@ import {
   NOTIFICATIONS_SUCCESS,
   NOTIFICATION_CLEAR,
   GET_TAG_CATEGORIES_FAILURE,
+  GET_MESSAGES_ONE_REQUEST,
+  GET_MESSAGES_ONE_SUCCESS,
+  GET_MESSAGES_ONE_FAILURE,
+  POST_MESSAGE_REQUEST,
+  POST_MESSAGE_SUCCESS,
+  POST_MESSAGE_FAILURE,
+  PUT_TICKET_CLOSE_REQUEST,
+  PUT_TICKET_CLOSE_SUCCESS,
+  PUT_TICKET_CLOSE_FAILURE,
+  DELETE_TICKET_REQUEST,
+  DELETE_TICKET_SUCCESS,
+  DELETE_TICKET_FAILURE,
 } from "./userTypes";
 
 import { store } from "../store";
@@ -748,6 +760,65 @@ const putTicketPriorityFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
+export const putTicketCloseAction = (ticketID) => {
+  return async (dispatch) => {
+    dispatch(putTicketCloseRequest());
+    await putTicketCloseWithAxios(ticketID)
+      .then((response) => {
+        dispatch(putTicketCloseSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(putTicketCloseFailure(error.message));
+      });
+  };
+};
+
+const putTicketCloseWithAxios = async (ticketID) => {
+  var tickets = [];
+
+  await putTicketClose(ticketID).then((response) => {
+    tickets.push(response);
+  });
+
+  return {
+    tickets,
+  };
+};
+
+const putTicketClose = (ticketID) => {
+  return axios.put(
+    endpoints.closeTicket,
+    { TicketID: ticketID },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const putTicketCloseRequest = () => {
+  return {
+    type: PUT_TICKET_CLOSE_REQUEST,
+  };
+};
+
+const putTicketCloseSuccess = (data) => {
+  return {
+    type: PUT_TICKET_CLOSE_SUCCESS,
+    payload: data,
+  };
+};
+
+const putTicketCloseFailure = (error) => {
+  return {
+    type: PUT_TICKET_CLOSE_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
 export const putTagsAction = (tagType, category, orgID) => {
   return async (dispatch) => {
     dispatch(putTagsRequest());
@@ -1104,6 +1175,64 @@ const getTagCategoriesSuccess = (data) => {
 const getTagCategoriesFailure = (error) => {
   return {
     type: GET_TAG_CATEGORIES_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const getMessagesOneAction = (ticketID) => {
+  return async (dispatch) => {
+    dispatch(getMessagesOneRequest());
+    await getMessagesOneWithAxios(ticketID)
+      .then((response) => {
+        dispatch(getMessagesOneSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getMessagesOneFailure(error.message));
+      });
+  };
+};
+
+const getMessagesOneWithAxios = async (ticketID) => {
+  var messages = [];
+
+  await getMessagesOne(ticketID).then((response) => {
+    messages.push(response);
+  });
+
+  return {
+    messages,
+  };
+};
+
+const getMessagesOne = (ticketID) => {
+  return axios.get(endpoints.getMessagesOne, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: {
+      TicketID: ticketID,
+    },
+  });
+};
+
+const getMessagesOneRequest = () => {
+  return {
+    type: GET_MESSAGES_ONE_REQUEST,
+  };
+};
+
+const getMessagesOneSuccess = (data) => {
+  return {
+    type: GET_MESSAGES_ONE_SUCCESS,
+    payload: data,
+  };
+};
+
+const getMessagesOneFailure = (error) => {
+  return {
+    type: GET_MESSAGES_ONE_FAILURE,
     payload: error,
   };
 };
@@ -1612,11 +1741,75 @@ const postTagCategoryFailure = () => {
 };
 /**************************************************************************************************************/
 
+export const postMessageAction = (userID, ticketID, msgContent, date, isPrivate) => {
+  return async (dispatch) => {
+    dispatch(postMessageRequest());
+    await postMessageWithAxios(userID, ticketID, msgContent, date, isPrivate)
+      .then((response) => {
+        dispatch(postMessageSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(postMessageFailure(error.message));
+      });
+  };
+};
+
+const postMessageWithAxios = async (userID, ticketID, msgContent, date, isPrivate) => {
+  var message = [];
+
+  await postMessage(userID, ticketID, msgContent, date, isPrivate).then((response) => {
+    message.push(response);
+  });
+
+  return {
+    message,
+  };
+};
+
+const postMessage = (userID, ticketID, msgContent, date, isPrivate) => {
+  return axios.post(
+    endpoints.postMessage,
+    {
+      SentBy: userID,
+      TicketID: ticketID,
+      Content: msgContent,
+      DateSent: date,
+      Private: isPrivate,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+const postMessageRequest = (error) => {
+  return {
+    type: POST_MESSAGE_REQUEST,
+    payload: error,
+  };
+};
+
+const postMessageSuccess = (data) => {
+  return {
+    type: POST_MESSAGE_SUCCESS,
+    payload: data,
+  };
+};
+
+const postMessageFailure = () => {
+  return {
+    type: POST_MESSAGE_FAILURE,
+  };
+};
 /**************************************************************************************************************/
-export const deleteTagAction = (tagType, orgID) => {
+
+/**************************************************************************************************************/
+export const deleteTagAction = (tagType, orgID, techID) => {
   return async (dispatch) => {
     dispatch(deleteTagRequest());
-    await deleteTagWithAxios(tagType, orgID)
+    await deleteTagWithAxios(tagType, orgID, techID)
       .then((response) => {
         dispatch(deleteTagSuccess(response));
       })
@@ -1626,10 +1819,10 @@ export const deleteTagAction = (tagType, orgID) => {
   };
 };
 
-const deleteTagWithAxios = async (tagType, orgID) => {
+const deleteTagWithAxios = async (tagType, orgID, techID) => {
   var tags = [];
 
-  await deleteTag(tagType, orgID).then((response) => {
+  await deleteTag(tagType, orgID, techID).then((response) => {
     tags.push(response);
   });
 
@@ -1638,7 +1831,7 @@ const deleteTagWithAxios = async (tagType, orgID) => {
   };
 };
 
-const deleteTag = (tagType, orgID) => {
+const deleteTag = (tagType, orgID, techID) => {
   return axios.delete(endpoints.deleteTag, {
     headers: {
       "Content-Type": "application/json",
@@ -1646,6 +1839,7 @@ const deleteTag = (tagType, orgID) => {
     data: {
       TagType: tagType,
       OrganizationID: orgID,
+      TechnicianID: techID,
     },
   });
 };
@@ -1673,6 +1867,65 @@ const deleteTagFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
+export const deleteTicketAction = (ticketID) => {
+  return async (dispatch) => {
+    dispatch(deleteTicketRequest());
+    await deleteTicketWithAxios(ticketID)
+      .then((response) => {
+        dispatch(deleteTicketSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(deleteTicketFailure(error.message));
+      });
+  };
+};
+
+const deleteTicketWithAxios = async (ticketID) => {
+  var tickets = [];
+
+  await deleteTicket(ticketID).then((response) => {
+    tickets.push(response);
+  });
+
+  return {
+    tickets,
+  };
+};
+
+const deleteTicket = (ticketID) => {
+  return axios.delete(endpoints.deleteTicket, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: {
+      TicketID: ticketID,
+    },
+  });
+};
+
+const deleteTicketRequest = (error) => {
+  return {
+    type: DELETE_TICKET_REQUEST,
+    payload: error,
+  };
+};
+
+const deleteTicketSuccess = (data) => {
+  return {
+    type: DELETE_TICKET_SUCCESS,
+    payload: data,
+  };
+};
+
+const deleteTicketFailure = (error) => {
+  return {
+    type: DELETE_TICKET_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
 export const logoutUserAction = () => {
   return async (dispatch) => {
     dispatch(logoutUser());
@@ -1685,6 +1938,8 @@ const logoutUser = () => {
   };
 };
 /**************************************************************************************************************/
+
+
 
 /**************************************************************************************************************/
 export const putTblUsersApprovedAction = (UserID, status, organizationID) => {

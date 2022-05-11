@@ -25,11 +25,16 @@ import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
+import CancelIcon from '@material-ui/icons/Cancel';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import { useSelector, useDispatch } from "react-redux";
 import {
+  deleteTicketAction,
+  getMessagesOneAction,
   getTechniciansAssignAction,
   getUserOrganizationAction,
+  putTicketCloseAction,
   putTicketPriorityAction,
   putTicketsAssignAction,
 } from "../../redux/user/userActions";
@@ -46,6 +51,7 @@ import AssignmentReturnIcon from "@material-ui/icons/AssignmentReturn";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import AssignToTechnician from "../AssignToTechnician/AssignToTechnician";
 import AutoAssignToTechnician from "../AutoAssignToTechnician/AutoAssignToTechnician";
+import NotesMessages from "../NotesMessages/NotesMessages";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -116,16 +122,20 @@ const TicketCard = ({ ticket }) => {
     tags.forEach((tag) => {
       const tagFromtbl = tblTags.find((record) => record.Type === tag);
 
-      newChips.push(
-        <Chip
-          label={tag}
-          key={tag}
-          style={{
-            backgroundColor: tagFromtbl.BackgroundColor,
-            color: tagFromtbl.Color,
-          }}
-        />
-      );
+      if (tagFromtbl)
+      {
+        newChips.push(
+          <Chip
+            label={tag}
+            key={tag}
+            style={{
+              backgroundColor: tagFromtbl.BackgroundColor,
+              color: tagFromtbl.Color,
+            }}
+          />
+        );
+      }
+
     });
 
     setSelectedTagsChips(newChips);
@@ -154,7 +164,7 @@ const TicketCard = ({ ticket }) => {
 
   const handleTicketOptionsClick = (e) => {
     setOptionsOpen(true);
-    setAnchorEl(e.currentTarget);
+    setAnchorEl(e.target);
   };
 
   const handleTicketOptionsClose = (e) => {
@@ -164,11 +174,6 @@ const TicketCard = ({ ticket }) => {
 
   const userID = useSelector((state) => state.User.user.tblUser.ID);
   const userRole = useSelector((state) => state.User.user.tblAccess.RoleName);
-
-  // const userFirstName = useSelector(
-  //   (state) => state.User.user.tblUser.FirstName
-  // );
-  // const userLastName = useSelector((state) => state.User.user.tblUser.LastName);
 
   const techs = useSelector((state) => state.User.techs);
 
@@ -204,6 +209,7 @@ const TicketCard = ({ ticket }) => {
 
   const [openAssign, setOpenAssign] = useState(false);
   const [openAutoAssign, setOpenAutoAssign] = useState(false);
+  const [openNotesMessages, setOpenNotesMessages] = useState(false);
   const user = useSelector((state) => state.User.user.tblUser.ID);
 
   const handleAssignOpen = () => {
@@ -228,6 +234,18 @@ const TicketCard = ({ ticket }) => {
 
   const handleAutoAssignClose = () => {
     setOpenAutoAssign(false);
+  };
+
+  const handleNotesMessagesOpen = () => {
+    dispatch(getMessagesOneAction(ticket.ID));
+
+    setOpenNotesMessages(true);
+    setOptionsOpen(false);
+    setAnchorEl(null);
+  };
+
+  const handleNotesMessagesClose = () => {
+    setOpenNotesMessages(false);
   };
 
   const handleRaisePriority = () => {
@@ -264,6 +282,20 @@ const TicketCard = ({ ticket }) => {
     dispatch(putTicketPriorityAction(ticket.ID, priority));
   };
 
+  const handleCloseTicket = () => {
+    setOptionsOpen(false);
+    setAnchorEl(null);
+
+    dispatch(putTicketCloseAction(ticket.ID));
+  }
+
+  const handleDeleteTicket = () => {
+    setOptionsOpen(false);
+    setAnchorEl(null);
+
+    dispatch(deleteTicketAction(ticket.ID));
+  }
+
   const [selected, setSelected] = useState("");
 
   const getTechnicianName = () => {
@@ -278,20 +310,26 @@ const TicketCard = ({ ticket }) => {
 
   const [fullName, setFullName] = useState("");
 
+  const users = useSelector((state) => state.User.users.tblUsers);
+
   useEffect(() => {
-    if (typeof ticket.tblUser !== "undefined") {
-      setFullName(ticket.tblUser.FirstName + " " + ticket.tblUser.LastName);
+
+    if (users.length > 0)
+    {
+      const submittedUser = users.find((record) => record.ID === ticket.UserID);
+      setFullName(submittedUser.FirstName + " " + submittedUser.LastName)
     }
-  }, [ticket]);
+
+  }, [ticket, users]);
 
   return (
     <>
-      <Card elevation={10} className={styles.card}>
+      <Card elevation={10} className={styles.card} >
         <CardHeader
           title={ticket.Subject}
           subheader={`Ticket ID: ${ticket.ID}`}
           action={
-            userRole !== "Bc" && (
+            userRole !== "Basic" && (
               <IconButton onClick={handleTicketOptionsClick}>
                 <MoreVert />
               </IconButton>
@@ -308,7 +346,7 @@ const TicketCard = ({ ticket }) => {
               md={10}
               lg={10}
               xl={10}
-              // style={{ borderRight: "1.5px solid #e0e0e0" }}
+              onClick={handleNotesMessagesOpen}
             >
               <Grid
                 container
@@ -450,6 +488,20 @@ const TicketCard = ({ ticket }) => {
                       : "Never"}
                   </Typography>
                 </Grid>
+                <Grid
+                  container
+                  item
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                >
+                  <Typography className={styles.info}>
+                    {"Status: "}
+                    {ticket.Status !== null
+                      ? ticket.Status
+                      : ""}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -560,6 +612,38 @@ const TicketCard = ({ ticket }) => {
                 />
               </MenuItem>
             )}
+
+          {(((userRole === "Tech" && ticket.TechnicianID === userID) ||
+            (userRole === "Admin" && ticket.TechnicianID !== null)) &&
+            (ticket.Status === "Open")) && (
+            <MenuItem onClick={handleCloseTicket}>
+              <ListItemIcon>
+                <CancelIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" color="textPrimary">
+                    Close Ticket
+                  </Typography>
+                }
+              />
+            </MenuItem>
+          )}
+
+          {(userRole === "Admin") && (
+            <MenuItem onClick={handleDeleteTicket}>
+              <ListItemIcon>
+                <DeleteIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" color="textPrimary">
+                    Delete Ticket
+                  </Typography>
+                }
+              />
+            </MenuItem>
+          )}
         </Menu>
       )}
 
@@ -578,6 +662,14 @@ const TicketCard = ({ ticket }) => {
         handleClose={handleAutoAssignClose}
         ticketID={ticket.ID}
       />
+
+      <NotesMessages
+        open={openNotesMessages}
+        handleOpen={handleNotesMessagesOpen}
+        handleClose={handleNotesMessagesClose}
+        ticketID={ticket.ID}
+      />
+
     </>
   );
 };

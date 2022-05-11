@@ -56,6 +56,8 @@ const Tags = () => {
 
   const loading = useSelector((state) => state.User.loading);
 
+  const userID = useSelector((state) => state.User.user.tblUser.ID);
+
   const organizationID = useSelector(
     (state) => state.User.user.tblOrganization.ID
   );
@@ -192,7 +194,7 @@ const Tags = () => {
                     if (tagType !== "")
                     {
                         dispatch(
-                            deleteTagAction(tagType, organizationID)
+                            deleteTagAction(tagType, organizationID, userID)
                         );
                     }
 

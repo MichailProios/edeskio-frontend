@@ -46,6 +46,12 @@ if (
       "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
     getTagCategories:
       "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
+    getMessagesOne:
+      "https://edeskio.com:8443/api/edeskio/get_tblMessages_OneTicket",
+    postMessage:
+      "https://edeskio.com:8443/api/edeskio/post_tblMessages_NewMessage",
+    closeTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_CloseTicket",
+    deleteTicket: "https://edeskio.com:8443/api/edeskio/delete_tblTickets",
   };
 } else if (
   window.location.hostname === "localhost" ||
@@ -94,6 +100,12 @@ if (
       "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
     getTagCategories:
       "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
+    getMessagesOne:
+      "https://edeskio.com:8443/api/edeskio/get_tblMessages_OneTicket",
+    postMessage:
+      "https://edeskio.com:8443/api/edeskio/post_tblMessages_NewMessage",
+    closeTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_CloseTicket",
+    deleteTicket: "https://edeskio.com:8443/api/edeskio/delete_tblTickets",
   };
 } else {
   endpoints = {
@@ -138,5 +150,11 @@ if (
       "https://edeskio.com:8443/api/edeskio/post_tblTagCategories_NewCategory",
     getTagCategories:
       "https://edeskio.com:8443/api/edeskio/get_tblTagCategories",
+    getMessagesOne:
+      "https://edeskio.com:8443/api/edeskio/get_tblMessages_OneTicket",
+    postMessage:
+      "https://edeskio.com:8443/api/edeskio/post_tblMessages_NewMessage",
+    closeTicket: "https://edeskio.com:8443/api/edeskio/put_tblTickets_CloseTicket",
+    deleteTicket: "https://edeskio.com:8443/api/edeskio/delete_tblTickets",
   };
 }

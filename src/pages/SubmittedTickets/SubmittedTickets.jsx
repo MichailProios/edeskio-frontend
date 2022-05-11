@@ -87,19 +87,29 @@ const SubmittedTickets = () => {
   const [original, setOriginal] = useState(tickets);
 
   const [loading, setLoading] = useState(true);
-  const [filteredTickets, setFilteredTickets] = useState(tickets);
+  const [filteredTickets, setFilteredTickets] = useState([]);
 
   const query = useQuery();
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const results = tickets.filter(
-      (element) =>
-        element.Subject.toLowerCase().includes(searchTerm) ||
-        element.ID.toString().toLowerCase().includes(searchTerm)
+    let results = [];
 
-      // element.ID.toLowerCase().includes(searchTerm)
-    );
+    if (userRole === "Basic") {
+      results = tickets.filter(
+        (element) =>
+          (element.Subject.toLowerCase().includes(searchTerm) ||
+            element.ID.toString().toLowerCase().includes(searchTerm)) &&
+          element.UserID === userID
+      );
+    } else {
+      results = tickets.filter(
+        (element) =>
+          element.Subject.toLowerCase().includes(searchTerm) ||
+          element.ID.toString().toLowerCase().includes(searchTerm)
+      );
+    }
+
     setFilteredTickets(results);
   }, [searchTerm]);
 
@@ -112,7 +122,7 @@ const SubmittedTickets = () => {
       setFilteredTickets(
         tickets.filter((row) => {
           if (userRole === "Basic") {
-            return row.tblUser.ID === userID;
+            return row.UserID === userID;
           } else {
             return row;
           }
@@ -258,11 +268,7 @@ const SubmittedTickets = () => {
 
     const copy = [...filteredTickets];
 
-    setFilteredTickets(
-      copy.filter(
-        (row) => row.TechnicianID !== null && row.TechnicianID === userID
-      )
-    );
+    setFilteredTickets(copy.filter((row) => row.TechnicianID !== null));
   };
 
   const techExpertiseTags = useSelector(
@@ -273,7 +279,17 @@ const SubmittedTickets = () => {
     setAnchorEl(null);
     setSelectedIndex(null);
 
-    setFilteredTickets(tickets);
+    if (typeof tickets !== "undefined") {
+      setFilteredTickets(
+        tickets.filter((row) => {
+          if (userRole === "Basic") {
+            return row.UserID === userID;
+          } else {
+            return row;
+          }
+        })
+      );
+    }
   };
 
   if (!loading) {
@@ -361,18 +377,27 @@ const SubmittedTickets = () => {
 
         <Grid container spacing={2}>
           {filteredTickets.map((value, index) => (
-            <Grow in={true} timeout={delayTime(index + 1)} key={index}>
+            <Grow
+              key={index}
+              in={true}
+              style={{
+                // transformOrigin: "0 0 0",
+                transitionDelay: `${(index + `00`) / 2}ms`,
+              }}
+              timeout={{ appear: 0, enter: 400 }}
+            >
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                 <TicketCard
                   ticket={{
                     Subject: value.Subject,
                     ID: value.ID,
+                    UserID: value.UserID,
                     TechnicianID: value.TechnicianID,
                     Description: value.Description,
                     SubmissionDate: value.SubmissionDate,
                     LastModified: value.LastModified,
                     Priority: value.Priority,
-                    tblUser: value.tblUser,
+                    Status: value.Status,
                   }}
                 />
               </Grid>
