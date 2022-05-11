@@ -151,6 +151,8 @@ const NotesMessages = ({
 
   const [value, setValue] = useState(0);
 
+  const userRole = useSelector((state) => state.User.user.tblAccess.RoleName);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -170,7 +172,7 @@ const NotesMessages = ({
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Ticket Messages and Notes
+        {userRole === "Admin" || userRole === "Tech" ? "Ticket Messages and Notes" : "Ticket Messages"}
         <IconButton
           aria-label="close"
           className={styles.closeButton}
@@ -204,19 +206,21 @@ const NotesMessages = ({
                       onChange={handleChange}
                     >
                     <Tab label="Messages" />
-                    <Tab label="Notes" />
+                    {userRole === "Admin" || userRole === "Tech" ? <Tab label="Notes" /> : ""}
                     </Tabs>
                 </Paper>
 
                 <TabPanel value={value} index={0}>
                     {/* <Messages grow={value === 0 ? true : false} /> */}
                 </TabPanel>
+                {userRole === "Admin" || userRole === "Tech" ? (
                 <TabPanel value={value} index={1}>
                     <Notes 
                         grow={value === 0 ? true : false} 
                         ticketID={ticketID}
                     />
-                </TabPanel>
+                </TabPanel> 
+                ) : "" }
 
                 {/* <ScrollToTopFAB /> */}
               </Grid>

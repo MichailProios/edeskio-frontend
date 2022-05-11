@@ -613,8 +613,9 @@ const TicketCard = ({ ticket }) => {
               </MenuItem>
             )}
 
-          {((userRole === "Tech" && ticket.TechnicianID === userID) ||
-            (userRole === "Admin" && ticket.TechnicianID !== null)) && (
+          {(((userRole === "Tech" && ticket.TechnicianID === userID) ||
+            (userRole === "Admin" && ticket.TechnicianID !== null)) &&
+            (ticket.Status === "Open")) && (
             <MenuItem onClick={handleCloseTicket}>
               <ListItemIcon>
                 <CancelIcon color="primary" />
