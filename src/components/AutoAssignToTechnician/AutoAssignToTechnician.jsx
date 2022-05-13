@@ -147,7 +147,9 @@ const AutoAssignToTechnician = ({
   const handleAutoAssign = () => {
     let caseNumber = 0;
 
-    if (includeAdminsOption === "true" && factorOpenTicketsOption === "false") {
+    if (includeAdminsOption === "true" && 
+      factorOpenTicketsOption === "false"
+    ) {
       caseNumber = 1;
     } else if (
       includeAdminsOption === "true" &&
@@ -167,7 +169,7 @@ const AutoAssignToTechnician = ({
     } else {
       return;
     }
-
+    
     dispatch(
       putTicketsAutoAssignAction(
         ticketID,

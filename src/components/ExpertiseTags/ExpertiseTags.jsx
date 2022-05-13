@@ -258,7 +258,14 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
   };
 
   const handleSave = () => {
-    dispatch(postExpertiseTagsAction(user, selectedTags));
+
+    const tagIDs = selectedTags.map((tag) => {
+      const tagFromTbl = tblTags.find((record) => record.Type === tag);
+
+      return tagFromTbl.ID;
+    })
+
+    dispatch(postExpertiseTagsAction(user, tagIDs));
 
     handleClose();
   };

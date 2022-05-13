@@ -155,6 +155,7 @@ export const UserReducer = (state = initialState, action) => {
   let access;
   let users;
   let expertiseTags;
+  let expertiseTagsAll;
   let ticketTags;
   let tags;
 
@@ -302,6 +303,7 @@ export const UserReducer = (state = initialState, action) => {
 
       tags = tags.map((tag) => {
         return {
+          ID: tag.ID,
           Type: tag.Type,
           Category: tag["tblTagCategory.Category"],
           BackgroundColor: tag["tblTagCategory.BackgroundColor"],
@@ -394,9 +396,15 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case POST_EXPERTISE_TAGS_SUCCESS:
-      expertiseTags = action.payload.expertiseTags[0].data.tblExpertiseTags.map(
-        ({ ID, TechnicianID, ...tag }) => tag
-      );
+      expertiseTags = action.payload.expertiseTags[0].data.tblExpertiseTags;
+      expertiseTags = expertiseTags.map((tag) => {
+        return {
+          ID: tag.ID,
+          TechnicianID: tag.TechnicianID,
+          TagID: tag.TagID,
+          TagType: tag.tblTag.Type,
+        };
+      });
 
       expertiseTags = Object.values(expertiseTags).map(
         (element) => element.TagType
@@ -426,6 +434,7 @@ export const UserReducer = (state = initialState, action) => {
       tags = action.payload.tags[0].data.tblTags;
       tags = tags.map((tag) => {
         return {
+          ID: tag.ID,
           Type: tag.Type,
           Category: tag["tblTagCategory.Category"],
           BackgroundColor: tag["tblTagCategory.BackgroundColor"],
@@ -501,6 +510,7 @@ export const UserReducer = (state = initialState, action) => {
       tags = action.payload.tags[0].data.tblTags;
       tags = tags.map((tag) => {
         return {
+          ID: tag.ID,
           Type: tag.Type,
           Category: tag["tblTagCategory.Category"],
           BackgroundColor: tag["tblTagCategory.BackgroundColor"],
@@ -509,9 +519,15 @@ export const UserReducer = (state = initialState, action) => {
         };
       });
 
-      expertiseTags = action.payload.tags[0].data.tblExpertiseTags.map(
-        ({ ID, TechnicianID, ...tag }) => tag
-      );
+      expertiseTags = action.payload.tags[0].data.tblExpertiseTags;
+      expertiseTags = expertiseTags.map((tag) => {
+        return {
+          ID: tag.ID,
+          TechnicianID: tag.TechnicianID,
+          TagID: tag.TagID,
+          TagType: tag.tblTag.Type,
+        };
+      });
 
       expertiseTags = Object.values(expertiseTags).map(
         (element) => element.TagType
@@ -540,11 +556,21 @@ export const UserReducer = (state = initialState, action) => {
       };
 
     case DELETE_TICKET_SUCCESS:
+      ticketTags = action.payload.tickets[0].data.tblTicketTags;
+      ticketTags = ticketTags.map((tag) => {
+        return {
+          ID: tag.ID,
+          TicketID: tag.TicketID,
+          TagID: tag.TagID,
+          TagType: tag["tblTag.Type"],
+        };
+      });
+
       return {
         ...state,
         loading: false,
         tickets: action.payload.tickets[0].data,
-        ticketTags: action.payload.tickets[0].data.tblTicketTags,
+        ticketTags: ticketTags,
         successfull: true,
       };
     case DELETE_TICKET_FAILURE:
@@ -562,11 +588,21 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case GET_TICKETS_SUCCESS:
+      ticketTags = action.payload.tickets[0].data.tblTicketTags;
+      ticketTags = ticketTags.map((tag) => {
+        return {
+          ID: tag.ID,
+          TicketID: tag.TicketID,
+          TagID: tag.TagID,
+          TagType: tag["tblTag.Type"],
+        };
+      });
+
       return {
         ...state,
         loading: false,
         tickets: action.payload.tickets[0].data,
-        ticketTags: action.payload.tickets[0].data.tblTicketTags,
+        ticketTags: ticketTags,
         successfull: true,
       };
     case GET_TICKETS_FAILURE:
@@ -583,9 +619,15 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case GET_EXPERTISE_TAGS_SUCCESS:
-      expertiseTags = action.payload.expertiseTags[0].data.tblExpertiseTags.map(
-        ({ ID, TechnicianID, ...tag }) => tag
-      );
+      expertiseTags = action.payload.expertiseTags[0].data.tblExpertiseTags;
+      expertiseTags = expertiseTags.map((tag) => {
+        return {
+          ID: tag.ID,
+          TechnicianID: tag.TechnicianID,
+          TagID: tag.TagID,
+          TagType: tag.tblTag.Type,
+        };
+      });
 
       expertiseTags = Object.values(expertiseTags).map(
         (element) => element.TagType
@@ -611,12 +653,22 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case GET_TECHNICIANS_ASSIGN_SUCCESS:
+
+      expertiseTagsAll = action.payload.technicianAssign[0].data.tblExpertiseTags_AllTechs;
+      expertiseTagsAll = expertiseTagsAll.map((tag) => {
+        return {
+          ID: tag.ID,
+          TechnicianID: tag.TechnicianID,
+          TagID: tag.TagID,
+          TagType: tag["tblTag.Type"],
+        };
+      });
+
       return {
         ...state,
         loading: false,
         techs: action.payload.technicianAssign[0].data.tblUsers_AllTechs,
-        expertiseTags_All:
-          action.payload.technicianAssign[0].data.tblExpertiseTags_AllTechs,
+        expertiseTags_All: expertiseTagsAll,
         techsTicketCount:
           action.payload.technicianAssign[0].data.TechTicketCount[0],
         successfull: true,
@@ -635,11 +687,21 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case PUT_TICKETS_ASSIGN_SUCCESS:
+      ticketTags = action.payload.tickets[0].data.tblTicketTags;
+      ticketTags = ticketTags.map((tag) => {
+        return {
+          ID: tag.ID,
+          TicketID: tag.TicketID,
+          TagID: tag.TagID,
+          TagType: tag["tblTag.Type"],
+        };
+      });
+
       return {
         ...state,
         loading: false,
         tickets: action.payload.tickets[0].data,
-        ticketTags: action.payload.tickets[0].data.tblTicketTags,
+        ticketTags: ticketTags,
         successfull: true,
       };
     case PUT_TICKETS_ASSIGN_FAILURE:
@@ -657,11 +719,21 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case PUT_TICKETS_AUTO_ASSIGN_SUCCESS:
+      ticketTags = action.payload.tickets[0].data.tblTicketTags;
+      ticketTags = ticketTags.map((tag) => {
+        return {
+          ID: tag.ID,
+          TicketID: tag.TicketID,
+          TagID: tag.TagID,
+          TagType: tag["tblTag.Type"],
+        };
+      });
+
       return {
         ...state,
         loading: false,
         tickets: action.payload.tickets[0].data,
-        ticketTags: action.payload.tickets[0].data.tblTicketTags,
+        ticketTags: ticketTags,
         successfull: true,
       };
     case PUT_TICKETS_AUTO_ASSIGN_FAILURE:
@@ -679,11 +751,21 @@ export const UserReducer = (state = initialState, action) => {
         successfull: false,
       };
     case PUT_TICKET_PRIORITY_SUCCESS:
+      ticketTags = action.payload.tickets[0].data.tblTicketTags;
+      ticketTags = ticketTags.map((tag) => {
+        return {
+          ID: tag.ID,
+          TicketID: tag.TicketID,
+          TagID: tag.TagID,
+          TagType: tag["tblTag.Type"],
+        };
+      });
+
       return {
         ...state,
         loading: false,
         tickets: action.payload.tickets[0].data,
-        ticketTags: action.payload.tickets[0].data.tblTicketTags,
+        ticketTags: ticketTags,
         successfull: true,
       };
     case PUT_TICKET_PRIORITY_FAILURE:
@@ -701,11 +783,21 @@ export const UserReducer = (state = initialState, action) => {
           successfull: false,
         };
       case PUT_TICKET_CLOSE_SUCCESS:
+        ticketTags = action.payload.tickets[0].data.tblTicketTags;
+        ticketTags = ticketTags.map((tag) => {
+          return {
+            ID: tag.ID,
+            TicketID: tag.TicketID,
+            TagID: tag.TagID,
+            TagType: tag["tblTag.Type"],
+          };
+        });
+
         return {
           ...state,
           loading: false,
           tickets: action.payload.tickets[0].data,
-          ticketTags: action.payload.tickets[0].data.tblTicketTags,
+          ticketTags: ticketTags,
           successfull: true,
         };
       case PUT_TICKET_CLOSE_FAILURE:
@@ -726,6 +818,7 @@ export const UserReducer = (state = initialState, action) => {
       tags = action.payload.tags[0].data.tblTags;
       tags = tags.map((tag) => {
         return {
+          ID: tag.ID,
           Type: tag.Type,
           Category: tag["tblTagCategory.Category"],
           BackgroundColor: tag["tblTagCategory.BackgroundColor"],
@@ -759,6 +852,7 @@ export const UserReducer = (state = initialState, action) => {
 
       tags = tags.map((tag) => {
         return {
+          ID: tag.ID,
           Type: tag.Type,
           Category: tag["tblTagCategory.Category"],
           BackgroundColor: tag["tblTagCategory.BackgroundColor"],
@@ -915,6 +1009,9 @@ export const UserReducer = (state = initialState, action) => {
         },
         expertiseTagsLoading: false,
         expertiseTags: [],
+        techs: [],
+        expertiseTags_All: [],
+        techsTicketCount: [],
         roles: [],
         users: [],
         access: [],
