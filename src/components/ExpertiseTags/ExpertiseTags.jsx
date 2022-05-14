@@ -234,6 +234,7 @@ const ExpertiseTags = ({ open, handleOpen, handleClose }) => {
               backgroundColor: tagFromtbl.BackgroundColor,
               color: tagFromtbl.Color,
             }}
+            onDelete={handleTagChipDelete.bind(this, tag)}
           />
         );
       }

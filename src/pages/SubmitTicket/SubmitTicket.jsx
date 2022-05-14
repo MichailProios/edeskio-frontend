@@ -208,6 +208,7 @@ const SubmitTicket = () => {
             backgroundColor: tagFromtbl.BackgroundColor,
             color: tagFromtbl.Color,
           }}
+          onDelete={handleTagChipDelete.bind(this, tag)}
         />
       );
     });
@@ -222,6 +223,13 @@ const SubmitTicket = () => {
 
   const handleTicketDescription = (e) => {
     setTicketDescription(e.target.value);
+  };
+
+  const handleTagChipDelete = (deletedTag, e) => {
+    setSelectedTagsChips((chips) =>
+      chips.filter((chip) => chip.key !== deletedTag)
+    );
+    setSelectedTags((tags) => tags.filter((tag) => tag !== deletedTag));
   };
 
   const userID = useSelector((state) => state.User.user.tblUser.ID);
