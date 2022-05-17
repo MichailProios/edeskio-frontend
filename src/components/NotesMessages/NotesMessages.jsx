@@ -20,6 +20,7 @@ import {
   FormLabel,
   RadioGroup,
   FormControlLabel,
+  InputAdornment,
   Radio,
   Tabs,
   Tab,
@@ -28,7 +29,8 @@ import {
 
 import CloseIcon from "@material-ui/icons/Close";
 
-import moment from "momnet";
+import moment from "moment";
+import { AiOutlineSend } from "react-icons/ai";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -36,6 +38,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import AssignToTechnician from "../AssignToTechnician/AssignToTechnician";
 
 import Notes from "./Notes";
+
+import Messages from "./Messages";
 
 const useStyles = makeStyles((theme) => ({
   disabledField: {
@@ -138,12 +142,7 @@ const TabPanel = ({ children, value, index }) => {
   return <div hidden={value !== index}>{children}</div>;
 };
 
-const NotesMessages = ({
-  open,
-  handleOpen,
-  handleClose,
-  ticketID,
-}) => {
+const NotesMessages = ({ open, handleOpen, handleClose, ticketID }) => {
   // create dispatch
   const dispatch = useDispatch();
 
@@ -157,11 +156,12 @@ const NotesMessages = ({
     setValue(newValue);
   };
 
+  const [currentMessage, setCurrentMessage] = useState("");
+
   const handleCancel = () => {
     setValue(0);
     handleClose();
   };
-
 
   //if (!loading) {
   return (
@@ -172,7 +172,9 @@ const NotesMessages = ({
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        {userRole === "Admin" || userRole === "Tech" ? "Ticket Messages and Notes" : "Ticket Messages"}
+        {userRole === "Admin" || userRole === "Tech"
+          ? "Ticket Messages and Notes"
+          : "Ticket Messages"}
         <IconButton
           aria-label="close"
           className={styles.closeButton}
@@ -195,34 +197,41 @@ const NotesMessages = ({
               xl={12}
               spacing={2}
             >
-              <Grid item xs={12} sm={12} md={12} lg={12} xl={12} >
+              <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                 <Paper elevation={1}>
-                    <Tabs
-                      indicatorColor="primary"
-                      textColor="primary"
-                      variant="fullWidth"
-                      //scrollButtons="on"
-                      value={value}
-                      onChange={handleChange}
-                    >
+                  <Tabs
+                    indicatorColor="primary"
+                    textColor="primary"
+                    variant="fullWidth"
+                    //scrollButtons="on"
+                    value={value}
+                    onChange={handleChange}
+                  >
                     <Tab label="Messages" />
-                    {userRole === "Admin" || userRole === "Tech" ? <Tab label="Notes" /> : ""}
-                    </Tabs>
+                    {userRole === "Admin" || userRole === "Tech" ? (
+                      <Tab label="Notes" />
+                    ) : (
+                      ""
+                    )}
+                  </Tabs>
                 </Paper>
 
                 <TabPanel value={value} index={0}>
-                    {/* <Messages grow={value === 0 ? true : false} /> */}
+                  <Messages
+                    grow={value === 0 ? true : false}
+                    ticketID={ticketID}
+                  />
                 </TabPanel>
                 {userRole === "Admin" || userRole === "Tech" ? (
-                <TabPanel value={value} index={1}>
-                    <Notes 
-                        grow={value === 0 ? true : false} 
-                        ticketID={ticketID}
+                  <TabPanel value={value} index={1}>
+                    <Notes
+                      grow={value === 0 ? true : false}
+                      ticketID={ticketID}
                     />
-                </TabPanel> 
-                ) : "" }
-
-                {/* <ScrollToTopFAB /> */}
+                  </TabPanel>
+                ) : (
+                  ""
+                )}
               </Grid>
             </Grid>
           </Grow>

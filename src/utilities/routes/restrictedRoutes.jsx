@@ -1,6 +1,7 @@
 import Permissions from "../../pages/Permissions/Permissions";
 import JoinOrganizationRequests from "../../pages/JoinOrganizationRequests/JoinOrganizationRequests.jsx";
 import Tags from "../../pages/Tags/Tags.jsx";
+import Statistics from "../../pages/Statistics/Statistics.jsx";
 
 export const restrictedRoutes = [];
 
@@ -17,6 +18,10 @@ restrictedRoutes.push(
   {
     path: "/Dashboard/ManageTags",
     component: <Tags />,
+  },
+  {
+    path: "/Statistics",
+    component: <Statistics />,
   }
 );
 

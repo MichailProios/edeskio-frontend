@@ -90,6 +90,9 @@ import {
   DELETE_TICKET_REQUEST,
   DELETE_TICKET_SUCCESS,
   DELETE_TICKET_FAILURE,
+  GET_STATISTICS_REQUEST,
+  GET_STATISTICS_SUCCESS,
+  GET_STATISTICS_FAILURE,
 } from "./userTypes";
 
 import { store } from "../store";
@@ -1741,7 +1744,13 @@ const postTagCategoryFailure = () => {
 };
 /**************************************************************************************************************/
 
-export const postMessageAction = (userID, ticketID, msgContent, date, isPrivate) => {
+export const postMessageAction = (
+  userID,
+  ticketID,
+  msgContent,
+  date,
+  isPrivate
+) => {
   return async (dispatch) => {
     dispatch(postMessageRequest());
     await postMessageWithAxios(userID, ticketID, msgContent, date, isPrivate)
@@ -1754,12 +1763,20 @@ export const postMessageAction = (userID, ticketID, msgContent, date, isPrivate)
   };
 };
 
-const postMessageWithAxios = async (userID, ticketID, msgContent, date, isPrivate) => {
+const postMessageWithAxios = async (
+  userID,
+  ticketID,
+  msgContent,
+  date,
+  isPrivate
+) => {
   var message = [];
 
-  await postMessage(userID, ticketID, msgContent, date, isPrivate).then((response) => {
-    message.push(response);
-  });
+  await postMessage(userID, ticketID, msgContent, date, isPrivate).then(
+    (response) => {
+      message.push(response);
+    }
+  );
 
   return {
     message,
@@ -1939,8 +1956,6 @@ const logoutUser = () => {
 };
 /**************************************************************************************************************/
 
-
-
 /**************************************************************************************************************/
 export const putTblUsersApprovedAction = (UserID, status, organizationID) => {
   return async (dispatch) => {
@@ -1995,6 +2010,66 @@ const putTblUsersApprovedSuccess = (data) => {
 const putTblUsersApprovedFailure = (error) => {
   return {
     type: PUT_USER_APPROVED_FAILURE,
+    payload: error,
+  };
+};
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const getStatisticsAction = (organizationID) => {
+  return async (dispatch) => {
+    dispatch(getStatisticsRequest());
+    await getStatisticsWithAxios(organizationID)
+      .then((response) => {
+        dispatch(getStatisticsSuccess(response));
+      })
+      .catch((error) => {
+        dispatch(getStatisticsFailure(error.message));
+      });
+  };
+};
+
+const getStatisticsWithAxios = async (organizationID) => {
+  var statistics = [];
+
+  await getStatistics(organizationID).then((response) => {
+    statistics.push(response);
+  });
+
+  return {
+    statistics,
+  };
+};
+
+const getStatistics = (organizationID) => {
+  return axios.get(endpoints.getStatistics, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: {
+      organizationID: organizationID,
+    },
+  });
+};
+
+const getStatisticsRequest = () => {
+  return {
+    type: GET_STATISTICS_REQUEST,
+  };
+};
+
+const getStatisticsSuccess = (data) => {
+  // alert("Authorized");
+  return {
+    type: GET_STATISTICS_SUCCESS,
+    payload: data,
+  };
+};
+
+const getStatisticsFailure = (error) => {
+  // alert("Not Authorized");
+  return {
+    type: GET_STATISTICS_FAILURE,
     payload: error,
   };
 };

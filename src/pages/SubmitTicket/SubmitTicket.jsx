@@ -33,7 +33,7 @@ import {
   Grow,
 } from "@material-ui/core";
 
-import moment from "momnet";
+import moment from "moment";
 
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
@@ -208,6 +208,7 @@ const SubmitTicket = () => {
             backgroundColor: tagFromtbl.BackgroundColor,
             color: tagFromtbl.Color,
           }}
+          onDelete={handleTagChipDelete.bind(this, tag)}
         />
       );
     });
@@ -224,19 +225,32 @@ const SubmitTicket = () => {
     setTicketDescription(e.target.value);
   };
 
+  const handleTagChipDelete = (deletedTag, e) => {
+    setSelectedTagsChips((chips) =>
+      chips.filter((chip) => chip.key !== deletedTag)
+    );
+    setSelectedTags((tags) => tags.filter((tag) => tag !== deletedTag));
+  };
+
   const userID = useSelector((state) => state.User.user.tblUser.ID);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = () => {
     if (ticketSubject.length > 0 && ticketDescription.length > 0) {
+      const tagIDs = selectedTags.map((tag) => {
+        const tagFromTbl = tblTags.find((record) => record.Type === tag);
+
+        return tagFromTbl.ID;
+      });
+
       dispatch(
         postTicketNewTicketAction(
           userID,
           ticketSubject,
           ticketDescription,
-          moment().format("YYYY-MM-DD HH:mm:ss"),
-          selectedTags
+          moment().local().format("YYYY-MM-DD HH:mm:ss"),
+          tagIDs
         )
       )
         .then((response) => {

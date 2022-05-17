@@ -156,52 +156,10 @@ const Notes = ({ ticketID }) => {
   const allMessages = useSelector((state) => state.User.messages);
   const userID = useSelector((state) => state.User.user.tblUser.ID);
 
-  useEffect(() => {
-    setNotes(
-      allMessages.filter((message) => {
-        if (message.Private === true) return message;
-      })
-    );
-  }, [allMessages]);
+  const [currentMessage, setCurrentMessage] = useState("");
 
-  const handleNoteChange = (e) => {
-    setCurrentNote(e.target.value);
-  };
-
-  const handleNotesOptionsEnter = (e, noteID) => {
-    setNoteOptionsOpen(true);
-    setAnchorEl(e.target);
-    setNoteIDHovered(noteID);
-  };
-
-  const handleNotesOptionsLeave = () => {
-    setNoteOptionsOpen(false);
-    setAnchorEl(null);
-    setNoteIDHovered("");
-  };
-
-  const handleEditNoteClick = () => {
-    console.log("Edit ", noteIDHovered);
-  };
-
-  const handleDeleteNote = () => {
-    console.log("Delete ", noteIDHovered);
-  };
-
-  const handleNewNote = (e) => {
-    if (currentNote !== "" && currentNote.length <= 255) {
-      dispatch(
-        postMessageAction(
-          userID,
-          ticketID,
-          currentNote,
-          moment().format("YYYY-MM-DD HH:mm:ss"),
-          true
-        )
-      );
-
-      setCurrentNote("");
-    }
+  const handleMessageChange = (e) => {
+    setCurrentMessage(e.target.value);
   };
 
   //if (!loading) {
@@ -224,7 +182,9 @@ const Notes = ({ ticketID }) => {
             >
               {notes.length === 0 ? (
                 <Grid container item key="noNotes" justifyContent="center">
-                  <Typography>No Notes</Typography>
+                  <Typography style={{ userSelect: "none" }}>
+                    No Messages
+                  </Typography>
                 </Grid>
               ) : (
                 notes.map((note) => {
@@ -235,13 +195,7 @@ const Notes = ({ ticketID }) => {
                       key={note.ID}
                       justifyContent="flex-end"
                     >
-                      <Typography
-                        className={styles.noteField}
-                        onMouseEnter={(e) =>
-                          handleNotesOptionsEnter(e, note.ID)
-                        }
-                        //onMouseLeave={() => handleNotesOptionsLeave()}
-                      >
+                      <Typography className={styles.noteField}>
                         {note.Content}
                       </Typography>
                     </Grid>
@@ -253,8 +207,8 @@ const Notes = ({ ticketID }) => {
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
             <TextField
               variant="outlined"
-              value={currentNote}
-              onChange={handleNoteChange}
+              value={currentMessage}
+              onChange={handleMessageChange}
               className={styles.textField}
               multiline
               maxRows={5}
@@ -264,7 +218,7 @@ const Notes = ({ ticketID }) => {
                     <IconButton
                       edge="end"
                       color="primary"
-                      onClick={handleNewNote}
+                      //   onClick={handleNewNote}
                     >
                       <AiOutlineSend />
                     </IconButton>
@@ -274,56 +228,13 @@ const Notes = ({ ticketID }) => {
               onKeyDown={(e) => {
                 if (e.keyCode === 13 && !e.shiftKey) {
                   e.preventDefault();
-                  handleNewNote();
+                  //   handleNewNote();
                 }
               }}
             />
           </Grid>
         </Grid>
       </Grid>
-
-      {noteOptionsOpen && (
-        <Menu
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(noteOptionsOpen)}
-          onClose={handleNotesOptionsLeave}
-          getContentAnchorEl={null}
-          anchorOrigin={{
-            vertical: "center",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "center",
-            horizontal: "left",
-          }}
-        >
-          <MenuItem onClick={handleEditNoteClick}>
-            <ListItemIcon>
-              <Edit color="primary" />
-            </ListItemIcon>
-            <ListItemText
-              primary={
-                <Typography variant="body1" color="textPrimary">
-                  Edit
-                </Typography>
-              }
-            />
-          </MenuItem>
-          <MenuItem onClick={handleDeleteNote}>
-            <ListItemIcon>
-              <DeleteForever color="primary" />
-            </ListItemIcon>
-            <ListItemText
-              primary={
-                <Typography variant="body1" color="textPrimary">
-                  Delete
-                </Typography>
-              }
-            />
-          </MenuItem>
-        </Menu>
-      )}
     </React.Fragment>
   );
 };

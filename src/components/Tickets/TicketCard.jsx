@@ -19,14 +19,15 @@ import {
   Chip,
   ListItemIcon,
   ListItemText,
+  CardActionArea,
 } from "@material-ui/core";
 
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
-import CancelIcon from '@material-ui/icons/Cancel';
-import DeleteIcon from '@material-ui/icons/Delete';
+import CancelIcon from "@material-ui/icons/Cancel";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -45,7 +46,7 @@ import {
   TrendingUp,
 } from "@material-ui/icons";
 
-import moment from "momnet";
+import moment from "moment";
 
 import AssignmentReturnIcon from "@material-ui/icons/AssignmentReturn";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
@@ -61,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
 
   cardContent: {
     width: "100%",
-    height: "20em",
+    height: "30em",
   },
 
   subject: {
@@ -75,14 +76,14 @@ const useStyles = makeStyles((theme) => ({
   },
   bottomDivider: {
     position: "absolute",
-    bottom: theme.spacing(9),
+    bottom: theme.spacing(7),
     left: theme.spacing(0),
     width: "100%",
   },
 
   chipField: {
     position: "absolute",
-    bottom: theme.spacing(2),
+    bottom: theme.spacing(1),
     left: theme.spacing(2),
     width: "100%",
     "& > *": {
@@ -95,6 +96,14 @@ const useStyles = makeStyles((theme) => ({
   },
   assignedChip: {
     backgroundColor: theme.palette.primary.main,
+    color: "#ffffff",
+  },
+  openStatusChip: {
+    backgroundColor: theme.palette.primary.main,
+    color: "#ffffff",
+  },
+  closedStatusChip: {
+    backgroundColor: "#0000ff",
     color: "#ffffff",
   },
 }));
@@ -122,8 +131,7 @@ const TicketCard = ({ ticket }) => {
     tags.forEach((tag) => {
       const tagFromtbl = tblTags.find((record) => record.Type === tag);
 
-      if (tagFromtbl)
-      {
+      if (tagFromtbl) {
         newChips.push(
           <Chip
             label={tag}
@@ -135,7 +143,6 @@ const TicketCard = ({ ticket }) => {
           />
         );
       }
-
     });
 
     setSelectedTagsChips(newChips);
@@ -287,14 +294,14 @@ const TicketCard = ({ ticket }) => {
     setAnchorEl(null);
 
     dispatch(putTicketCloseAction(ticket.ID));
-  }
+  };
 
   const handleDeleteTicket = () => {
     setOptionsOpen(false);
     setAnchorEl(null);
 
     dispatch(deleteTicketAction(ticket.ID));
-  }
+  };
 
   const [selected, setSelected] = useState("");
 
@@ -313,18 +320,17 @@ const TicketCard = ({ ticket }) => {
   const users = useSelector((state) => state.User.users.tblUsers);
 
   useEffect(() => {
-
-    if (users.length > 0)
-    {
+    if (users.length > 0) {
       const submittedUser = users.find((record) => record.ID === ticket.UserID);
-      setFullName(submittedUser.FirstName + " " + submittedUser.LastName)
+      setFullName(submittedUser.FirstName + " " + submittedUser.LastName);
     }
-
   }, [ticket, users]);
+
+  moment.locale();
 
   return (
     <>
-      <Card elevation={10} className={styles.card} >
+      <Card elevation={10} className={styles.card}>
         <CardHeader
           title={ticket.Subject}
           subheader={`Ticket ID: ${ticket.ID}`}
@@ -337,175 +343,197 @@ const TicketCard = ({ ticket }) => {
           }
         />
         <Divider />
-        <CardContent className={styles.cardContent}>
-          <Grid container style={{ height: "100%" }}>
-            <Grid
-              item
-              xs={10}
-              sm={10}
-              md={10}
-              lg={10}
-              xl={10}
-              onClick={handleNotesMessagesOpen}
-            >
+        <CardActionArea onClick={handleNotesMessagesOpen}>
+          <CardContent className={styles.cardContent}>
+            <Grid container style={{ height: "100%" }}>
+              <Grid item xs={10} sm={10} md={10} lg={10} xl={10}>
+                <Grid
+                  container
+                  item
+                  xs={9}
+                  sm={9}
+                  md={9}
+                  lg={9}
+                  xl={9}
+                  justifyContent="flex-start"
+                >
+                  <Typography className={styles.description}>
+                    {ticket.Description !== null
+                      ? ticket.Description
+                      : "No Description"}
+                  </Typography>
+                </Grid>
+
+                <Divider className={styles.bottomDivider} />
+                <div className={styles.chipField}>
+                  {selectedTagsChips.length === 0 ? (
+                    <Chip label="No Tags" key="none" />
+                  ) : (
+                    selectedTagsChips
+                  )}
+                </div>
+              </Grid>
+
               <Grid
                 container
                 item
-                xs={9}
-                sm={9}
-                md={9}
-                lg={9}
-                xl={9}
-                justifyContent="flex-start"
-              >
-                <Typography className={styles.description}>
-                  {ticket.Description !== null
-                    ? ticket.Description
-                    : "No Description"}
-                </Typography>
-              </Grid>
-
-              <Divider className={styles.bottomDivider} />
-              <div className={styles.chipField}>
-                {selectedTagsChips.length === 0 ? (
-                  <Chip label="No Tags" key="none" />
-                ) : (
-                  selectedTagsChips
-                )}
-              </div>
-            </Grid>
-
-            <Grid
-              container
-              item
-              xs={2}
-              sm={2}
-              md={2}
-              lg={2}
-              xl={2}
-              alignContent="flex-start"
-            >
-              <Grid
-                container
-                spacing={1}
-                justifyContent="flex-end"
-                alignContent="center"
+                xs={2}
+                sm={2}
+                md={2}
+                lg={2}
+                xl={2}
+                alignContent="flex-start"
               >
                 <Grid
                   container
-                  item
-                  direction="row"
-                  justifyContent="flex-start"
-                  alignItems="center"
+                  spacing={1}
+                  justifyContent="flex-end"
+                  alignContent="center"
                 >
-                  <Typography
-                    className={styles.info}
-                    style={{ paddingRight: "5px" }}
+                  <Grid
+                    container
+                    item
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
                   >
-                    {"Submitted By:"}
-                  </Typography>
-                  <Chip label={fullName} className={styles.assignedChip} />
-                </Grid>
-                <Grid
-                  container
-                  item
-                  direction="row"
-                  justifyContent="flex-start"
-                  alignItems="center"
-                >
-                  <Typography
-                    className={styles.info}
-                    style={{ paddingRight: "5px" }}
+                    <Typography
+                      className={styles.info}
+                      style={{ paddingRight: "5px" }}
+                    >
+                      {"Submitted By:"}
+                    </Typography>
+                    <Chip label={fullName} className={styles.assignedChip} />
+                  </Grid>
+                  <Grid
+                    container
+                    item
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
                   >
-                    {"Assigned To:"}
-                  </Typography>
-                  <Chip
-                    label={
-                      ticket.TechnicianID !== null
-                        ? getTechnicianName()
-                        : "Unassigned"
-                    }
-                    className={
-                      ticket.TechnicianID !== null ? styles.assignedChip : ""
-                    }
-                  />
-                </Grid>
-                <Grid
-                  container
-                  item
-                  direction="row"
-                  justifyContent="flex-start"
-                  alignItems="center"
-                >
-                  <Typography
-                    className={styles.info}
-                    style={{ paddingRight: "5px" }}
+                    <Typography
+                      className={styles.info}
+                      style={{ paddingRight: "5px" }}
+                    >
+                      {"Assigned To:"}
+                    </Typography>
+                    <Chip
+                      label={
+                        ticket.TechnicianID !== null
+                          ? getTechnicianName()
+                          : "Unassigned"
+                      }
+                      className={
+                        ticket.TechnicianID !== null ? styles.assignedChip : ""
+                      }
+                    />
+                  </Grid>
+                  <Grid
+                    container
+                    item
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
                   >
-                    {"Priority:"}
-                  </Typography>
-                  <Chip
-                    // className={styles.infoChip}
-                    label={ticket.Priority !== null ? ticket.Priority : "None"}
-                    style={
-                      ticket.Priority !== null
-                        ? ticket.Priority === "High"
-                          ? { backgroundColor: "#ff0000", color: "#ffffff" }
-                          : ticket.Priority === "Medium" ||
-                            ticket.Priority === "Normal"
-                          ? { backgroundColor: "#ffd700", color: "#000000" }
-                          : ticket.Priority === "Low"
-                          ? { backgroundColor: "#0000ff", color: "#ffffff" }
+                    <Typography
+                      className={styles.info}
+                      style={{ paddingRight: "5px" }}
+                    >
+                      {"Priority:"}
+                    </Typography>
+                    <Chip
+                      // className={styles.infoChip}
+                      label={
+                        ticket.Priority !== null ? ticket.Priority : "None"
+                      }
+                      style={
+                        ticket.Priority !== null
+                          ? ticket.Priority === "High"
+                            ? { backgroundColor: "#ff0000", color: "#ffffff" }
+                            : ticket.Priority === "Medium" ||
+                              ticket.Priority === "Normal"
+                            ? { backgroundColor: "#ffd700", color: "#000000" }
+                            : ticket.Priority === "Low"
+                            ? { backgroundColor: "#0000ff", color: "#ffffff" }
+                            : {}
                           : {}
-                        : {}
-                    }
-                  />
-                </Grid>
-                <Grid
-                  container
-                  item
-                  direction="row"
-                  justifyContent="flex-start"
-                  alignItems="center"
-                >
-                  <Typography className={styles.info}>
-                    {"Submitted: "}
-                    {ticket.SubmittedDate !== null
-                      ? moment(ticket.SubmissionDate).format("LL")
-                      : "Never"}
-                  </Typography>
-                </Grid>
-                <Grid
-                  container
-                  item
-                  direction="row"
-                  justifyContent="flex-start"
-                  alignItems="center"
-                >
-                  <Typography className={styles.info}>
-                    {"Last Modified: "}
-                    {ticket.LastModified !== null
-                      ? moment(ticket.SubmissionDate).format("LL")
-                      : "Never"}
-                  </Typography>
-                </Grid>
-                <Grid
-                  container
-                  item
-                  direction="row"
-                  justifyContent="flex-start"
-                  alignItems="center"
-                >
-                  <Typography className={styles.info}>
-                    {"Status: "}
-                    {ticket.Status !== null
-                      ? ticket.Status
-                      : ""}
-                  </Typography>
+                      }
+                    />
+                  </Grid>
+                  <Grid
+                    container
+                    item
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                  >
+                    <Typography
+                      className={styles.info}
+                      style={{ paddingRight: "5px" }}
+                    >
+                      {"Submitted:"}
+                    </Typography>
+                    <Chip
+                      label={
+                        ticket.SubmittedDate !== null
+                          ? moment(ticket.SubmissionDate).utc().format("LLL")
+                          : "Never"
+                      }
+                    />
+                  </Grid>
+                  <Grid
+                    container
+                    item
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                  >
+                    <Typography
+                      className={styles.info}
+                      style={{ paddingRight: "5px" }}
+                    >
+                      {"Last Modified:"}
+                    </Typography>
+                    <Chip
+                      label={
+                        ticket.LastModified !== null
+                          ? moment(ticket.LastModified).utc().format("LLL")
+                          : "Never"
+                      }
+                    />
+                  </Grid>
+                  <Grid
+                    container
+                    item
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                  >
+                    <Typography
+                      className={styles.info}
+                      style={{ paddingRight: "5px" }}
+                    >
+                      {"Status:"}
+                    </Typography>
+                    <Chip
+                      label={ticket.Status !== null ? ticket.Status : ""}
+                      className={
+                        ticket.Status !== null
+                          ? ticket.Status === "Open"
+                            ? styles.openStatusChip
+                            : ticket.Status === "Closed"
+                            ? styles.closedStatusChip
+                            : ""
+                          : ""
+                      }
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </CardContent>
+          </CardContent>
+        </CardActionArea>
       </Card>
 
       {userRole !== "Basic" && (
@@ -613,24 +641,24 @@ const TicketCard = ({ ticket }) => {
               </MenuItem>
             )}
 
-          {(((userRole === "Tech" && ticket.TechnicianID === userID) ||
+          {((userRole === "Tech" && ticket.TechnicianID === userID) ||
             (userRole === "Admin" && ticket.TechnicianID !== null)) &&
-            (ticket.Status === "Open")) && (
-            <MenuItem onClick={handleCloseTicket}>
-              <ListItemIcon>
-                <CancelIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText
-                primary={
-                  <Typography variant="body1" color="textPrimary">
-                    Close Ticket
-                  </Typography>
-                }
-              />
-            </MenuItem>
-          )}
+            ticket.Status === "Open" && (
+              <MenuItem onClick={handleCloseTicket}>
+                <ListItemIcon>
+                  <CancelIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1" color="textPrimary">
+                      Close Ticket
+                    </Typography>
+                  }
+                />
+              </MenuItem>
+            )}
 
-          {(userRole === "Admin") && (
+          {userRole === "Admin" && (
             <MenuItem onClick={handleDeleteTicket}>
               <ListItemIcon>
                 <DeleteIcon color="primary" />
@@ -669,7 +697,6 @@ const TicketCard = ({ ticket }) => {
         handleClose={handleNotesMessagesClose}
         ticketID={ticket.ID}
       />
-
     </>
   );
 };

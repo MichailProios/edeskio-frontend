@@ -17,6 +17,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import BusinessIcon from "@material-ui/icons/Business";
+import BarChartIcon from "@material-ui/icons/BarChart";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -144,6 +145,12 @@ const useStyles = makeStyles((theme) => ({
   appbarUserText: {
     userSelect: "none",
   },
+
+  drawerLinks: {
+    textDecoration: "none",
+    userDrag: "none",
+    userSelect: "none",
+  },
 }));
 
 const Navbar = ({ children }) => {
@@ -217,7 +224,7 @@ const Navbar = ({ children }) => {
       case pathnames.startsWith("/dashboard"):
         setSelectedIndex(0);
         break;
-      case pathnames.startsWith("/organization"):
+      case pathnames.startsWith("/statistics"):
         setSelectedIndex(1);
         break;
       default:
@@ -393,6 +400,7 @@ const Navbar = ({ children }) => {
             button
             component={Link}
             to="/Dashboard"
+            className={styles.drawerLinks}
             selected={selectedIndex === 0}
           >
             <ListItemIcon>
@@ -400,17 +408,20 @@ const Navbar = ({ children }) => {
             </ListItemIcon>
             <ListItemText primary={"Dashboard"} />
           </ListItem>
-          <ListItem
-            button
-            component={Link}
-            to="/Organization"
-            selected={selectedIndex === 1}
-          >
-            <ListItemIcon>
-              <BusinessIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Organization"} />
-          </ListItem>
+          {user.tblAccess.RoleName === "Admin" && (
+            <ListItem
+              button
+              component={Link}
+              className={styles.drawerLinks}
+              to="/Statistics"
+              selected={selectedIndex === 1}
+            >
+              <ListItemIcon style={{ userSelect: "none", userDrag: "none" }}>
+                <BarChartIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Statistics"} />
+            </ListItem>
+          )}
         </List>
         <Divider />
         {/* <List>

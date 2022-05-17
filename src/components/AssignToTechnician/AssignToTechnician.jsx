@@ -25,7 +25,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 
 import CloseIcon from "@material-ui/icons/Close";
 
-import moment from "momnet";
+import moment from "moment";
 
 import { useSelector, useDispatch } from "react-redux";
 

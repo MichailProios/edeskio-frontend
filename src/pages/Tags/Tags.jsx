@@ -4,21 +4,38 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 //Material-UI
-import { Button, Chip, Grid, Grow, ListItemText, MenuItem, Popover, Select, TextField, Typography } from "@material-ui/core";
+import {
+  Button,
+  Chip,
+  Grid,
+  Grow,
+  ListItemText,
+  MenuItem,
+  Popover,
+  Select,
+  TextField,
+  Typography,
+  Paper,
+} from "@material-ui/core";
 
 // Basic Components
 import PageHeader from "../../components/PageHeader/PageHeader.jsx";
 
 //import AddUserDialog from "./AddUserDialog";
 
-import { SwatchesPicker } from 'react-color'
+import { SwatchesPicker } from "react-color";
 
 // Material Table
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ExportCsv, ExportPdf } from "@material-table/exporters";
 import { tableIcons } from "../../utilities/DataTable/DataTableIcons.jsx";
-import { deleteTagAction, postTagsAction, putTagCategoriesAction, putTagsAction } from "../../redux/user/userActions.js";
+import {
+  deleteTagAction,
+  postTagsAction,
+  putTagCategoriesAction,
+  putTagsAction,
+} from "../../redux/user/userActions.js";
 import AddTagCategory from "../../components/AddTagCategory/AddTagCategory.jsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,23 +43,23 @@ const useStyles = makeStyles((theme) => ({
     padding: "1.5em",
   },
   swatch: {
-    padding: '5px',
-    background: '#fff',
-    borderRadius: '1px',
-    boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
+    padding: "5px",
+    background: "#fff",
+    borderRadius: "1px",
+    boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
   },
   swatch2: {
-    padding: '10px',
+    padding: "10px",
     marginBottom: "5px",
-    background: '#fff',
-    borderRadius: '1px',
-    boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
+    background: "#fff",
+    borderRadius: "1px",
+    boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
     height: "10px",
   },
   buttons: {
     marginLeft: "10px",
-    marginRight: "10px"
-  }
+    marginRight: "10px",
+  },
 }));
 
 const Tags = () => {
@@ -62,18 +79,26 @@ const Tags = () => {
     (state) => state.User.user.tblOrganization.ID
   );
 
-  const [uniqTagCategories, setUniqTagCategories] = useState(tagCategories.map((record) => {return record.Category}));
+  const [uniqTagCategories, setUniqTagCategories] = useState(
+    tagCategories.map((record) => {
+      return record.Category;
+    })
+  );
 
   const [openAddTagCategory, setOpenAddTagCategory] = useState(false);
 
   useEffect(() => {
-    setUniqTagCategories(tagCategories.map((record) => {return record.Category}));
+    setUniqTagCategories(
+      tagCategories.map((record) => {
+        return record.Category;
+      })
+    );
   }, [tagCategories]);
 
-  const categoryReduce = uniqTagCategories.reduce(function(acc, cur, i) {    
+  const categoryReduce = uniqTagCategories.reduce(function (acc, cur, i) {
     acc[cur] = cur;
     return acc;
-    }, {});
+  }, {});
 
   const columns = [
     {
@@ -90,16 +115,26 @@ const Tags = () => {
       title: "Chip Color",
       field: "BackgroundColor",
       render: (text, record) => {
-        return <div className={styles.swatch} style={{ backgroundColor: text.BackgroundColor }}></div>
+        return (
+          <div
+            className={styles.swatch}
+            style={{ backgroundColor: text.BackgroundColor }}
+          ></div>
+        );
       },
-      editComponent: props => (
-            <React.Fragment>
-                <div className={styles.swatch2} style={{ backgroundColor: props.rowData.BackgroundColor }}></div>
-                <SwatchesPicker
-                    value={props.value}
-                    onChange={e => {props.onChange(e.hex)}}
-                />
-            </React.Fragment>
+      editComponent: (props) => (
+        <React.Fragment>
+          <div
+            className={styles.swatch2}
+            style={{ backgroundColor: props.rowData.BackgroundColor }}
+          ></div>
+          <SwatchesPicker
+            value={props.value}
+            onChange={(e) => {
+              props.onChange(e.hex);
+            }}
+          />
+        </React.Fragment>
       ),
       editable: "onUpdate",
     },
@@ -110,27 +145,27 @@ const Tags = () => {
       editable: "onUpdate",
     },
     {
-        title: "Preview",
-        render: (text, record) => {
-           return (
-            <Chip
-                label={text.Type}
-                key={text.Type}
-                style={{ backgroundColor: text.BackgroundColor, color: text.Color }}
-            />
-           )
-        },
-        editable: "never"
+      title: "Preview",
+      render: (text, record) => {
+        return (
+          <Chip
+            label={text.Type}
+            key={text.Type}
+            style={{ backgroundColor: text.BackgroundColor, color: text.Color }}
+          />
+        );
+      },
+      editable: "never",
     },
   ];
 
   const handleTagCategoryOpen = () => {
     setOpenAddTagCategory(true);
-  }
+  };
 
   const handleTagCategoryClose = () => {
     setOpenAddTagCategory(false);
-  }
+  };
 
   return (
     <>
@@ -171,38 +206,39 @@ const Tags = () => {
               editable={{
                 onRowAdd: (newRow) =>
                   new Promise((resolve, reject) => {
-
                     const tagType = newRow.Type;
                     const category = newRow.Category;
 
-                    if (tagType !== "" && category !== undefined)
-                    {                        
-                        const fromCategories = tagCategories.find((record) => record.Category === category);
+                    if (tagType !== "" && category !== undefined) {
+                      const fromCategories = tagCategories.find(
+                        (record) => record.Category === category
+                      );
 
-                        dispatch(
-                            postTagsAction(tagType, fromCategories.CategoryID, organizationID)
-                        );
+                      dispatch(
+                        postTagsAction(
+                          tagType,
+                          fromCategories.CategoryID,
+                          organizationID
+                        )
+                      );
                     }
 
                     resolve();
-                }),
+                  }),
                 onRowDelete: (selectedRow) =>
                   new Promise((resolve, reject) => {
-
                     const tagType = selectedRow.Type;
 
-                    if (tagType !== "")
-                    {
-                        dispatch(
-                            deleteTagAction(tagType, organizationID, userID)
-                        );
+                    if (tagType !== "") {
+                      dispatch(
+                        deleteTagAction(tagType, organizationID, userID)
+                      );
                     }
 
                     resolve();
-                }),
+                  }),
                 onRowUpdate: (updatedRow, oldRow) =>
                   new Promise((resolve, reject) => {
-
                     const tagType = updatedRow.Type;
                     const category = updatedRow.Category;
 
@@ -212,27 +248,32 @@ const Tags = () => {
                     const newColor = updatedRow.Color;
 
                     dispatch(
-                      putTagsAction(tagType, category, organizationID),
-                    )
-                    .then(() => {
-                      if (oldBgColor !== newBgColor || oldColor !== newColor)
-                      {
-                        const fromCategories = tableRows.find((record) => record.Category === category);
+                      putTagsAction(tagType, category, organizationID)
+                    ).then(() => {
+                      if (oldBgColor !== newBgColor || oldColor !== newColor) {
+                        const fromCategories = tableRows.find(
+                          (record) => record.Category === category
+                        );
 
                         dispatch(
-                          putTagCategoriesAction(fromCategories.CategoryID, newBgColor, newColor),
-                        )
+                          putTagCategoriesAction(
+                            fromCategories.CategoryID,
+                            newBgColor,
+                            newColor
+                          )
+                        );
                       }
-                    })
+                    });
 
                     resolve();
-                }),
+                  }),
               }}
               components={{
-                Toolbar: props => (
+                Container: (props) => <Paper {...props} elevation={10} />,
+                Toolbar: (props) => (
                   <div>
                     <MTableToolbar {...props} />
-                    <Grid 
+                    <Grid
                       container
                       item
                       direction="row"
@@ -245,12 +286,34 @@ const Tags = () => {
                       xl={12}
                       spacing={2}
                     >
-                      <Grid container item justifyContent="center" xs={9} sm={9} md={9} lg={9} xl={9}>
-                        <Typography style={{textAlign: "center", margin: "auto 10px"}}>
-                          <strong>Warning:</strong> Changing <em>Chip Color</em> or <em>Text Color</em> of a Tag will change the colors of all Tags from the same Category
+                      <Grid
+                        container
+                        item
+                        justifyContent="center"
+                        xs={9}
+                        sm={9}
+                        md={9}
+                        lg={9}
+                        xl={9}
+                      >
+                        <Typography
+                          style={{ textAlign: "center", margin: "auto 10px" }}
+                        >
+                          <strong>Warning:</strong> Changing <em>Chip Color</em>{" "}
+                          or <em>Text Color</em> of a Tag will change the colors
+                          of all Tags from the same Category
                         </Typography>
                       </Grid>
-                      <Grid container item justifyContent="center" xs={3} sm={3} md={3} lg={3} xl={3}>
+                      <Grid
+                        container
+                        item
+                        justifyContent="center"
+                        xs={3}
+                        sm={3}
+                        md={3}
+                        lg={3}
+                        xl={3}
+                      >
                         <Button
                           onClick={handleTagCategoryOpen}
                           variant="contained"
@@ -262,8 +325,8 @@ const Tags = () => {
                       </Grid>
                     </Grid>
                   </div>
-                )
-            }}
+                ),
+              }}
             />
           </div>
         </Grow>
