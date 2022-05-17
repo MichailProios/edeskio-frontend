@@ -149,6 +149,7 @@ export const initialState = {
     ticketsActiveTech: [],
     ticketsStatus: [],
     ticketsUnresolved: [],
+    underPerformingTechs: [],
   },
 
   //Notifications
@@ -1029,6 +1030,13 @@ export const UserReducer = (state = initialState, action) => {
         usersApproved: [],
         tickets: { tblTickets: [] },
         ticketTags: [],
+
+        statistics: {
+          ticketsActiveTech: [],
+          ticketsStatus: [],
+          ticketsUnresolved: [],
+          underPerformingTechs: [],
+        },
       };
 
     case PUT_USER_APPROVED_REQUEST:

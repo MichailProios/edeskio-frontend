@@ -708,7 +708,7 @@ const SubmittedTickets = () => {
     return (
       <div className={styles.root}>
         <PageHeader title="Tickets" />
-        <Grid container spacing={2}>
+        <Grid container>
           <Grow in={true} timeout={50}>
             <Grid
               container

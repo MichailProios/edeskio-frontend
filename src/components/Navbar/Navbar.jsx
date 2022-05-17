@@ -145,6 +145,12 @@ const useStyles = makeStyles((theme) => ({
   appbarUserText: {
     userSelect: "none",
   },
+
+  drawerLinks: {
+    textDecoration: "none",
+    userDrag: "none",
+    userSelect: "none",
+  },
 }));
 
 const Navbar = ({ children }) => {
@@ -394,6 +400,7 @@ const Navbar = ({ children }) => {
             button
             component={Link}
             to="/Dashboard"
+            className={styles.drawerLinks}
             selected={selectedIndex === 0}
           >
             <ListItemIcon>
@@ -401,17 +408,20 @@ const Navbar = ({ children }) => {
             </ListItemIcon>
             <ListItemText primary={"Dashboard"} />
           </ListItem>
-          <ListItem
-            button
-            component={Link}
-            to="/Statistics"
-            selected={selectedIndex === 1}
-          >
-            <ListItemIcon>
-              <BarChartIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Statistics"} />
-          </ListItem>
+          {user.tblAccess.RoleName === "Admin" && (
+            <ListItem
+              button
+              component={Link}
+              className={styles.drawerLinks}
+              to="/Statistics"
+              selected={selectedIndex === 1}
+            >
+              <ListItemIcon style={{ userSelect: "none", userDrag: "none" }}>
+                <BarChartIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Statistics"} />
+            </ListItem>
+          )}
         </List>
         <Divider />
         {/* <List>

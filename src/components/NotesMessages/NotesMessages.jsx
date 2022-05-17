@@ -20,6 +20,7 @@ import {
   FormLabel,
   RadioGroup,
   FormControlLabel,
+  InputAdornment,
   Radio,
   Tabs,
   Tab,
@@ -29,6 +30,7 @@ import {
 import CloseIcon from "@material-ui/icons/Close";
 
 import moment from "moment";
+import { AiOutlineSend } from "react-icons/ai";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -36,6 +38,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import AssignToTechnician from "../AssignToTechnician/AssignToTechnician";
 
 import Notes from "./Notes";
+
+import Messages from "./Messages";
 
 const useStyles = makeStyles((theme) => ({
   disabledField: {
@@ -152,6 +156,8 @@ const NotesMessages = ({ open, handleOpen, handleClose, ticketID }) => {
     setValue(newValue);
   };
 
+  const [currentMessage, setCurrentMessage] = useState("");
+
   const handleCancel = () => {
     setValue(0);
     handleClose();
@@ -211,7 +217,10 @@ const NotesMessages = ({ open, handleOpen, handleClose, ticketID }) => {
                 </Paper>
 
                 <TabPanel value={value} index={0}>
-                  {/* <Messages grow={value === 0 ? true : false} /> */}
+                  <Messages
+                    grow={value === 0 ? true : false}
+                    ticketID={ticketID}
+                  />
                 </TabPanel>
                 {userRole === "Admin" || userRole === "Tech" ? (
                   <TabPanel value={value} index={1}>
@@ -223,8 +232,6 @@ const NotesMessages = ({ open, handleOpen, handleClose, ticketID }) => {
                 ) : (
                   ""
                 )}
-
-                {/* <ScrollToTopFAB /> */}
               </Grid>
             </Grid>
           </Grow>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 //Material-UI
-import { Grow, MenuItem, Select } from "@material-ui/core";
+import { Grow, MenuItem, Paper } from "@material-ui/core";
 
 // Basic Components
 import PageHeader from "../../components/PageHeader/PageHeader.jsx";
@@ -103,6 +103,9 @@ const JoinOrganizationRequests = () => {
         <Grow in={true} timeout={150}>
           <div>
             <MaterialTable
+              components={{
+                Container: (props) => <Paper {...props} elevation={10} />,
+              }}
               title="Approve Users"
               icons={tableIcons}
               columns={columns}

@@ -97,6 +97,19 @@ function shuffleArray(array) {
   return newArray;
 }
 
+// Note: changes to the plugin code is not reflected to the chart, because the plugin is loaded at chart construction time and editor changes only trigger an chart.update().
+const plugin = {
+  id: "custom_canvas_background_color",
+  beforeDraw: (chart) => {
+    const ctx = chart.canvas.getContext("2d");
+    ctx.save();
+    ctx.globalCompositeOperation = "destination-over";
+    ctx.fillStyle = "lightGreen";
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  },
+};
+
 const Statistics = () => {
   const styles = useStyles();
 
@@ -117,18 +130,23 @@ const Statistics = () => {
   }, [dispatch, userID, organizationID]);
 
   const colorsArray = Object.values(color).map((row) => {
-    return typeof row["800"] !== "undefined" ? row["800"] : "#f3f3f3";
+    return typeof row["800"] !== "undefined" ? row["800"] : "#455a64";
   });
+
+  console.log(statistics.underPerformingTechs[0]);
 
   return (
     <Grow in={true} timeout={50}>
       <div className={styles.root}>
         <PageHeader title={"Statistics"} showBreadcrumbs={false} />
         <Paper elevation={10}>
-          <Grid container spacing={2}>
+          <Grid container>
             <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
               <Card raised={true} className={styles.cardRoot}>
-                <CardHeader title="Ticket Status" />
+                <CardHeader
+                  title="Ticket Status"
+                  subheader="Recent Seven Day Status"
+                />
                 <Divider />
                 <CardContent className={styles.cardContent}>
                   <Bar
@@ -168,7 +186,7 @@ const Statistics = () => {
 
             <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
               <Card raised={true} className={styles.cardRoot}>
-                <CardHeader title="Active Tickets" />
+                <CardHeader title="Open Tickets" subheader="Current Activity" />
                 <Divider />
                 <CardContent className={styles.cardContent}>
                   <Bar
@@ -206,18 +224,68 @@ const Statistics = () => {
 
             <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
               <Card raised={true} className={styles.cardRoot}>
-                <CardHeader title="Unresolved Tickets" />
+                <CardHeader
+                  title="Unresolved Tickets"
+                  subheader="More than 7 Days"
+                />
                 <Divider />
                 <CardContent className={styles.cardContent}>
-                  <Pie
+                  {typeof statistics.ticketsUnresolved[0] != "undefined" &&
+                  statistics.ticketsUnresolved[0].length > 0 ? (
+                    <Pie
+                      data={{
+                        labels: statistics.ticketsUnresolved[0].map(
+                          (row) => "Submitted by " + row.SubmittedBy
+                        ),
+                        datasets: [
+                          {
+                            data: statistics.ticketsUnresolved[0],
+                            label: "Number of Active Open Tickets",
+                            backgroundColor: shuffleArray(colorsArray),
+                          },
+                        ],
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        // indexAxis: "y",
+                        plugins: {
+                          legend: {
+                            display: true,
+                          },
+                        },
+                        parsing: {
+                          key: "UnresolvedTickets",
+                        },
+                      }}
+                    />
+                  ) : (
+                    <Typography
+                      align="center"
+                      style={{ userSelect: "none" }}
+                      color="textSecondary"
+                    >
+                      No Content
+                    </Typography>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+              <Card raised={true} className={styles.cardRoot}>
+                <CardHeader
+                  title="Under-Performing Technicians"
+                  subheader="Resolved Low or Zero Number of Tickets within Fourteen Days"
+                />
+                <Divider />
+                <CardContent className={styles.cardContent}>
+                  <Bar
                     data={{
-                      labels: statistics.ticketsActiveTech[0].map(
-                        (row) => row.FullName
-                      ),
                       datasets: [
                         {
-                          data: statistics.ticketsActiveTech[0],
-                          label: "Number of Active Open Tickets",
+                          data: statistics.underPerformingTechs[0],
+                          label: "Number of Tickets Closed Last 14 Days",
                           backgroundColor: shuffleArray(colorsArray),
                         },
                       ],
@@ -225,14 +293,18 @@ const Statistics = () => {
                     options={{
                       responsive: true,
                       maintainAspectRatio: false,
-                      // indexAxis: "y",
+                      indexAxis: "y",
                       plugins: {
                         legend: {
                           display: false,
                         },
+                        autocolors: {
+                          mode: "data",
+                        },
                       },
                       parsing: {
-                        key: "ActiveTickets",
+                        yAxisKey: "FullName",
+                        xAxisKey: "ClosedTickets",
                       },
                     }}
                   />
