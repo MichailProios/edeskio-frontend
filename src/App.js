@@ -25,6 +25,7 @@ import UnAuthenticated from "./components/UnAuthenticated/UnAuthenticated.jsx";
 
 import Navbar from "./components/Navbar/Navbar.jsx";
 import Unauthorized from "./components/Unauthorized/Unauthorized.jsx";
+import { SnackbarProvider } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -115,16 +116,15 @@ const App = () => {
     ({ path, component }, key) => {
       if (role === "Admin") {
         return <Route path={path} exact element={component} key={key} />;
-      }
-      else{
-      return (
-        <Route
-          path={path}
-          exact
-          element={<Unauthorized title="Compliance" />}
-          key={key}
-        />
-      );
+      } else {
+        return (
+          <Route
+            path={path}
+            exact
+            element={<Unauthorized title="Compliance" />}
+            key={key}
+          />
+        );
       }
     }
   );
@@ -132,21 +132,23 @@ const App = () => {
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
-        <UnAuthenticated>
-          <LandingPage />
-        </UnAuthenticated>
-        <Authenticated>
-          <Router>
-            <Navbar>
-              <Routes>
-                <Route>
-                  {routeComponents}
-                  {restrictedRouteComponents}
-                </Route>
-              </Routes>
-            </Navbar>
-          </Router>
-        </Authenticated>
+        <SnackbarProvider maxSnack={3}>
+          <UnAuthenticated>
+            <LandingPage />
+          </UnAuthenticated>
+          <Authenticated>
+            <Router>
+              <Navbar>
+                <Routes>
+                  <Route>
+                    {routeComponents}
+                    {restrictedRouteComponents}
+                  </Route>
+                </Routes>
+              </Navbar>
+            </Router>
+          </Authenticated>
+        </SnackbarProvider>
       </ThemeProvider>
     </React.Fragment>
   );

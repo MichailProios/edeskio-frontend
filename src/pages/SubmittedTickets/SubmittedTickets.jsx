@@ -34,8 +34,9 @@ import {
   BsChevronBarExpand,
   BsChevronBarDown,
   BsArrowCounterclockwise,
-  BsFillTagsFill,
 } from "react-icons/bs";
+
+import { BiWindowOpen, BiWindowClose } from "react-icons/bi";
 
 import CloseIcon from "@material-ui/icons/Close";
 
@@ -88,6 +89,15 @@ const SubmittedTickets = () => {
 
   const [loading, setLoading] = useState(true);
   const [filteredTickets, setFilteredTickets] = useState([]);
+  const [copy, setCopy] = useState(
+    tickets.filter((row) => {
+      if (userRole === "Basic") {
+        return row.UserID === userID;
+      } else {
+        return row;
+      }
+    })
+  );
 
   const query = useQuery();
   const [searchTerm, setSearchTerm] = useState("");
@@ -182,7 +192,15 @@ const SubmittedTickets = () => {
     setAnchorEl(null);
     setSelectedIndex(0);
 
-    const copy = [...filteredTickets];
+    setCopy(
+      tickets.filter((row) => {
+        if (userRole === "Basic") {
+          return row.UserID === userID;
+        } else {
+          return row;
+        }
+      })
+    );
 
     copy.sort((a, b) => a.Subject.localeCompare(b.Subject));
 
@@ -193,7 +211,15 @@ const SubmittedTickets = () => {
     setAnchorEl(null);
     setSelectedIndex(1);
 
-    const copy = [...filteredTickets];
+    setCopy(
+      tickets.filter((row) => {
+        if (userRole === "Basic") {
+          return row.UserID === userID;
+        } else {
+          return row;
+        }
+      })
+    );
 
     copy.sort((a, b) => b.Subject.localeCompare(a.Subject));
 
@@ -204,7 +230,15 @@ const SubmittedTickets = () => {
     setAnchorEl(null);
     setSelectedIndex(2);
 
-    const copy = [...filteredTickets];
+    setCopy(
+      tickets.filter((row) => {
+        if (userRole === "Basic") {
+          return row.UserID === userID;
+        } else {
+          return row;
+        }
+      })
+    );
 
     copy.sort(
       (a, b) => new Date(a.SubmissionDate) - new Date(b.SubmissionDate)
@@ -217,7 +251,15 @@ const SubmittedTickets = () => {
     setAnchorEl(null);
     setSelectedIndex(3);
 
-    const copy = [...filteredTickets];
+    setCopy(
+      tickets.filter((row) => {
+        if (userRole === "Basic") {
+          return row.UserID === userID;
+        } else {
+          return row;
+        }
+      })
+    );
 
     copy.sort(
       (a, b) => new Date(b.SubmissionDate) - new Date(a.SubmissionDate)
@@ -230,7 +272,15 @@ const SubmittedTickets = () => {
     setAnchorEl(null);
     setSelectedIndex(4);
 
-    const copy = [...filteredTickets];
+    setCopy(
+      tickets.filter((row) => {
+        if (userRole === "Basic") {
+          return row.UserID === userID;
+        } else {
+          return row;
+        }
+      })
+    );
 
     setFilteredTickets(copy.filter((row) => row.Priority === "High"));
   };
@@ -239,7 +289,15 @@ const SubmittedTickets = () => {
     setAnchorEl(null);
     setSelectedIndex(5);
 
-    const copy = [...filteredTickets];
+    setCopy(
+      tickets.filter((row) => {
+        if (userRole === "Basic") {
+          return row.UserID === userID;
+        } else {
+          return row;
+        }
+      })
+    );
 
     setFilteredTickets(copy.filter((row) => row.Priority === "Medium"));
   };
@@ -248,7 +306,15 @@ const SubmittedTickets = () => {
     setAnchorEl(null);
     setSelectedIndex(6);
 
-    const copy = [...filteredTickets];
+    setCopy(
+      tickets.filter((row) => {
+        if (userRole === "Basic") {
+          return row.UserID === userID;
+        } else {
+          return row;
+        }
+      })
+    );
 
     setFilteredTickets(copy.filter((row) => row.Priority === "Low"));
   };
@@ -257,7 +323,15 @@ const SubmittedTickets = () => {
     setAnchorEl(null);
     setSelectedIndex(7);
 
-    const copy = [...filteredTickets];
+    setCopy(
+      tickets.filter((row) => {
+        if (userRole === "Basic") {
+          return row.UserID === userID;
+        } else {
+          return row;
+        }
+      })
+    );
 
     setFilteredTickets(copy.filter((row) => row.TechnicianID === null));
   };
@@ -266,14 +340,63 @@ const SubmittedTickets = () => {
     setAnchorEl(null);
     setSelectedIndex(8);
 
-    const copy = [...filteredTickets];
+    setCopy(
+      tickets.filter((row) => {
+        if (userRole === "Basic") {
+          return row.UserID === userID;
+        } else {
+          return row;
+        }
+      })
+    );
 
     setFilteredTickets(copy.filter((row) => row.TechnicianID !== null));
   };
 
-  const techExpertiseTags = useSelector(
-    (state) => state.User.expertiseTags_All
-  );
+  const sortOpened = () => {
+    if (typeof tickets !== "undefined") {
+      setFilteredTickets(
+        tickets.filter((row) => {
+          if (userRole === "Basic") {
+            return row.UserID === userID;
+          } else {
+            return row;
+          }
+        })
+      );
+    }
+    setAnchorEl(null);
+    setSelectedIndex(9);
+
+    setCopy(
+      tickets.filter((row) => {
+        if (userRole === "Basic") {
+          return row.UserID === userID;
+        } else {
+          return row;
+        }
+      })
+    );
+
+    setFilteredTickets(copy.filter((row) => row.Status === "Open"));
+  };
+
+  const sortClosed = () => {
+    setAnchorEl(null);
+    setSelectedIndex(10);
+
+    setCopy(
+      tickets.filter((row) => {
+        if (userRole === "Basic") {
+          return row.UserID === userID;
+        } else {
+          return row;
+        }
+      })
+    );
+
+    setFilteredTickets(copy.filter((row) => row.Status === "Closed"));
+  };
 
   const sortReset = () => {
     setAnchorEl(null);
@@ -531,6 +654,34 @@ const SubmittedTickets = () => {
               primary={
                 <Typography variant="body1" color="textPrimary">
                   Assigned Only
+                </Typography>
+              }
+            />
+          </MenuItem>
+          <Divider />
+          <MenuItem selected={selectedIndex === 9} onClick={sortOpened}>
+            <ListItemIcon>
+              <BiWindowOpen className={styles.menuIcons} />
+            </ListItemIcon>
+
+            <ListItemText
+              primary={
+                <Typography variant="body1" color="textPrimary">
+                  Opened Only
+                </Typography>
+              }
+            />
+          </MenuItem>
+
+          <MenuItem selected={selectedIndex === 10} onClick={sortClosed}>
+            <ListItemIcon>
+              <BiWindowClose className={styles.menuIcons} />
+            </ListItemIcon>
+
+            <ListItemText
+              primary={
+                <Typography variant="body1" color="textPrimary">
+                  Closed Only
                 </Typography>
               }
             />

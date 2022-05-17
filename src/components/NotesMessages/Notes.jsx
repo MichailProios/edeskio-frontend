@@ -32,13 +32,18 @@ import {
 import CloseIcon from "@material-ui/icons/Close";
 import { AiOutlineSend } from "react-icons/ai";
 
-import moment from "momnet";
+import moment from "moment";
 
 import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { postMessageAction } from "../../redux/user/userActions";
-import { DeleteForever, Edit, MoreHoriz, RestorePage } from "@material-ui/icons";
+import {
+  DeleteForever,
+  Edit,
+  MoreHoriz,
+  RestorePage,
+} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   disabledField: {
@@ -134,9 +139,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Notes = ({
-  ticketID,
-}) => {
+const Notes = ({ ticketID }) => {
   // create dispatch
   const dispatch = useDispatch();
 
@@ -149,137 +152,138 @@ const Notes = ({
 
   const [noteOptionsOpen, setNoteOptionsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  
+
   const allMessages = useSelector((state) => state.User.messages);
   const userID = useSelector((state) => state.User.user.tblUser.ID);
 
   useEffect(() => {
-    setNotes(allMessages.filter((message) => { if (message.Private === true) return message; } ));
+    setNotes(
+      allMessages.filter((message) => {
+        if (message.Private === true) return message;
+      })
+    );
   }, [allMessages]);
 
   const handleNoteChange = (e) => {
-    setCurrentNote(e.target.value)
-  }
+    setCurrentNote(e.target.value);
+  };
 
   const handleNotesOptionsEnter = (e, noteID) => {
     setNoteOptionsOpen(true);
     setAnchorEl(e.target);
     setNoteIDHovered(noteID);
-  }
+  };
 
   const handleNotesOptionsLeave = () => {
     setNoteOptionsOpen(false);
     setAnchorEl(null);
     setNoteIDHovered("");
-  }
+  };
 
   const handleEditNoteClick = () => {
-    console.log("Edit ", noteIDHovered)
-  }
+    console.log("Edit ", noteIDHovered);
+  };
 
   const handleDeleteNote = () => {
-    console.log("Delete ", noteIDHovered)
-  }
+    console.log("Delete ", noteIDHovered);
+  };
 
   const handleNewNote = (e) => {
+    if (currentNote !== "" && currentNote.length <= 255) {
+      dispatch(
+        postMessageAction(
+          userID,
+          ticketID,
+          currentNote,
+          moment().format("YYYY-MM-DD HH:mm:ss"),
+          true
+        )
+      );
 
-      if (currentNote !== "" && currentNote.length <= 255)
-      {
-          dispatch(
-            postMessageAction(
-                userID,
-                ticketID,
-                currentNote,
-                moment().format("YYYY-MM-DD HH:mm:ss"),
-                true,
-            )
-          );
-
-          setCurrentNote("");
-      }
-  }
+      setCurrentNote("");
+    }
+  };
 
   //if (!loading) {
   return (
     <React.Fragment>
       <Grid container className={styles.mainGrid} spacing={2}>
-          <Grid
-              container
-              item
-              justifyContent="center"
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              xl={12}
-          >
-              <Grid container item spacing={1} className={styles.noteGrid}>
-              <div style={{width: "100%", height: "250px", overflowY: "scroll"}}>
-                  {notes.length === 0 ? (
-                      <Grid 
-                          container 
-                          item
-                          key="noNotes"
-                          justifyContent="center"
+        <Grid
+          container
+          item
+          justifyContent="center"
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          xl={12}
+        >
+          <Grid container item spacing={1} className={styles.noteGrid}>
+            <div
+              style={{ width: "100%", height: "250px", overflowY: "scroll" }}
+            >
+              {notes.length === 0 ? (
+                <Grid container item key="noNotes" justifyContent="center">
+                  <Typography>No Notes</Typography>
+                </Grid>
+              ) : (
+                notes.map((note) => {
+                  return (
+                    <Grid
+                      container
+                      item
+                      key={note.ID}
+                      justifyContent="flex-end"
+                    >
+                      <Typography
+                        className={styles.noteField}
+                        onMouseEnter={(e) =>
+                          handleNotesOptionsEnter(e, note.ID)
+                        }
+                        //onMouseLeave={() => handleNotesOptionsLeave()}
                       >
-                          <Typography>
-                              No Notes
-                          </Typography>
-                      </Grid>
-                      ) : (
-                      notes.map((note) => {
-                          return (
-                              <Grid 
-                                  container 
-                                  item 
-                                  key={note.ID} 
-                                  justifyContent="flex-end"
-                              >
-                                  <Typography 
-                                    className={styles.noteField} 
-                                    onMouseEnter={(e) => handleNotesOptionsEnter(e, note.ID)}
-                                    //onMouseLeave={() => handleNotesOptionsLeave()}
-                                  >
-                                      {note.Content}
-                                  </Typography>                                
-                              </Grid>
-                          );
-                      })
-                  )}
-              </div>
-              </Grid>
-              <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  xl={12}
-              >
-                  <TextField
-                      variant="outlined"
-                      value={currentNote}
-                      onChange={handleNoteChange}
-                      className={styles.textField}
-                      multiline
-                      maxRows={5}
-                      InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton edge="end" color="primary" onClick={handleNewNote}>
-                                <AiOutlineSend />
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                      onKeyDown={(e) => {if (e.keyCode === 13 && !e.shiftKey) {e.preventDefault(); handleNewNote();}}}
-                  />
-              </Grid>
+                        {note.Content}
+                      </Typography>
+                    </Grid>
+                  );
+                })
+              )}
+            </div>
           </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+            <TextField
+              variant="outlined"
+              value={currentNote}
+              onChange={handleNoteChange}
+              className={styles.textField}
+              multiline
+              maxRows={5}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      color="primary"
+                      onClick={handleNewNote}
+                    >
+                      <AiOutlineSend />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              onKeyDown={(e) => {
+                if (e.keyCode === 13 && !e.shiftKey) {
+                  e.preventDefault();
+                  handleNewNote();
+                }
+              }}
+            />
+          </Grid>
+        </Grid>
       </Grid>
 
       {noteOptionsOpen && (
-        <Menu 
+        <Menu
           anchorEl={anchorEl}
           id="note-options"
           keepMounted
@@ -287,40 +291,39 @@ const Notes = ({
           onClose={handleNotesOptionsLeave}
           getContentAnchorEl={null}
           anchorOrigin={{
-            vertical: 'center',
-            horizontal: 'right',
+            vertical: "center",
+            horizontal: "right",
           }}
           transformOrigin={{
-            vertical: 'center',
-            horizontal: 'left',
+            vertical: "center",
+            horizontal: "left",
           }}
-          
         >
-        <MenuItem onClick={handleEditNoteClick}>
-          <ListItemIcon>
-            <Edit color="primary" />
-          </ListItemIcon>
-          <ListItemText
-            primary={
-              <Typography variant="body1" color="textPrimary">
-                Edit
-              </Typography>
-            }
-          />
-        </MenuItem>
-        <MenuItem onClick={handleDeleteNote}>
-          <ListItemIcon>
-            <DeleteForever color="primary" />
-          </ListItemIcon>
-          <ListItemText
-            primary={
-              <Typography variant="body1" color="textPrimary">
-                Delete
-              </Typography>
-            }
-          />
-        </MenuItem>
-      </Menu>
+          <MenuItem onClick={handleEditNoteClick}>
+            <ListItemIcon>
+              <Edit color="primary" />
+            </ListItemIcon>
+            <ListItemText
+              primary={
+                <Typography variant="body1" color="textPrimary">
+                  Edit
+                </Typography>
+              }
+            />
+          </MenuItem>
+          <MenuItem onClick={handleDeleteNote}>
+            <ListItemIcon>
+              <DeleteForever color="primary" />
+            </ListItemIcon>
+            <ListItemText
+              primary={
+                <Typography variant="body1" color="textPrimary">
+                  Delete
+                </Typography>
+              }
+            />
+          </MenuItem>
+        </Menu>
       )}
     </React.Fragment>
   );

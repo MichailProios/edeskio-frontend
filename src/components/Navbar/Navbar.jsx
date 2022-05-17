@@ -17,6 +17,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import BusinessIcon from "@material-ui/icons/Business";
+import BarChartIcon from "@material-ui/icons/BarChart";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -217,7 +218,7 @@ const Navbar = ({ children }) => {
       case pathnames.startsWith("/dashboard"):
         setSelectedIndex(0);
         break;
-      case pathnames.startsWith("/organization"):
+      case pathnames.startsWith("/statistics"):
         setSelectedIndex(1);
         break;
       default:
@@ -403,13 +404,13 @@ const Navbar = ({ children }) => {
           <ListItem
             button
             component={Link}
-            to="/Organization"
+            to="/Statistics"
             selected={selectedIndex === 1}
           >
             <ListItemIcon>
-              <BusinessIcon />
+              <BarChartIcon />
             </ListItemIcon>
-            <ListItemText primary={"Organization"} />
+            <ListItemText primary={"Statistics"} />
           </ListItem>
         </List>
         <Divider />

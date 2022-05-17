@@ -33,7 +33,7 @@ import {
   Grow,
 } from "@material-ui/core";
 
-import moment from "momnet";
+import moment from "moment";
 
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
@@ -238,19 +238,18 @@ const SubmitTicket = () => {
 
   const handleSubmit = () => {
     if (ticketSubject.length > 0 && ticketDescription.length > 0) {
-
       const tagIDs = selectedTags.map((tag) => {
         const tagFromTbl = tblTags.find((record) => record.Type === tag);
-  
+
         return tagFromTbl.ID;
-      })
+      });
 
       dispatch(
         postTicketNewTicketAction(
           userID,
           ticketSubject,
           ticketDescription,
-          moment().format("YYYY-MM-DD HH:mm:ss"),
+          moment().local().format("YYYY-MM-DD HH:mm:ss"),
           tagIDs
         )
       )
