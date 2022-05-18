@@ -18,6 +18,8 @@ import {
   Paper,
 } from "@material-ui/core";
 
+import { useSnackbar } from "notistack";
+
 // Basic Components
 import PageHeader from "../../components/PageHeader/PageHeader.jsx";
 
@@ -66,6 +68,8 @@ const Tags = () => {
   const styles = useStyles();
 
   const dispatch = useDispatch();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const tableRows = useSelector((state) => state.User.tags);
 
@@ -221,17 +225,27 @@ const Tags = () => {
                           organizationID
                         )
                       );
+
+                      enqueueSnackbar("Tag added successfully", {
+                        variant: "success",
+                      });
+                    }
+                    else
+                    {
+                      enqueueSnackbar("Please supply a Tag Type and Category", {
+                        variant: "error",
+                      });
                     }
 
                     resolve();
                   }),
                 onRowDelete: (selectedRow) =>
                   new Promise((resolve, reject) => {
-                    const tagType = selectedRow.Type;
+                    const tagID = selectedRow.ID;
 
-                    if (tagType !== "") {
+                    if (tagID !== "") {
                       dispatch(
-                        deleteTagAction(tagType, organizationID, userID)
+                        deleteTagAction(tagID, organizationID, userID)
                       );
                     }
 
@@ -239,8 +253,10 @@ const Tags = () => {
                   }),
                 onRowUpdate: (updatedRow, oldRow) =>
                   new Promise((resolve, reject) => {
-                    const tagType = updatedRow.Type;
-                    const category = updatedRow.Category;
+                    const tagID = updatedRow.ID;
+                    const category = tagCategories.find(
+                      (record) => record.Category === updatedRow.Category
+                    );
 
                     const oldBgColor = oldRow.BackgroundColor;
                     const newBgColor = updatedRow.BackgroundColor;
@@ -248,16 +264,13 @@ const Tags = () => {
                     const newColor = updatedRow.Color;
 
                     dispatch(
-                      putTagsAction(tagType, category, organizationID)
+                      putTagsAction(tagID, category.CategoryID, organizationID)
                     ).then(() => {
                       if (oldBgColor !== newBgColor || oldColor !== newColor) {
-                        const fromCategories = tableRows.find(
-                          (record) => record.Category === category
-                        );
-
+                        
                         dispatch(
                           putTagCategoriesAction(
-                            fromCategories.CategoryID,
+                            category.CategoryID,
                             newBgColor,
                             newColor
                           )

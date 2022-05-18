@@ -271,6 +271,12 @@ const SubmitTicket = () => {
           setSelectedTagsChips([]);
         });
     }
+    else
+    {
+      enqueueSnackbar("Please supply a Ticket Subject and Description", {
+        variant: "error",
+      });
+    }
   };
 
   return (

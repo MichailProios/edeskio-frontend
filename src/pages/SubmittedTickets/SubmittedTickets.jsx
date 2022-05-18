@@ -108,15 +108,15 @@ const SubmittedTickets = () => {
     if (userRole === "Basic") {
       results = tickets.filter(
         (element) =>
-          (element.Subject.toLowerCase().includes(searchTerm) ||
-            element.ID.toString().toLowerCase().includes(searchTerm)) &&
+          (element.Subject.includes(searchTerm) ||
+            element.ID.toString().includes(searchTerm)) &&
           element.UserID === userID
       );
     } else {
       results = tickets.filter(
         (element) =>
-          element.Subject.toLowerCase().includes(searchTerm) ||
-          element.ID.toString().toLowerCase().includes(searchTerm)
+          element.Subject.includes(searchTerm) ||
+          element.ID.toString().includes(searchTerm)
       );
     }
 

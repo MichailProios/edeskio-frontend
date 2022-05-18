@@ -133,8 +133,6 @@ const Statistics = () => {
     return typeof row["800"] !== "undefined" ? row["800"] : "#455a64";
   });
 
-  console.log(statistics.underPerformingTechs[0]);
-
   return (
     <Grow in={true} timeout={50}>
       <div className={styles.root}>
@@ -226,7 +224,7 @@ const Statistics = () => {
               <Card raised={true} className={styles.cardRoot}>
                 <CardHeader
                   title="Unresolved Tickets"
-                  subheader="More than 7 Days"
+                  subheader="Open or Pending Tickets"
                 />
                 <Divider />
                 <CardContent className={styles.cardContent}>
@@ -235,12 +233,12 @@ const Statistics = () => {
                     <Pie
                       data={{
                         labels: statistics.ticketsUnresolved[0].map(
-                          (row) => "Submitted by " + row.SubmittedBy
+                          (row) => row.Timeframe
                         ),
                         datasets: [
                           {
                             data: statistics.ticketsUnresolved[0],
-                            label: "Number of Active Open Tickets",
+                            label: "Number of Unresolved Tickets",
                             backgroundColor: shuffleArray(colorsArray),
                           },
                         ],
@@ -255,7 +253,7 @@ const Statistics = () => {
                           },
                         },
                         parsing: {
-                          key: "UnresolvedTickets",
+                          key: "TicketAmount",
                         },
                       }}
                     />

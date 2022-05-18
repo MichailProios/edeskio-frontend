@@ -92,6 +92,7 @@ import {
   GET_STATISTICS_REQUEST,
   GET_STATISTICS_SUCCESS,
   GET_STATISTICS_FAILURE,
+  MESSAGES_SUCCESS,
 } from "./userTypes";
 import { store } from "../store";
 
@@ -158,6 +159,7 @@ export const initialState = {
 
   //Messages
   messages: [],
+  privateMessages: [],
 };
 
 export const UserReducer = (state = initialState, action) => {
@@ -1095,6 +1097,12 @@ export const UserReducer = (state = initialState, action) => {
         loading: false,
         successfull: false,
         error: action.payload,
+      };
+
+    case MESSAGES_SUCCESS:
+      return {
+        ...state,
+        privateMessages: action.payload,
       };
     default:
       return state;

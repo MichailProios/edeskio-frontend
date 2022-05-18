@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Typography,
   Dialog,
@@ -29,21 +29,29 @@ import {
   ListItemIcon,
 } from "@material-ui/core";
 
+import io from "socket.io-client";
+
 import CloseIcon from "@material-ui/icons/Close";
 import { AiOutlineSend } from "react-icons/ai";
 
+import { withStyles } from "@material-ui/styles";
 import moment from "moment";
 
 import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { postMessageAction } from "../../redux/user/userActions";
+import {
+  messagesAction,
+  postMessageAction,
+} from "../../redux/user/userActions";
 import {
   DeleteForever,
   Edit,
   MoreHoriz,
   RestorePage,
 } from "@material-ui/icons";
+
+import { endpoints } from "../../redux/user/userEndpoints";
 
 const useStyles = makeStyles((theme) => ({
   disabledField: {
@@ -112,6 +120,8 @@ const useStyles = makeStyles((theme) => ({
     margin: ".5em",
   },
 
+  noteText: { userSelect: "none", fontSize: "0.8em" },
+
   textField: {
     width: "100%",
     userSelect: "none",
@@ -133,6 +143,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
+  textField: {
+    width: "100%",
+    userSelect: "none",
+    userDrag: "none",
+  },
+
   outGrid: {
     justifyContent: "center",
     alignItems: "center",
@@ -145,22 +161,68 @@ const Notes = ({ ticketID }) => {
 
   const styles = useStyles();
 
-  const [notes, setNotes] = useState([]);
-  const [currentNote, setCurrentNote] = useState("");
+  const [currentMessage, setCurrentMessage] = useState("");
 
-  const [noteIDHovered, setNoteIDHovered] = useState("");
-
-  const [noteOptionsOpen, setNoteOptionsOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const allMessages = useSelector((state) => state.User.messages);
+  const messages = useSelector((state) => state.User.privateMessages);
   const userID = useSelector((state) => state.User.user.tblUser.ID);
 
-  const [currentMessage, setCurrentMessage] = useState("");
+  const socketRef = useRef();
+
+  const [connected, setConnected] = useState(false);
+
+  useEffect(() => {
+    socketRef.current = io.connect(endpoints.messagesWS, {
+      query: { test: 2 },
+    });
+
+    socketRef.current.on("connect", () => {
+      setConnected(socketRef.current.connected);
+    });
+
+    return () => socketRef.current.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (connected) {
+      socketRef.current.on("messagesNew", ({ messages }) => {
+        dispatch(messagesAction(messages));
+      });
+
+      socketRef.current.emit("messagesOpen", { ticketID });
+    }
+  }, [dispatch, connected, ticketID]);
 
   const handleMessageChange = (e) => {
     setCurrentMessage(e.target.value);
   };
+
+  const handleMessageSend = () => {
+    const date = moment().format("YYYY-MM-DD HH:mm:ss");
+    const privateMsg = false;
+
+    if (currentMessage !== "" && currentMessage.length <= 255) {
+      setCurrentMessage("");
+      socketRef.current.emit("messageSent", {
+        userID,
+        ticketID,
+        currentMessage,
+        date,
+        privateMsg,
+      });
+    }
+  };
+
+  const StyledChip = withStyles({
+    root: {
+      // backgroundColor: "red", // here you can do anything actually
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    },
+    label: {
+      fontSize: "1.2em",
+    },
+  })(Chip);
 
   //if (!loading) {
   return (
@@ -178,28 +240,78 @@ const Notes = ({ ticketID }) => {
         >
           <Grid container item spacing={1} className={styles.noteGrid}>
             <div
-              style={{ width: "100%", height: "250px", overflowY: "scroll" }}
+              style={{
+                width: "100%",
+                height: "250px",
+                overflowY: "scroll",
+                top: 1000,
+              }}
             >
-              {notes.length === 0 ? (
+              {messages.length === 0 ? (
                 <Grid container item key="noNotes" justifyContent="center">
                   <Typography style={{ userSelect: "none" }}>
                     No Messages
                   </Typography>
                 </Grid>
               ) : (
-                notes.map((note) => {
-                  return (
-                    <Grid
-                      container
-                      item
-                      key={note.ID}
-                      justifyContent="flex-end"
-                    >
-                      <Typography className={styles.noteField}>
-                        {note.Content}
-                      </Typography>
-                    </Grid>
-                  );
+                messages.map((message) => {
+                  if (message.SentBy === userID) {
+                    return (
+                      <div key={message.ID}>
+                        <Grid container item justifyContent="flex-end">
+                          {/* <Typography className={styles.messageField}>
+                        {message.Content}
+                      </Typography> */}
+
+                          <StyledChip label={message.Content} color="primary" />
+                        </Grid>
+                        <Grid container item justifyContent="flex-end">
+                          {/* <Typography className={styles.messageField}>
+                        {message.Content}
+                      </Typography> */}
+
+                          <Typography
+                            className={styles.noteText}
+                            color="textSecondary"
+                          >
+                            {message.tblUser.FirstName +
+                              " " +
+                              message.tblUser.LastName +
+                              " " +
+                              moment(message.DateSent).utc().format("lll")}
+                          </Typography>
+                        </Grid>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div key={message.ID}>
+                        <Grid container item justifyContent="flex-start">
+                          {/* <Typography className={styles.messageField}>
+                        {message.Content}
+                      </Typography> */}
+
+                          <StyledChip label={message.Content} color="primary" />
+                        </Grid>
+                        <Grid container item justifyContent="flex-start">
+                          {/* <Typography className={styles.messageField}>
+                        {message.Content}
+                      </Typography> */}
+
+                          <Typography
+                            className={styles.noteText}
+                            color="textSecondary"
+                          >
+                            {message.tblUser.FirstName +
+                              " " +
+                              message.tblUser.LastName +
+                              " " +
+                              moment(message.DateSent).utc().format("lll")}
+                          </Typography>
+                        </Grid>
+                      </div>
+                    );
+                  }
                 })
               )}
             </div>
@@ -218,7 +330,7 @@ const Notes = ({ ticketID }) => {
                     <IconButton
                       edge="end"
                       color="primary"
-                      //   onClick={handleNewNote}
+                      onClick={handleMessageSend}
                     >
                       <AiOutlineSend />
                     </IconButton>
@@ -228,7 +340,7 @@ const Notes = ({ ticketID }) => {
               onKeyDown={(e) => {
                 if (e.keyCode === 13 && !e.shiftKey) {
                   e.preventDefault();
-                  //   handleNewNote();
+                  handleMessageSend();
                 }
               }}
             />
