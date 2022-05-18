@@ -54,6 +54,7 @@ if (
       "https://edeskio.com:8443/api/edeskio/put_tblTickets_CloseTicket",
     deleteTicket: "https://edeskio.com:8443/api/edeskio/delete_tblTickets",
     getStatistics: "https://edeskio.com:8443/api/edeskio/get_Statistics",
+    messagesWS: "https://edeskio.com:8443/websocket/messages",
   };
 } else if (
   window.location.hostname === "localhost" ||
@@ -110,6 +111,7 @@ if (
       "https://edeskio.com:8443/api/edeskio/put_tblTickets_CloseTicket",
     deleteTicket: "https://edeskio.com:8443/api/edeskio/delete_tblTickets",
     getStatistics: "https://edeskio.com:8443/api/edeskio/get_Statistics",
+    messagesWS: "https://edeskio.com:8443/websocket/messages",
   };
 } else {
   endpoints = {
@@ -162,5 +164,6 @@ if (
       "https://edeskio.com:8443/api/edeskio/put_tblTickets_CloseTicket",
     deleteTicket: "https://edeskio.com:8443/api/edeskio/delete_tblTickets",
     getStatistics: "https://edeskio.com:8443/api/edeskio/get_Statistics",
+    messagesWS: "https://edeskio.com:8443/websocket/messages",
   };
 }

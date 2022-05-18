@@ -44,6 +44,7 @@ import {
   MoreHoriz,
   RestorePage,
 } from "@material-ui/icons";
+import { withStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles((theme) => ({
   disabledField: {
@@ -77,14 +78,9 @@ const useStyles = makeStyles((theme) => ({
   noteGrid: {
     padding: "10px 0",
   },
-  noteField: {
-    flexShrink: "revert",
-    color: theme.palette.primary.main,
-    borderRadius: "25px",
-    border: `1px solid ${theme.palette.primary.main}`,
-    padding: "5px",
-    margin: "2px",
-  },
+  noteChip: { userSelect: "none" },
+
+  noteText: { userSelect: "none", fontSize: "0.8em" },
   queryButton: {
     backgroundColor: theme.palette.primary.main,
     color: "#f3f3f3",
@@ -203,8 +199,18 @@ const Notes = ({ ticketID }) => {
       setCurrentNote("");
     }
   };
+  const StyledChip = withStyles({
+    root: {
+      // backgroundColor: "red", // here you can do anything actually
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    },
+    label: {
+      fontSize: "1.2em",
+    },
+  })(Chip);
 
-  //if (!loading) {
   return (
     <React.Fragment>
       <Grid container className={styles.mainGrid} spacing={2}>
@@ -229,22 +235,31 @@ const Notes = ({ ticketID }) => {
               ) : (
                 notes.map((note) => {
                   return (
-                    <Grid
-                      container
-                      item
-                      key={note.ID}
-                      justifyContent="flex-end"
-                    >
-                      <Typography
-                        className={styles.noteField}
-                        onMouseEnter={(e) =>
-                          handleNotesOptionsEnter(e, note.ID)
-                        }
-                        //onMouseLeave={() => handleNotesOptionsLeave()}
-                      >
+                    <div key={note.ID}>
+                      <Grid container item justifyContent="flex-end">
+                        {/* <Typography className={styles.noteField}>
                         {note.Content}
-                      </Typography>
-                    </Grid>
+                      </Typography> */}
+
+                        <StyledChip label={note.Content} color="primary" />
+                      </Grid>
+                      <Grid container item justifyContent="flex-end">
+                        {/* <Typography className={styles.noteField}>
+                        {note.Content}
+                      </Typography> */}
+
+                        <Typography
+                          className={styles.noteText}
+                          color="textSecondary"
+                        >
+                          {note.tblUser.FirstName +
+                            " " +
+                            note.tblUser.LastName +
+                            " " +
+                            moment(note.DateSent).utc().format("lll")}
+                        </Typography>
+                      </Grid>
+                    </div>
                   );
                 })
               )}
@@ -282,7 +297,7 @@ const Notes = ({ ticketID }) => {
         </Grid>
       </Grid>
 
-      {noteOptionsOpen && (
+      {/* {noteOptionsOpen && (
         <Menu
           anchorEl={anchorEl}
           keepMounted
@@ -323,7 +338,7 @@ const Notes = ({ ticketID }) => {
             />
           </MenuItem>
         </Menu>
-      )}
+      )} */}
     </React.Fragment>
   );
 };

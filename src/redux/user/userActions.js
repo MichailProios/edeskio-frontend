@@ -93,6 +93,7 @@ import {
   GET_STATISTICS_REQUEST,
   GET_STATISTICS_SUCCESS,
   GET_STATISTICS_FAILURE,
+  MESSAGES_SUCCESS,
 } from "./userTypes";
 
 import { store } from "../store";
@@ -2101,6 +2102,22 @@ export const notificationClearAction = () => {
 const notificationCLear = () => {
   return {
     type: NOTIFICATION_CLEAR,
+  };
+};
+
+/**************************************************************************************************************/
+
+/**************************************************************************************************************/
+export const messagesAction = (notifications) => {
+  return async (dispatch) => {
+    dispatch(messagesSuccess(notifications));
+  };
+};
+
+const messagesSuccess = (data) => {
+  return {
+    type: MESSAGES_SUCCESS,
+    payload: data,
   };
 };
 
