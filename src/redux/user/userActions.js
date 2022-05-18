@@ -822,10 +822,10 @@ const putTicketCloseFailure = (error) => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const putTagsAction = (tagType, category, orgID) => {
+export const putTagsAction = (tagID, categoryID, orgID) => {
   return async (dispatch) => {
     dispatch(putTagsRequest());
-    await putTagsWithAxios(tagType, category, orgID)
+    await putTagsWithAxios(tagID, categoryID, orgID)
       .then((response) => {
         dispatch(putTagsSuccess(response));
       })
@@ -835,10 +835,10 @@ export const putTagsAction = (tagType, category, orgID) => {
   };
 };
 
-const putTagsWithAxios = async (tagType, category, orgID) => {
+const putTagsWithAxios = async (tagID, categoryID, orgID) => {
   var tags = [];
 
-  await putTags(tagType, category, orgID).then((response) => {
+  await putTags(tagID, categoryID, orgID).then((response) => {
     tags.push(response);
   });
 
@@ -847,10 +847,10 @@ const putTagsWithAxios = async (tagType, category, orgID) => {
   };
 };
 
-const putTags = (tagType, category, orgID) => {
+const putTags = (tagID, categoryID, orgID) => {
   return axios.put(
     endpoints.putTags,
-    { TagType: tagType, Category: category, OrganizationID: orgID },
+    { TagID: tagID, CategoryID: categoryID, OrganizationID: orgID },
     {
       headers: {
         "Content-Type": "application/json",
@@ -1823,10 +1823,10 @@ const postMessageFailure = () => {
 /**************************************************************************************************************/
 
 /**************************************************************************************************************/
-export const deleteTagAction = (tagType, orgID, techID) => {
+export const deleteTagAction = (tagID, orgID, techID) => {
   return async (dispatch) => {
     dispatch(deleteTagRequest());
-    await deleteTagWithAxios(tagType, orgID, techID)
+    await deleteTagWithAxios(tagID, orgID, techID)
       .then((response) => {
         dispatch(deleteTagSuccess(response));
       })
@@ -1836,10 +1836,10 @@ export const deleteTagAction = (tagType, orgID, techID) => {
   };
 };
 
-const deleteTagWithAxios = async (tagType, orgID, techID) => {
+const deleteTagWithAxios = async (tagID, orgID, techID) => {
   var tags = [];
 
-  await deleteTag(tagType, orgID, techID).then((response) => {
+  await deleteTag(tagID, orgID, techID).then((response) => {
     tags.push(response);
   });
 
@@ -1848,13 +1848,13 @@ const deleteTagWithAxios = async (tagType, orgID, techID) => {
   };
 };
 
-const deleteTag = (tagType, orgID, techID) => {
+const deleteTag = (tagID, orgID, techID) => {
   return axios.delete(endpoints.deleteTag, {
     headers: {
       "Content-Type": "application/json",
     },
     data: {
-      TagType: tagType,
+      TagID: tagID,
       OrganizationID: orgID,
       TechnicianID: techID,
     },

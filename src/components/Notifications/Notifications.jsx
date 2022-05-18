@@ -182,6 +182,7 @@ const Notifications = () => {
                       color="textPrimary"
                       align="left"
                     >
+                      {"#"}{value["tblNotification.TicketID"]}{" - "}
                       {value["tblNotification.tblUser.FirstName"]}{" "}
                       {value["tblNotification.tblUser.LastName"]}{" "}
                       {value["tblNotification.Content"]}

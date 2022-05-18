@@ -19,6 +19,8 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { useSelector, useDispatch } from "react-redux";
 
+import { useSnackbar } from "notistack";
+
 import { makeStyles } from "@material-ui/core/styles";
 import { SwatchesPicker } from "react-color";
 import { postTagCategoryAction } from "../../redux/user/userActions";
@@ -124,11 +126,15 @@ const AddTagCategory = ({ open, handleOpen, handleClose }) => {
   // create dispatch
   const dispatch = useDispatch();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const styles = useStyles();
 
   const [category, setCategory] = useState("");
   const [backgroundColor, setBackgroundColor] = useState("");
   const [color, setColor] = useState("#000000");
+
+  const tagCategories = useSelector((state) => state.User.tagCategories);
 
   const organizationID = useSelector(
     (state) => state.User.user.tblOrganization.ID
@@ -138,6 +144,16 @@ const AddTagCategory = ({ open, handleOpen, handleClose }) => {
     
     if (category !== "" && backgroundColor != "")
     {
+      let existingCategories = tagCategories.map((row) => row.Category);
+      
+      if (existingCategories.includes(category))
+      {
+        enqueueSnackbar("Tag Category Name already exists", {
+          variant: "error",
+        });
+      }
+      else
+      {
         dispatch(
             postTagCategoryAction(
                 category,
@@ -146,6 +162,17 @@ const AddTagCategory = ({ open, handleOpen, handleClose }) => {
                 organizationID,
             )
         );
+
+        enqueueSnackbar("Tag Category added successfully", {
+          variant: "success",
+        });
+      }
+    }
+    else
+    {
+      enqueueSnackbar("Please supply a Category Name and Chip Color", {
+        variant: "error",
+      });
     }
 
     handleCancel();
