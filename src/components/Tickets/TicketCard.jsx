@@ -244,11 +244,14 @@ const TicketCard = ({ ticket }) => {
   };
 
   const handleNotesMessagesOpen = () => {
-    dispatch(getMessagesOneAction(ticket.ID));
+    if ((userRole === "Admin") || (userRole === "Tech" && ticket.TechnicianID === userID) || (ticket.UserID === userID))
+    {
+      dispatch(getMessagesOneAction(ticket.ID));
 
-    setOpenNotesMessages(true);
-    setOptionsOpen(false);
-    setAnchorEl(null);
+      setOpenNotesMessages(true);
+      setOptionsOpen(false);
+      setAnchorEl(null);
+    }
   };
 
   const handleNotesMessagesClose = () => {
